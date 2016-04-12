@@ -1,0 +1,19 @@
+﻿{
+  "version": "1.0.0-*",
+  "description": "Uri.Tests Class Library",
+  "authors": [ "Steven" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+  "frameworks": {
+    "dnxcore50": { }
+  },
+  "dependencies": {
+    "Txt.ABNF": "2.0.0-CI00174",
+    "xunit": "2.1.0",
+    "xunit.runner.dnx": "2.1.0-rc1-build204",
+    "Uri": {
+      "target": "project"
+    }
+  }
+}
