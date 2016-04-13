@@ -7,7 +7,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{13A6CC00-2CC
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9762734F-7B13-4063-8EF4-524AE7706A34}"
 	ProjectSection(SolutionItems) = preProject
+		appveyor.yml = appveyor.yml
+		dec-octet.abnf = dec-octet.abnf
 		global.json = global.json
+		IPv6address.abnf = IPv6address.abnf
+		NuGet.config = NuGet.config
+		path-empty.abnf = path-empty.abnf
+		RFC3986.abnf = RFC3986.abnf
 	EndProjectSection
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Uri", "src\Uri\Uri.xproj", "{6CAACB93-8086-4788-8479-B6E10D1BDCCA}"
