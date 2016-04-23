@@ -6,9 +6,9 @@ namespace Uri.URI_reference
 {
     public sealed class UriReferenceLexer : Lexer<UriReference>
     {
-        private readonly ILexer<Alternative> innerLexer;
+        private readonly ILexer<Alternation> innerLexer;
 
-        public UriReferenceLexer(ILexer<Alternative> innerLexer)
+        public UriReferenceLexer(ILexer<Alternation> innerLexer)
         {
             if (innerLexer == null)
             {

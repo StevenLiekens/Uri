@@ -21,8 +21,8 @@ namespace Uri.sub_delims
         public void Read_ShouldSucceed(string input)
         {
             var terminalLexerFactory = new TerminalLexerFactory();
-            var alternativeLexerFactory = new AlternativeLexerFactory();
-            var factory = new SubcomponentsDelimiterLexerFactory(terminalLexerFactory, alternativeLexerFactory);
+            var alternationLexerFactory = new AlternationLexerFactory();
+            var factory = new SubcomponentsDelimiterLexerFactory(terminalLexerFactory, alternationLexerFactory);
             var lexer = factory.Create();
             using (var scanner = new TextScanner(new StringTextSource(input)))
             {

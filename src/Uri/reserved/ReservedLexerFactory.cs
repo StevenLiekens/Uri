@@ -12,9 +12,9 @@ namespace Uri.reserved
 
         private readonly ILexerFactory<SubcomponentsDelimiter> subcomponentsDelimiterLexerFactory;
 
-        private readonly IAlternativeLexerFactory alternativeLexerFactory;
+        private readonly IAlternationLexerFactory alternationLexerFactory;
 
-        public ReservedLexerFactory(ILexerFactory<GenericDelimiter> genericDelimiterLexerFactory, ILexerFactory<SubcomponentsDelimiter> subcomponentsDelimiterLexerFactory, IAlternativeLexerFactory alternativeLexerFactory)
+        public ReservedLexerFactory(ILexerFactory<GenericDelimiter> genericDelimiterLexerFactory, ILexerFactory<SubcomponentsDelimiter> subcomponentsDelimiterLexerFactory, IAlternationLexerFactory alternationLexerFactory)
         {
             if (genericDelimiterLexerFactory == null)
             {
@@ -26,19 +26,19 @@ namespace Uri.reserved
                 throw new ArgumentNullException(nameof(subcomponentsDelimiterLexerFactory));
             }
 
-            if (alternativeLexerFactory == null)
+            if (alternationLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(alternativeLexerFactory));
+                throw new ArgumentNullException(nameof(alternationLexerFactory));
             }
 
             this.genericDelimiterLexerFactory = genericDelimiterLexerFactory;
             this.subcomponentsDelimiterLexerFactory = subcomponentsDelimiterLexerFactory;
-            this.alternativeLexerFactory = alternativeLexerFactory;
+            this.alternationLexerFactory = alternationLexerFactory;
         }
 
         public ILexer<Reserved> Create()
         {
-            var reservedAlterativeLexer = alternativeLexerFactory.Create(
+            var reservedAlterativeLexer = alternationLexerFactory.Create(
                 genericDelimiterLexerFactory.Create(),
                 subcomponentsDelimiterLexerFactory.Create());
             return new ReservedLexer(reservedAlterativeLexer);

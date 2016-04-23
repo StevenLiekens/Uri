@@ -10,7 +10,7 @@ namespace Uri.scheme
     {
         private readonly ILexerFactory<Alpha> alphaLexerFactory;
 
-        private readonly IAlternativeLexerFactory alternativeLexerFactory;
+        private readonly IAlternationLexerFactory alternationLexerFactory;
 
         private readonly IConcatenationLexerFactory concatenationLexerFactory;
 
@@ -22,7 +22,7 @@ namespace Uri.scheme
 
         public SchemeLexerFactory(
             IConcatenationLexerFactory concatenationLexerFactory,
-            IAlternativeLexerFactory alternativeLexerFactory,
+            IAlternationLexerFactory alternationLexerFactory,
             IRepetitionLexerFactory repetitionLexerFactory,
             ILexerFactory<Alpha> alphaLexerFactory,
             ILexerFactory<Digit> digitLexerFactory,
@@ -32,9 +32,9 @@ namespace Uri.scheme
             {
                 throw new ArgumentNullException(nameof(concatenationLexerFactory));
             }
-            if (alternativeLexerFactory == null)
+            if (alternationLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(alternativeLexerFactory));
+                throw new ArgumentNullException(nameof(alternationLexerFactory));
             }
             if (repetitionLexerFactory == null)
             {
@@ -53,7 +53,7 @@ namespace Uri.scheme
                 throw new ArgumentNullException(nameof(terminalLexerFactory));
             }
             this.concatenationLexerFactory = concatenationLexerFactory;
-            this.alternativeLexerFactory = alternativeLexerFactory;
+            this.alternationLexerFactory = alternationLexerFactory;
             this.repetitionLexerFactory = repetitionLexerFactory;
             this.alphaLexerFactory = alphaLexerFactory;
             this.digitLexerFactory = digitLexerFactory;
@@ -67,7 +67,7 @@ namespace Uri.scheme
             var plus = terminalLexerFactory.Create(@"+", StringComparer.Ordinal);
             var minus = terminalLexerFactory.Create(@"-", StringComparer.Ordinal);
             var dot = terminalLexerFactory.Create(@".", StringComparer.Ordinal);
-            var alt = alternativeLexerFactory.Create(alpha, digit, plus, minus, dot);
+            var alt = alternationLexerFactory.Create(alpha, digit, plus, minus, dot);
             var rep = repetitionLexerFactory.Create(alt, 0, int.MaxValue);
             var innerLexer = concatenationLexerFactory.Create(alpha, rep);
             return new SchemeLexer(innerLexer);

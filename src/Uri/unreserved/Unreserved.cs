@@ -2,9 +2,9 @@
 
 namespace Uri.unreserved
 {
-    public class Unreserved : Alternative
+    public class Unreserved : Alternation
     {
-        public Unreserved(Alternative element)
+        public Unreserved(Alternation element)
             : base(element)
         {
         }

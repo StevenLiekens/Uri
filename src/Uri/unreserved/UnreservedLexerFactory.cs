@@ -10,7 +10,7 @@ namespace Uri.unreserved
     {
         private readonly ILexerFactory<Alpha> alphaLexerFactory;
 
-        private readonly IAlternativeLexerFactory alternativeLexerFactory;
+        private readonly IAlternationLexerFactory alternationLexerFactory;
 
         private readonly ILexerFactory<Digit> digitLexerFactory;
 
@@ -20,7 +20,7 @@ namespace Uri.unreserved
             ILexerFactory<Alpha> alphaLexerFactory,
             ILexerFactory<Digit> digitLexerFactory,
             ITerminalLexerFactory terminalLexerFactory,
-            IAlternativeLexerFactory alternativeLexerFactory)
+            IAlternationLexerFactory alternationLexerFactory)
         {
             if (alphaLexerFactory == null)
             {
@@ -41,19 +41,19 @@ namespace Uri.unreserved
             this.alphaLexerFactory = alphaLexerFactory;
             this.digitLexerFactory = digitLexerFactory;
             this.terminalLexerFactory = terminalLexerFactory;
-            this.alternativeLexerFactory = alternativeLexerFactory;
+            this.alternationLexerFactory = alternationLexerFactory;
         }
 
         public ILexer<Unreserved> Create()
         {
-            var unreservedAlternativeLexer = alternativeLexerFactory.Create(
+            var unreservedAlternationLexer = alternationLexerFactory.Create(
                 alphaLexerFactory.Create(),
                 digitLexerFactory.Create(),
                 terminalLexerFactory.Create(@"-", StringComparer.Ordinal),
                 terminalLexerFactory.Create(@".", StringComparer.Ordinal),
                 terminalLexerFactory.Create(@"_", StringComparer.Ordinal),
                 terminalLexerFactory.Create(@"~", StringComparer.Ordinal));
-            return new UnreservedLexer(unreservedAlternativeLexer);
+            return new UnreservedLexer(unreservedAlternationLexer);
         }
     }
 }

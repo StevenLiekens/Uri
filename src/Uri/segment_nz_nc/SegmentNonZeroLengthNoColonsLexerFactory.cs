@@ -9,7 +9,7 @@ namespace Uri.segment_nz_nc
 {
     public class SegmentNonZeroLengthNoColonsLexerFactory : ILexerFactory<SegmentNonZeroLengthNoColons>
     {
-        private readonly IAlternativeLexerFactory alternativeLexerFactory;
+        private readonly IAlternationLexerFactory alternationLexerFactory;
 
         private readonly ILexerFactory<PercentEncoding> percentEncodingLexerFactory;
 
@@ -23,7 +23,7 @@ namespace Uri.segment_nz_nc
 
         public SegmentNonZeroLengthNoColonsLexerFactory(
             IRepetitionLexerFactory repetitionLexerFactory,
-            IAlternativeLexerFactory alternativeLexerFactory,
+            IAlternationLexerFactory alternationLexerFactory,
             ILexerFactory<Unreserved> unreservedLexerFactory,
             ILexerFactory<PercentEncoding> percentEncodingLexerFactory,
             ILexerFactory<SubcomponentsDelimiter> subcomponentsDelimiterLexerFactory,
@@ -35,10 +35,10 @@ namespace Uri.segment_nz_nc
                     nameof(repetitionLexerFactory));
             }
 
-            if (alternativeLexerFactory == null)
+            if (alternationLexerFactory == null)
             {
                 throw new ArgumentNullException(
-                    nameof(alternativeLexerFactory));
+                    nameof(alternationLexerFactory));
             }
 
             if (unreservedLexerFactory == null)
@@ -65,7 +65,7 @@ namespace Uri.segment_nz_nc
             }
 
             this.repetitionLexerFactory = repetitionLexerFactory;
-            this.alternativeLexerFactory = alternativeLexerFactory;
+            this.alternationLexerFactory = alternationLexerFactory;
             this.unreservedLexerFactory = unreservedLexerFactory;
             this.percentEncodingLexerFactory = percentEncodingLexerFactory;
             this.subcomponentsDelimiterLexerFactory = subcomponentsDelimiterLexerFactory;
@@ -74,12 +74,12 @@ namespace Uri.segment_nz_nc
 
         public ILexer<SegmentNonZeroLengthNoColons> Create()
         {
-            var alternativeLexer = alternativeLexerFactory.Create(
+            var alternationLexer = alternationLexerFactory.Create(
                 unreservedLexerFactory.Create(),
                 percentEncodingLexerFactory.Create(),
                 subcomponentsDelimiterLexerFactory.Create(),
                 terminalLexerFactory.Create(@"@", StringComparer.Ordinal));
-            var segmentNonZeroLengthNoColonsRepetitionLexer = repetitionLexerFactory.Create(alternativeLexer, 1, int.MaxValue);
+            var segmentNonZeroLengthNoColonsRepetitionLexer = repetitionLexerFactory.Create(alternationLexer, 1, int.MaxValue);
             return new SegmentNonZeroLengthNoColonsLexer(segmentNonZeroLengthNoColonsRepetitionLexer);
         }
     }

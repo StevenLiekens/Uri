@@ -9,7 +9,7 @@ namespace Uri.IPvFuture
 {
     public class IPvFutureLexerFactory : ILexerFactory<IPvFuture>
     {
-        private readonly IAlternativeLexerFactory alternativeLexerFactory;
+        private readonly IAlternationLexerFactory alternationLexerFactory;
 
         private readonly IConcatenationLexerFactory concatenationLexerFactory;
 
@@ -27,7 +27,7 @@ namespace Uri.IPvFuture
             ITerminalLexerFactory terminalLexerFactory,
             IRepetitionLexerFactory repetitionLexerFactory,
             IConcatenationLexerFactory concatenationLexerFactory,
-            IAlternativeLexerFactory alternativeLexerFactory,
+            IAlternationLexerFactory alternationLexerFactory,
             ILexerFactory<HexadecimalDigit> hexadecimalDigitLexerFactory,
             ILexerFactory<Unreserved> unreservedLexerFactory,
             ILexerFactory<SubcomponentsDelimiter> subcomponentsDelimiterLexerFactory)
@@ -44,9 +44,9 @@ namespace Uri.IPvFuture
             {
                 throw new ArgumentNullException(nameof(concatenationLexerFactory));
             }
-            if (alternativeLexerFactory == null)
+            if (alternationLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(alternativeLexerFactory));
+                throw new ArgumentNullException(nameof(alternationLexerFactory));
             }
             if (hexadecimalDigitLexerFactory == null)
             {
@@ -63,7 +63,7 @@ namespace Uri.IPvFuture
             this.terminalLexerFactory = terminalLexerFactory;
             this.repetitionLexerFactory = repetitionLexerFactory;
             this.concatenationLexerFactory = concatenationLexerFactory;
-            this.alternativeLexerFactory = alternativeLexerFactory;
+            this.alternationLexerFactory = alternationLexerFactory;
             this.hexadecimalDigitLexerFactory = hexadecimalDigitLexerFactory;
             this.unreservedLexerFactory = unreservedLexerFactory;
             this.subcomponentsDelimiterLexerFactory = subcomponentsDelimiterLexerFactory;
@@ -93,7 +93,7 @@ namespace Uri.IPvFuture
             var r = repetitionLexerFactory.Create(hexdig, 1, int.MaxValue);
 
             // unreserved / sub-delims / ":"
-            var a = alternativeLexerFactory.Create(unreserved, subDelims, colon);
+            var a = alternationLexerFactory.Create(unreserved, subDelims, colon);
 
             // 1*( unreserved / sub-delims / ":" )
             var s = repetitionLexerFactory.Create(a, 1, int.MaxValue);

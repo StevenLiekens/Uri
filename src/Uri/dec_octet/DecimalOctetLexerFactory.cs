@@ -7,7 +7,7 @@ namespace Uri.dec_octet
 {
     public class DecimalOctetLexerFactory : ILexerFactory<DecimalOctet>
     {
-        private readonly IAlternativeLexerFactory alternativeLexerFactory;
+        private readonly IAlternationLexerFactory alternationLexerFactory;
 
         private readonly ILexerFactory<Digit> digitLexerFactory;
 
@@ -22,7 +22,7 @@ namespace Uri.dec_octet
         public DecimalOctetLexerFactory(
             IValueRangeLexerFactory valueRangeLexerFactory,
             ITerminalLexerFactory terminalLexerFactory,
-            IAlternativeLexerFactory alternativeLexerFactory,
+            IAlternationLexerFactory alternationLexerFactory,
             IRepetitionLexerFactory repetitionLexerFactory,
             ILexerFactory<Digit> digitLexerFactory,
             IConcatenationLexerFactory concatenationLexerFactory)
@@ -37,9 +37,9 @@ namespace Uri.dec_octet
                 throw new ArgumentNullException(nameof(terminalLexerFactory));
             }
 
-            if (alternativeLexerFactory == null)
+            if (alternationLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(alternativeLexerFactory));
+                throw new ArgumentNullException(nameof(alternationLexerFactory));
             }
 
             if (repetitionLexerFactory == null)
@@ -59,7 +59,7 @@ namespace Uri.dec_octet
 
             this.valueRangeLexerFactory = valueRangeLexerFactory;
             this.terminalLexerFactory = terminalLexerFactory;
-            this.alternativeLexerFactory = alternativeLexerFactory;
+            this.alternationLexerFactory = alternationLexerFactory;
             this.repetitionLexerFactory = repetitionLexerFactory;
             this.digitLexerFactory = digitLexerFactory;
             this.concatenationLexerFactory = concatenationLexerFactory;
@@ -104,7 +104,7 @@ namespace Uri.dec_octet
             var l = concatenationLexerFactory.Create(k, d);
 
             // "25" %x30-35 / "2" %x30-34 DIGIT / "1" 2DIGIT / %x31-39 DIGIT / DIGIT
-            var m = alternativeLexerFactory.Create(c, g, j, l, d);
+            var m = alternationLexerFactory.Create(c, g, j, l, d);
 
             // dec-octet
             return new DecimalOctetLexer(m);

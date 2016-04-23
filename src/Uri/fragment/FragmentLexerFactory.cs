@@ -7,7 +7,7 @@ namespace Uri.fragment
 {
     public class FragmentLexerFactory : ILexerFactory<Fragment>
     {
-        private readonly IAlternativeLexerFactory alternativeLexerFactory;
+        private readonly IAlternationLexerFactory alternationLexerFactory;
 
         private readonly ILexerFactory<PathCharacter> pathCharacterLexerFactory;
 
@@ -15,11 +15,11 @@ namespace Uri.fragment
 
         private readonly ITerminalLexerFactory terminalLexerFactory;
 
-        public FragmentLexerFactory(IAlternativeLexerFactory alternativeLexerFactory, ILexerFactory<PathCharacter> pathCharacterLexerFactory, IRepetitionLexerFactory repetitionLexerFactory, ITerminalLexerFactory terminalLexerFactory)
+        public FragmentLexerFactory(IAlternationLexerFactory alternationLexerFactory, ILexerFactory<PathCharacter> pathCharacterLexerFactory, IRepetitionLexerFactory repetitionLexerFactory, ITerminalLexerFactory terminalLexerFactory)
         {
-            if (alternativeLexerFactory == null)
+            if (alternationLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(alternativeLexerFactory));
+                throw new ArgumentNullException(nameof(alternationLexerFactory));
             }
 
             if (pathCharacterLexerFactory == null)
@@ -37,7 +37,7 @@ namespace Uri.fragment
                 throw new ArgumentNullException(nameof(terminalLexerFactory));
             }
 
-            this.alternativeLexerFactory = alternativeLexerFactory;
+            this.alternationLexerFactory = alternationLexerFactory;
             this.pathCharacterLexerFactory = pathCharacterLexerFactory;
             this.repetitionLexerFactory = repetitionLexerFactory;
             this.terminalLexerFactory = terminalLexerFactory;
@@ -45,11 +45,11 @@ namespace Uri.fragment
 
         public ILexer<Fragment> Create()
         {
-            var alternativeLexer = alternativeLexerFactory.Create(
+            var alternationLexer = alternationLexerFactory.Create(
                 pathCharacterLexerFactory.Create(),
                 terminalLexerFactory.Create(@"/", StringComparer.Ordinal),
                 terminalLexerFactory.Create(@"?", StringComparer.Ordinal));
-            var fragmentRepetitionLexer = repetitionLexerFactory.Create(alternativeLexer, 0, int.MaxValue);
+            var fragmentRepetitionLexer = repetitionLexerFactory.Create(alternationLexer, 0, int.MaxValue);
             return new FragmentLexer(fragmentRepetitionLexer);
         }
     }

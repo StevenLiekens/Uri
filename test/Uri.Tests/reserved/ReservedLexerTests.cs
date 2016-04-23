@@ -34,10 +34,10 @@ namespace Uri.reserved
         public void Read_ShouldSucceed(string input)
         {
             var terminalLexerFactory = new TerminalLexerFactory();
-            var alternativeLexerFactory = new AlternativeLexerFactory();
-            var subcomponentsDelimiterLexerFactory = new SubcomponentsDelimiterLexerFactory(terminalLexerFactory, alternativeLexerFactory);
-            var genericDelimiterLexerFactory = new GenericDelimiterLexerFactory(terminalLexerFactory, alternativeLexerFactory);
-            var factory = new ReservedLexerFactory(genericDelimiterLexerFactory, subcomponentsDelimiterLexerFactory, alternativeLexerFactory);
+            var alternationLexerFactory = new AlternationLexerFactory();
+            var subcomponentsDelimiterLexerFactory = new SubcomponentsDelimiterLexerFactory(terminalLexerFactory, alternationLexerFactory);
+            var genericDelimiterLexerFactory = new GenericDelimiterLexerFactory(terminalLexerFactory, alternationLexerFactory);
+            var factory = new ReservedLexerFactory(genericDelimiterLexerFactory, subcomponentsDelimiterLexerFactory, alternationLexerFactory);
             var lexer = factory.Create();
             using (var scanner = new TextScanner(new StringTextSource(input)))
             {

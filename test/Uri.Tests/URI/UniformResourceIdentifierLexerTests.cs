@@ -49,14 +49,14 @@ namespace Uri.URI
             var concatenationLexerFactory = new ConcatenationLexerFactory();
             var optionLexerFactory = new OptionLexerFactory();
             var terminalLexerFactory = new TerminalLexerFactory();
-            var alternativeLexerFactory = new AlternativeLexerFactory();
+            var alternationLexerFactory = new AlternationLexerFactory();
             var repetitionLexerFactory = new RepetitionLexerFactory();
             var valueRangeLexerFactory = new ValueRangeLexerFactory();
-            var alphaLexerFactory = new AlphaLexerFactory(valueRangeLexerFactory, alternativeLexerFactory);
+            var alphaLexerFactory = new AlphaLexerFactory(valueRangeLexerFactory, alternationLexerFactory);
             var digitLexerFactory = new DigitLexerFactory(valueRangeLexerFactory);
             var schemeLexerFactory = new SchemeLexerFactory(
                 concatenationLexerFactory,
-                alternativeLexerFactory,
+                alternationLexerFactory,
                 repetitionLexerFactory,
                 alphaLexerFactory,
                 digitLexerFactory,
@@ -65,21 +65,21 @@ namespace Uri.URI
                 alphaLexerFactory,
                 digitLexerFactory,
                 terminalLexerFactory,
-                alternativeLexerFactory);
+                alternationLexerFactory);
             var hexadecimalDigitLexerFactory = new HexadecimalDigitLexerFactory(
                 digitLexerFactory,
                 terminalLexerFactory,
-                alternativeLexerFactory);
+                alternationLexerFactory);
             var percentEncodingLexerFactory = new PercentEncodingLexerFactory(
                 terminalLexerFactory,
                 hexadecimalDigitLexerFactory,
                 concatenationLexerFactory);
             var subcomponentsDelimiterLexerFactory = new SubcomponentsDelimiterLexerFactory(
                 terminalLexerFactory,
-                alternativeLexerFactory);
+                alternationLexerFactory);
             var userInformationLexerFactory = new UserInformationLexerFactory(
                 repetitionLexerFactory,
-                alternativeLexerFactory,
+                alternationLexerFactory,
                 terminalLexerFactory,
                 unreservedLexerFactory,
                 percentEncodingLexerFactory,
@@ -90,7 +90,7 @@ namespace Uri.URI
             var decimalOctetLexerFactory = new DecimalOctetLexerFactory(
                 valueRangeLexerFactory,
                 terminalLexerFactory,
-                alternativeLexerFactory,
+                alternationLexerFactory,
                 repetitionLexerFactory,
                 digitLexerFactory,
                 concatenationLexerFactory);
@@ -99,13 +99,13 @@ namespace Uri.URI
                 terminalLexerFactory,
                 decimalOctetLexerFactory);
             var leastSignificantInt32LexerFactory = new LeastSignificantInt32LexerFactory(
-                alternativeLexerFactory,
+                alternationLexerFactory,
                 concatenationLexerFactory,
                 terminalLexerFactory,
                 hexadecimalInt16LexerFactory,
                 ipv4AddressLexerFactory);
             var ipv6AddressLexerFactory = new IPv6AddressLexerFactory(
-                alternativeLexerFactory,
+                alternationLexerFactory,
                 concatenationLexerFactory,
                 terminalLexerFactory,
                 repetitionLexerFactory,
@@ -116,13 +116,13 @@ namespace Uri.URI
                 terminalLexerFactory,
                 repetitionLexerFactory,
                 concatenationLexerFactory,
-                alternativeLexerFactory,
+                alternationLexerFactory,
                 hexadecimalDigitLexerFactory,
                 unreservedLexerFactory,
                 subcomponentsDelimiterLexerFactory);
             var ipLiteralLexerFactory = new IPLiteralLexerFactory(
                 concatenationLexerFactory,
-                alternativeLexerFactory,
+                alternationLexerFactory,
                 terminalLexerFactory,
                 ipv6AddressLexerFactory,
                 ipvFutureLexerFactory);
@@ -132,12 +132,12 @@ namespace Uri.URI
                 concatenationLexerFactory);
             var registeredNameLexerFactory = new RegisteredNameLexerFactory(
                 repetitionLexerFactory,
-                alternativeLexerFactory,
+                alternationLexerFactory,
                 unreservedLexerFactory,
                 encodingLexerFactory,
                 subcomponentsDelimiterLexerFactory);
             var hostLexerFactory = new HostLexerFactory(
-                alternativeLexerFactory,
+                alternationLexerFactory,
                 ipLiteralLexerFactory,
                 ipv4AddressLexerFactory,
                 registeredNameLexerFactory);
@@ -154,7 +154,7 @@ namespace Uri.URI
                 percentEncodingLexerFactory,
                 subcomponentsDelimiterLexerFactory,
                 terminalLexerFactory,
-                alternativeLexerFactory);
+                alternationLexerFactory);
             var segmentLexerFactory = new SegmentLexerFactory(pathCharacterLexerFactory, repetitionLexerFactory);
             var segmentNonZeroLengthLexerFactory = new SegmentNonZeroLengthLexerFactory(
                 pathCharacterLexerFactory,
@@ -179,7 +179,7 @@ namespace Uri.URI
                 segmentLexerFactory,
                 segmentNonZeroLengthLexerFactory);
             var hierarchicalPartLexerFactory = new HierarchicalPartLexerFactory(
-                alternativeLexerFactory,
+                alternationLexerFactory,
                 authorityLexerFactory,
                 pathAbsoluteLexerFactory,
                 pathAbsoluteOrEmptyLexerFactory,
@@ -188,12 +188,12 @@ namespace Uri.URI
                 concatenationLexerFactory,
                 terminalLexerFactory);
             var queryLexerFactory = new QueryLexerFactory(
-                alternativeLexerFactory,
+                alternationLexerFactory,
                 pathCharacterLexerFactory,
                 repetitionLexerFactory,
                 terminalLexerFactory);
             var fragmentLexerFactory = new FragmentLexerFactory(
-                alternativeLexerFactory,
+                alternationLexerFactory,
                 pathCharacterLexerFactory,
                 repetitionLexerFactory,
                 terminalLexerFactory);

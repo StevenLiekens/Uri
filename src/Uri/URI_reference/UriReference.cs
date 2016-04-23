@@ -5,10 +5,10 @@ using Uri.URI;
 
 namespace Uri.URI_reference
 {
-    public class UriReference : Alternative
+    public class UriReference : Alternation
     {
-        public UriReference(Alternative alternative)
-            : base(alternative)
+        public UriReference(Alternation alternation)
+            : base(alternation)
         {
         }
 

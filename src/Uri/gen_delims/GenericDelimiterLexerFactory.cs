@@ -6,24 +6,24 @@ namespace Uri.gen_delims
 {
     public class GenericDelimiterLexerFactory : ILexerFactory<GenericDelimiter>
     {
-        private readonly IAlternativeLexerFactory alternativeLexerFactory;
+        private readonly IAlternationLexerFactory alternationLexerFactory;
 
         private readonly ITerminalLexerFactory terminalLexerFactory;
 
-        public GenericDelimiterLexerFactory(ITerminalLexerFactory terminalLexerFactory, IAlternativeLexerFactory alternativeLexerFactory)
+        public GenericDelimiterLexerFactory(ITerminalLexerFactory terminalLexerFactory, IAlternationLexerFactory alternationLexerFactory)
         {
             if (terminalLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(terminalLexerFactory));
             }
 
-            if (alternativeLexerFactory == null)
+            if (alternationLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(alternativeLexerFactory));
+                throw new ArgumentNullException(nameof(alternationLexerFactory));
             }
 
             this.terminalLexerFactory = terminalLexerFactory;
-            this.alternativeLexerFactory = alternativeLexerFactory;
+            this.alternationLexerFactory = alternationLexerFactory;
         }
 
         public ILexer<GenericDelimiter> Create()
@@ -40,7 +40,7 @@ namespace Uri.gen_delims
                 };
 
             // ":" / "/" / "?" / "#" / "[" / "]" / "@"
-            var b = alternativeLexerFactory.Create(a);
+            var b = alternationLexerFactory.Create(a);
 
             // gen-delims
             return new GenericDelimiterLexer(b);

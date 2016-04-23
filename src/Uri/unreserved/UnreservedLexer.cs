@@ -6,9 +6,9 @@ namespace Uri.unreserved
 {
     public sealed class UnreservedLexer : Lexer<Unreserved>
     {
-        private readonly ILexer<Alternative> innerLexer;
+        private readonly ILexer<Alternation> innerLexer;
 
-        public UnreservedLexer(ILexer<Alternative> innerLexer)
+        public UnreservedLexer(ILexer<Alternation> innerLexer)
         {
             if (innerLexer == null)
             {

@@ -9,7 +9,7 @@ namespace Uri.reg_name
 {
     public class RegisteredNameLexerFactory : ILexerFactory<RegisteredName>
     {
-        private readonly IAlternativeLexerFactory alternativeLexerFactory;
+        private readonly IAlternationLexerFactory alternationLexerFactory;
 
         private readonly ILexerFactory<PercentEncoding> percentEncodingLexerFactory;
 
@@ -21,7 +21,7 @@ namespace Uri.reg_name
 
         public RegisteredNameLexerFactory(
             IRepetitionLexerFactory repetitionLexerFactory,
-            IAlternativeLexerFactory alternativeLexerFactory,
+            IAlternationLexerFactory alternationLexerFactory,
             ILexerFactory<Unreserved> unreservedLexerFactory,
             ILexerFactory<PercentEncoding> percentEncodingLexerFactory,
             ILexerFactory<SubcomponentsDelimiter> subcomponentsDelimiterLexerFactory)
@@ -31,9 +31,9 @@ namespace Uri.reg_name
                 throw new ArgumentNullException(nameof(repetitionLexerFactory));
             }
 
-            if (alternativeLexerFactory == null)
+            if (alternationLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(alternativeLexerFactory));
+                throw new ArgumentNullException(nameof(alternationLexerFactory));
             }
 
             if (unreservedLexerFactory == null)
@@ -52,7 +52,7 @@ namespace Uri.reg_name
             }
 
             this.repetitionLexerFactory = repetitionLexerFactory;
-            this.alternativeLexerFactory = alternativeLexerFactory;
+            this.alternationLexerFactory = alternationLexerFactory;
             this.unreservedLexerFactory = unreservedLexerFactory;
             this.percentEncodingLexerFactory = percentEncodingLexerFactory;
             this.subcomponentsDelimiterLexerFactory = subcomponentsDelimiterLexerFactory;
@@ -66,7 +66,7 @@ namespace Uri.reg_name
                     subcomponentsDelimiterLexerFactory.Create()
                 };
 
-            var b = alternativeLexerFactory.Create(a);
+            var b = alternationLexerFactory.Create(a);
 
             var c = repetitionLexerFactory.Create(b, 0, int.MaxValue);
 

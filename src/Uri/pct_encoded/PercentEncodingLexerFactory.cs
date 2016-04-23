@@ -38,11 +38,11 @@ namespace Uri.pct_encoded
         public ILexer<PercentEncoding> Create()
         {
             var hexadecimalDigitLexer = hexadecimalDigitLexerFactory.Create();
-            var percentEncodingAlternativeLexer = concatenationLexerFactory.Create(
+            var percentEncodingAlternationLexer = concatenationLexerFactory.Create(
                 terminalLexerFactory.Create(@"%", StringComparer.Ordinal),
                 hexadecimalDigitLexer,
                 hexadecimalDigitLexer);
-            return new PercentEncodingLexer(percentEncodingAlternativeLexer);
+            return new PercentEncodingLexer(percentEncodingAlternationLexer);
         }
     }
 }

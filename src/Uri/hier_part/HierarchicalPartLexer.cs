@@ -6,9 +6,9 @@ namespace Uri.hier_part
 {
     public sealed class HierarchicalPartLexer : Lexer<HierarchicalPart>
     {
-        private readonly ILexer<Alternative> innerLexer;
+        private readonly ILexer<Alternation> innerLexer;
 
-        public HierarchicalPartLexer(ILexer<Alternative> innerLexer)
+        public HierarchicalPartLexer(ILexer<Alternation> innerLexer)
         {
             if (innerLexer == null)
             {

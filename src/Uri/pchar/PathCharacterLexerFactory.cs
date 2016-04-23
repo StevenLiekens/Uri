@@ -17,9 +17,9 @@ namespace Uri.pchar
 
         private readonly ITerminalLexerFactory terminalLexerFactory;
 
-        private readonly IAlternativeLexerFactory alternativeLexerFactory;
+        private readonly IAlternationLexerFactory alternationLexerFactory;
 
-        public PathCharacterLexerFactory(ILexerFactory<Unreserved> unreservedLexerFactory, ILexerFactory<PercentEncoding> percentEncodingLexerFactory, ILexerFactory<SubcomponentsDelimiter> subcomponentsDelimiterLexerFactory, ITerminalLexerFactory terminalLexerFactory, IAlternativeLexerFactory alternativeLexerFactory)
+        public PathCharacterLexerFactory(ILexerFactory<Unreserved> unreservedLexerFactory, ILexerFactory<PercentEncoding> percentEncodingLexerFactory, ILexerFactory<SubcomponentsDelimiter> subcomponentsDelimiterLexerFactory, ITerminalLexerFactory terminalLexerFactory, IAlternationLexerFactory alternationLexerFactory)
         {
             if (unreservedLexerFactory == null)
             {
@@ -41,27 +41,27 @@ namespace Uri.pchar
                 throw new ArgumentNullException(nameof(terminalLexerFactory));
             }
 
-            if (alternativeLexerFactory == null)
+            if (alternationLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(alternativeLexerFactory));
+                throw new ArgumentNullException(nameof(alternationLexerFactory));
             }
 
             this.unreservedLexerFactory = unreservedLexerFactory;
             this.percentEncodingLexerFactory = percentEncodingLexerFactory;
             this.subcomponentsDelimiterLexerFactory = subcomponentsDelimiterLexerFactory;
             this.terminalLexerFactory = terminalLexerFactory;
-            this.alternativeLexerFactory = alternativeLexerFactory;
+            this.alternationLexerFactory = alternationLexerFactory;
         }
 
         public ILexer<PathCharacter> Create()
         {
-            var pathCharacterAlternativeLexer = alternativeLexerFactory.Create(
+            var pathCharacterAlternationLexer = alternationLexerFactory.Create(
                 unreservedLexerFactory.Create(),
                 percentEncodingLexerFactory.Create(),
                 subcomponentsDelimiterLexerFactory.Create(),
                 terminalLexerFactory.Create(@":", StringComparer.Ordinal),
                 terminalLexerFactory.Create(@"@", StringComparer.Ordinal));
-            return new PathCharacterLexer(pathCharacterAlternativeLexer);
+            return new PathCharacterLexer(pathCharacterAlternationLexer);
         }
     }
 }

@@ -6,27 +6,27 @@ namespace Uri.sub_delims
 {
     public class SubcomponentsDelimiterLexerFactory : ILexerFactory<SubcomponentsDelimiter>
     {
-        private readonly IAlternativeLexerFactory alternativeLexerFactory;
+        private readonly IAlternationLexerFactory alternationLexerFactory;
 
         private readonly ITerminalLexerFactory terminalLexerFactory;
 
         public SubcomponentsDelimiterLexerFactory(
             ITerminalLexerFactory terminalLexerFactory,
-            IAlternativeLexerFactory alternativeLexerFactory)
+            IAlternationLexerFactory alternationLexerFactory)
         {
             if (terminalLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(terminalLexerFactory));
             }
 
-            if (alternativeLexerFactory == null)
+            if (alternationLexerFactory == null)
             {
                 throw new ArgumentNullException(
-                    nameof(alternativeLexerFactory));
+                    nameof(alternationLexerFactory));
             }
 
             this.terminalLexerFactory = terminalLexerFactory;
-            this.alternativeLexerFactory = alternativeLexerFactory;
+            this.alternationLexerFactory = alternationLexerFactory;
         }
 
         public ILexer<SubcomponentsDelimiter> Create()
@@ -47,7 +47,7 @@ namespace Uri.sub_delims
                 };
 
             // "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
-            var b = alternativeLexerFactory.Create(a);
+            var b = alternationLexerFactory.Create(a);
 
             // sub-delims
             return new SubcomponentsDelimiterLexer(b);

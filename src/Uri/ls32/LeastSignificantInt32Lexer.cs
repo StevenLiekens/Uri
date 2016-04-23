@@ -6,9 +6,9 @@ namespace Uri.ls32
 {
     public sealed class LeastSignificantInt32Lexer : Lexer<LeastSignificantInt32>
     {
-        private readonly ILexer<Alternative> innerLexer;
+        private readonly ILexer<Alternation> innerLexer;
 
-        public LeastSignificantInt32Lexer(ILexer<Alternative> innerLexer)
+        public LeastSignificantInt32Lexer(ILexer<Alternation> innerLexer)
         {
             if (innerLexer == null)
             {

@@ -2,9 +2,9 @@
 
 namespace Uri.sub_delims
 {
-    public class SubcomponentsDelimiter : Alternative
+    public class SubcomponentsDelimiter : Alternation
     {
-        public SubcomponentsDelimiter(Alternative element)
+        public SubcomponentsDelimiter(Alternation element)
             : base(element)
         {
         }

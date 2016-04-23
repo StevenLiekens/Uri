@@ -17,7 +17,7 @@
       }
     }
   },
-  "dependencies": {
-    "Txt.ABNF": "2.0.0-CI00174"
-  }
+    "dependencies": {
+        "Txt.ABNF": "2.0.0-CI00190"
+    }
 }

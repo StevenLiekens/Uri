@@ -6,9 +6,9 @@ namespace Uri.dec_octet
 {
     public sealed class DecimalOctetLexer : Lexer<DecimalOctet>
     {
-        private readonly ILexer<Alternative> innerLexer;
+        private readonly ILexer<Alternation> innerLexer;
 
-        public DecimalOctetLexer(ILexer<Alternative> innerLexer)
+        public DecimalOctetLexer(ILexer<Alternation> innerLexer)
         {
             if (innerLexer == null)
             {

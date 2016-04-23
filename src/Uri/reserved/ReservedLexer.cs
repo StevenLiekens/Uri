@@ -6,9 +6,9 @@ namespace Uri.reserved
 {
     public sealed class ReservedLexer : Lexer<Reserved>
     {
-        private readonly ILexer<Alternative> innerLexer;
+        private readonly ILexer<Alternation> innerLexer;
 
-        public ReservedLexer(ILexer<Alternative> innerLexer)
+        public ReservedLexer(ILexer<Alternation> innerLexer)
         {
             if (innerLexer == null)
             {

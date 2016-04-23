@@ -11,7 +11,7 @@ namespace Uri.path
 {
     public class PathLexerFactory : ILexerFactory<Path>
     {
-        private readonly IAlternativeLexerFactory alternativeLexerFactory;
+        private readonly IAlternationLexerFactory alternationLexerFactory;
 
         private readonly ILexerFactory<PathAbsolute> pathAbsoluteLexerFactory;
 
@@ -24,16 +24,16 @@ namespace Uri.path
         private readonly ILexerFactory<PathRootless> pathRootlessLexerFactory;
 
         public PathLexerFactory(
-            IAlternativeLexerFactory alternativeLexerFactory,
+            IAlternationLexerFactory alternationLexerFactory,
             ILexerFactory<PathAbsoluteOrEmpty> pathAbsoluteOrEmptyLexerFactory,
             ILexerFactory<PathAbsolute> pathAbsoluteLexerFactory,
             ILexerFactory<PathNoScheme> pathNoSchemeLexerFactory,
             ILexerFactory<PathRootless> pathRootlessLexerFactory,
             ILexerFactory<PathEmpty> pathEmptyLexerFactory)
         {
-            if (alternativeLexerFactory == null)
+            if (alternationLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(alternativeLexerFactory));
+                throw new ArgumentNullException(nameof(alternationLexerFactory));
             }
 
             if (pathAbsoluteOrEmptyLexerFactory == null)
@@ -61,7 +61,7 @@ namespace Uri.path
                 throw new ArgumentNullException(nameof(pathEmptyLexerFactory));
             }
 
-            this.alternativeLexerFactory = alternativeLexerFactory;
+            this.alternationLexerFactory = alternationLexerFactory;
             this.pathAbsoluteOrEmptyLexerFactory = pathAbsoluteOrEmptyLexerFactory;
             this.pathAbsoluteLexerFactory = pathAbsoluteLexerFactory;
             this.pathNoSchemeLexerFactory = pathNoSchemeLexerFactory;
@@ -78,7 +78,7 @@ namespace Uri.path
                     pathEmptyLexerFactory.Create()
                 };
 
-            var b = alternativeLexerFactory.Create(a);
+            var b = alternationLexerFactory.Create(a);
             return new PathLexer(b);
         }
     }

@@ -21,18 +21,18 @@ namespace Uri.fragment
         public void Read_ShouldSucceed(string input)
         {
             var terminalLexerFactory = new TerminalLexerFactory();
-            var alternativeLexerFactory = new AlternativeLexerFactory();
+            var alternationLexerFactory = new AlternationLexerFactory();
             var subcomponentsDelimiterLexerFactory = new SubcomponentsDelimiterLexerFactory(
                 terminalLexerFactory,
-                alternativeLexerFactory);
+                alternationLexerFactory);
             var valueRangeLexerFactory = new ValueRangeLexerFactory();
             var concatenationLexerFactory = new ConcatenationLexerFactory();
             var digitLexerFactory = new DigitLexerFactory(valueRangeLexerFactory);
             var hexadecimalDigitLexerFactory = new HexadecimalDigitLexerFactory(
                 digitLexerFactory,
                 terminalLexerFactory,
-                alternativeLexerFactory);
-            var alphaLexerFactory = new AlphaLexerFactory(valueRangeLexerFactory, alternativeLexerFactory);
+                alternationLexerFactory);
+            var alphaLexerFactory = new AlphaLexerFactory(valueRangeLexerFactory, alternationLexerFactory);
             var percentEncodingLexerFactory = new PercentEncodingLexerFactory(
                 terminalLexerFactory,
                 hexadecimalDigitLexerFactory,
@@ -41,16 +41,16 @@ namespace Uri.fragment
                 alphaLexerFactory,
                 digitLexerFactory,
                 terminalLexerFactory,
-                alternativeLexerFactory);
+                alternationLexerFactory);
             var pathCharacterLexerFactory = new PathCharacterLexerFactory(
                 unreservedLexerFactory,
                 percentEncodingLexerFactory,
                 subcomponentsDelimiterLexerFactory,
                 terminalLexerFactory,
-                alternativeLexerFactory);
+                alternationLexerFactory);
             var repetitionLexerFactory = new RepetitionLexerFactory();
             var factory = new FragmentLexerFactory(
-                alternativeLexerFactory,
+                alternationLexerFactory,
                 pathCharacterLexerFactory,
                 repetitionLexerFactory,
                 terminalLexerFactory);

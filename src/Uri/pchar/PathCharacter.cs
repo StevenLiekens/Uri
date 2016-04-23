@@ -2,9 +2,9 @@
 
 namespace Uri.pchar
 {
-    public class PathCharacter : Alternative
+    public class PathCharacter : Alternation
     {
-        public PathCharacter(Alternative element)
+        public PathCharacter(Alternation element)
             : base(element)
         {
         }

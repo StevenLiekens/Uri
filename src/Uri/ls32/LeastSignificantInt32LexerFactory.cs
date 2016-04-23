@@ -8,7 +8,7 @@ namespace Uri.ls32
 {
     public class LeastSignificantInt32LexerFactory : ILexerFactory<LeastSignificantInt32>
     {
-        private readonly IAlternativeLexerFactory alternativeLexerFactory;
+        private readonly IAlternationLexerFactory alternationLexerFactory;
 
         private readonly ILexerFactory<HexadecimalInt16> hexadecimalInt16LexerFactory;
 
@@ -19,15 +19,15 @@ namespace Uri.ls32
         private readonly ITerminalLexerFactory terminalLexerFactory;
 
         public LeastSignificantInt32LexerFactory(
-            IAlternativeLexerFactory alternativeLexerFactory,
+            IAlternationLexerFactory alternationLexerFactory,
             IConcatenationLexerFactory concatenationLexerFactory,
             ITerminalLexerFactory terminalLexerFactory,
             ILexerFactory<HexadecimalInt16> hexadecimalInt16LexerFactory,
             ILexerFactory<IPv4Address> ipv4AddressLexerFactory)
         {
-            if (alternativeLexerFactory == null)
+            if (alternationLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(alternativeLexerFactory));
+                throw new ArgumentNullException(nameof(alternationLexerFactory));
             }
 
             if (concatenationLexerFactory == null)
@@ -50,7 +50,7 @@ namespace Uri.ls32
                 throw new ArgumentNullException(nameof(ipv4AddressLexerFactory));
             }
 
-            this.alternativeLexerFactory = alternativeLexerFactory;
+            this.alternationLexerFactory = alternationLexerFactory;
             this.concatenationLexerFactory = concatenationLexerFactory;
             this.terminalLexerFactory = terminalLexerFactory;
             this.hexadecimalInt16LexerFactory = hexadecimalInt16LexerFactory;
@@ -72,7 +72,7 @@ namespace Uri.ls32
             var d = ipv4AddressLexerFactory.Create();
 
             // ( h16 ":" h16 ) / IPv4address
-            var e = alternativeLexerFactory.Create(c, d);
+            var e = alternationLexerFactory.Create(c, d);
 
             // ls32
             return new LeastSignificantInt32Lexer(e);

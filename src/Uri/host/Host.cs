@@ -2,10 +2,10 @@
 
 namespace Uri.host
 {
-    public class Host : Alternative
+    public class Host : Alternation
     {
-        public Host(Alternative alternative)
-            : base(alternative)
+        public Host(Alternation alternation)
+            : base(alternation)
         {
         }
     }

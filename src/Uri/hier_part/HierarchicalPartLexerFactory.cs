@@ -11,7 +11,7 @@ namespace Uri.hier_part
 {
     public class HierarchicalPartLexerFactory : ILexerFactory<HierarchicalPart>
     {
-        private readonly IAlternativeLexerFactory alternativeLexerFactory;
+        private readonly IAlternationLexerFactory alternationLexerFactory;
 
         private readonly ILexerFactory<Authority> authorityLexerFactory;
 
@@ -28,7 +28,7 @@ namespace Uri.hier_part
         private readonly ITerminalLexerFactory terminalLexerFactory;
 
         public HierarchicalPartLexerFactory(
-            IAlternativeLexerFactory alternativeLexerFactory,
+            IAlternationLexerFactory alternationLexerFactory,
             ILexerFactory<Authority> authorityLexerFactory,
             ILexerFactory<PathAbsolute> pathAbsoluteLexerFactory,
             ILexerFactory<PathAbsoluteOrEmpty> pathAbsoluteOrEmptyLexerFactory,
@@ -37,9 +37,9 @@ namespace Uri.hier_part
             IConcatenationLexerFactory concatenationLexerFactory,
             ITerminalLexerFactory terminalLexerFactory)
         {
-            if (alternativeLexerFactory == null)
+            if (alternationLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(alternativeLexerFactory));
+                throw new ArgumentNullException(nameof(alternationLexerFactory));
             }
 
             if (authorityLexerFactory == null)
@@ -77,7 +77,7 @@ namespace Uri.hier_part
                 throw new ArgumentNullException(nameof(terminalLexerFactory));
             }
 
-            this.alternativeLexerFactory = alternativeLexerFactory;
+            this.alternationLexerFactory = alternationLexerFactory;
             this.authorityLexerFactory = authorityLexerFactory;
             this.pathAbsoluteLexerFactory = pathAbsoluteLexerFactory;
             this.pathAbsoluteOrEmptyLexerFactory = pathAbsoluteOrEmptyLexerFactory;
@@ -96,7 +96,7 @@ namespace Uri.hier_part
             var pathAbsolute = pathAbsoluteLexerFactory.Create();
             var pathRootless = pathRootlessLexerFactory.Create();
             var pathEmpty = pathEmptyLexerFactory.Create();
-            var innerLexer = alternativeLexerFactory.Create(seq, pathAbsolute, pathRootless, pathEmpty);
+            var innerLexer = alternationLexerFactory.Create(seq, pathAbsolute, pathRootless, pathEmpty);
             return new HierarchicalPartLexer(innerLexer);
 
         }

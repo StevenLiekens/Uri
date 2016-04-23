@@ -7,10 +7,10 @@ using Uri.path_noscheme;
 
 namespace Uri.relative_part
 {
-    public class RelativePart : Alternative
+    public class RelativePart : Alternation
     {
-        public RelativePart(Alternative alternative)
-            : base(alternative)
+        public RelativePart(Alternation alternation)
+            : base(alternation)
         {
         }
 

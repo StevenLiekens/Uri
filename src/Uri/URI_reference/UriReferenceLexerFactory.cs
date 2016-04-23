@@ -8,20 +8,20 @@ namespace Uri.URI_reference
 {
     public class UriReferenceLexerFactory : ILexerFactory<UriReference>
     {
-        private readonly IAlternativeLexerFactory alternativeLexerFactory;
+        private readonly IAlternationLexerFactory alternationLexerFactory;
 
         private readonly ILexerFactory<RelativeReference> relativeReferenceLexerFactory;
 
         private readonly ILexerFactory<UniformResourceIdentifier> uriLexerFactory;
 
         public UriReferenceLexerFactory(
-            IAlternativeLexerFactory alternativeLexerFactory,
+            IAlternationLexerFactory alternationLexerFactory,
             ILexerFactory<UniformResourceIdentifier> uriLexerFactory,
             ILexerFactory<RelativeReference> relativeReferenceLexerFactory)
         {
-            if (alternativeLexerFactory == null)
+            if (alternationLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(alternativeLexerFactory));
+                throw new ArgumentNullException(nameof(alternationLexerFactory));
             }
 
             if (uriLexerFactory == null)
@@ -34,7 +34,7 @@ namespace Uri.URI_reference
                 throw new ArgumentNullException(nameof(relativeReferenceLexerFactory));
             }
 
-            this.alternativeLexerFactory = alternativeLexerFactory;
+            this.alternationLexerFactory = alternationLexerFactory;
             this.uriLexerFactory = uriLexerFactory;
             this.relativeReferenceLexerFactory = relativeReferenceLexerFactory;
         }
@@ -43,7 +43,7 @@ namespace Uri.URI_reference
         {
             var uri = uriLexerFactory.Create();
             var relativeRef = relativeReferenceLexerFactory.Create();
-            var innerLexer = alternativeLexerFactory.Create(uri, relativeRef);
+            var innerLexer = alternationLexerFactory.Create(uri, relativeRef);
             return new UriReferenceLexer(innerLexer);
         }
     }

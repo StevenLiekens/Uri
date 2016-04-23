@@ -2,10 +2,10 @@
 
 namespace Uri.dec_octet
 {
-    public class DecimalOctet : Alternative
+    public class DecimalOctet : Alternation
     {
-        public DecimalOctet(Alternative alternative)
-            : base(alternative)
+        public DecimalOctet(Alternation alternation)
+            : base(alternation)
         {
         }
 

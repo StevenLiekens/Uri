@@ -6,9 +6,9 @@ namespace Uri.pchar
 {
     public sealed class PathCharacterLexer : Lexer<PathCharacter>
     {
-        private readonly ILexer<Alternative> innerLexer;
+        private readonly ILexer<Alternation> innerLexer;
 
-        public PathCharacterLexer(ILexer<Alternative> innerLexer)
+        public PathCharacterLexer(ILexer<Alternation> innerLexer)
         {
             if (innerLexer == null)
             {

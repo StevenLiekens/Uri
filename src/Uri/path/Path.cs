@@ -2,10 +2,10 @@
 
 namespace Uri.path
 {
-    public class Path : Alternative
+    public class Path : Alternation
     {
-        public Path(Alternative alternative)
-            : base(alternative)
+        public Path(Alternation alternation)
+            : base(alternation)
         {
         }
     }

@@ -6,9 +6,9 @@ namespace Uri.sub_delims
 {
     public sealed class SubcomponentsDelimiterLexer : Lexer<SubcomponentsDelimiter>
     {
-        private readonly ILexer<Alternative> innerLexer;
+        private readonly ILexer<Alternation> innerLexer;
 
-        public SubcomponentsDelimiterLexer(ILexer<Alternative> innerLexer)
+        public SubcomponentsDelimiterLexer(ILexer<Alternation> innerLexer)
         {
             if (innerLexer == null)
             {

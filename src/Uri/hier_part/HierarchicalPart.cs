@@ -7,10 +7,10 @@ using Uri.path_rootless;
 
 namespace Uri.hier_part
 {
-    public class HierarchicalPart : Alternative
+    public class HierarchicalPart : Alternation
     {
-        public HierarchicalPart(Alternative alternative)
-            : base(alternative)
+        public HierarchicalPart(Alternation alternation)
+            : base(alternation)
         {
         }
 

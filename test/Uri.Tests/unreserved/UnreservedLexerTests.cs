@@ -22,11 +22,11 @@ namespace Uri.unreserved
         public void Read_ShouldSucceed(string input)
         {
             var terminalLexerFactory = new TerminalLexerFactory();
-            var alternativeLexerFactory = new AlternativeLexerFactory();
+            var alternationLexerFactory = new AlternationLexerFactory();
             var valueRangeLexerFactory = new ValueRangeLexerFactory();
-            var alphaLexerFactory = new AlphaLexerFactory(valueRangeLexerFactory, alternativeLexerFactory);
+            var alphaLexerFactory = new AlphaLexerFactory(valueRangeLexerFactory, alternationLexerFactory);
             var digitLexerFactory = new DigitLexerFactory(valueRangeLexerFactory);
-            var factory = new UnreservedLexerFactory(alphaLexerFactory, digitLexerFactory, terminalLexerFactory, alternativeLexerFactory);
+            var factory = new UnreservedLexerFactory(alphaLexerFactory, digitLexerFactory, terminalLexerFactory, alternationLexerFactory);
             var lexer = factory.Create();
             using (var scanner = new TextScanner(new StringTextSource(input)))
             {

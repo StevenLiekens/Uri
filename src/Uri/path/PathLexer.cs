@@ -6,9 +6,9 @@ namespace Uri.path
 {
     public sealed class PathLexer : Lexer<Path>
     {
-        private readonly ILexer<Alternative> innerLexer;
+        private readonly ILexer<Alternation> innerLexer;
 
-        public PathLexer(ILexer<Alternative> innerLexer)
+        public PathLexer(ILexer<Alternation> innerLexer)
         {
             if (innerLexer == null)
             {

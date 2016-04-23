@@ -5,10 +5,10 @@ using Uri.IPv4address;
 
 namespace Uri.ls32
 {
-    public class LeastSignificantInt32 : Alternative
+    public class LeastSignificantInt32 : Alternation
     {
-        public LeastSignificantInt32(Alternative alternative)
-            : base(alternative)
+        public LeastSignificantInt32(Alternation alternation)
+            : base(alternation)
         {
         }
 

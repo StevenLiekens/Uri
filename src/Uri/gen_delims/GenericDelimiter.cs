@@ -2,9 +2,9 @@
 
 namespace Uri.gen_delims
 {
-    public class GenericDelimiter : Alternative
+    public class GenericDelimiter : Alternation
     {
-        public GenericDelimiter(Alternative element)
+        public GenericDelimiter(Alternation element)
             : base(element)
         {
         }

@@ -9,7 +9,7 @@ namespace Uri.userinfo
 {
     public class UserInformationLexerFactory : ILexerFactory<UserInformation>
     {
-        private readonly IAlternativeLexerFactory alternativeLexerFactory;
+        private readonly IAlternationLexerFactory alternationLexerFactory;
 
         private readonly ILexerFactory<PercentEncoding> percentEncodingLexerFactory;
 
@@ -23,7 +23,7 @@ namespace Uri.userinfo
 
         public UserInformationLexerFactory(
             IRepetitionLexerFactory repetitionLexerFactory,
-            IAlternativeLexerFactory alternativeLexerFactory,
+            IAlternationLexerFactory alternationLexerFactory,
             ITerminalLexerFactory terminalLexerFactory,
             ILexerFactory<Unreserved> unreservedLexerFactory,
             ILexerFactory<PercentEncoding> percentEncodingLexerFactory,
@@ -34,9 +34,9 @@ namespace Uri.userinfo
                 throw new ArgumentNullException(nameof(repetitionLexerFactory));
             }
 
-            if (alternativeLexerFactory == null)
+            if (alternationLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(alternativeLexerFactory));
+                throw new ArgumentNullException(nameof(alternationLexerFactory));
             }
 
             if (terminalLexerFactory == null)
@@ -60,7 +60,7 @@ namespace Uri.userinfo
             }
 
             this.repetitionLexerFactory = repetitionLexerFactory;
-            this.alternativeLexerFactory = alternativeLexerFactory;
+            this.alternationLexerFactory = alternationLexerFactory;
             this.terminalLexerFactory = terminalLexerFactory;
             this.unreservedLexerFactory = unreservedLexerFactory;
             this.percentEncodingLexerFactory = percentEncodingLexerFactory;
@@ -73,7 +73,7 @@ namespace Uri.userinfo
             var pctEncoding = percentEncodingLexerFactory.Create();
             var subDelims = subcomponentsDelimiterLexerFactory.Create();
             var colon = terminalLexerFactory.Create(@":", StringComparer.Ordinal);
-            var alt = alternativeLexerFactory.Create(unreserved, pctEncoding, subDelims, colon);
+            var alt = alternationLexerFactory.Create(unreserved, pctEncoding, subDelims, colon);
             var innerLexer = repetitionLexerFactory.Create(alt, 0, int.MaxValue);
             return new UserInformationLexer(innerLexer);
         }

@@ -6,9 +6,9 @@ namespace Uri.IPv6address
 {
     public sealed class IPv6AddressLexer : Lexer<IPv6Address>
     {
-        private readonly ILexer<Alternative> innerLexer;
+        private readonly ILexer<Alternation> innerLexer;
 
-        public IPv6AddressLexer(ILexer<Alternative> innerLexer)
+        public IPv6AddressLexer(ILexer<Alternation> innerLexer)
         {
             if (innerLexer == null)
             {

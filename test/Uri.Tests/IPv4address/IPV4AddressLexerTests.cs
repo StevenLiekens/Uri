@@ -29,13 +29,13 @@ namespace Uri.IPv4address
             var terminalLexerFactory = new TerminalLexerFactory();
             var concatenationLexerFactory = new ConcatenationLexerFactory();
             var valueRangeLexerFactory = new ValueRangeLexerFactory();
-            var alternativeLexerFactory = new AlternativeLexerFactory();
+            var alternationLexerFactory = new AlternationLexerFactory();
             var repetitionLexerFactory = new RepetitionLexerFactory();
             var digitLexerFactory = new DigitLexerFactory(valueRangeLexerFactory);
             var decimalOctetLexerFactory = new DecimalOctetLexerFactory(
                 valueRangeLexerFactory,
                 terminalLexerFactory,
-                alternativeLexerFactory,
+                alternationLexerFactory,
                 repetitionLexerFactory,
                 digitLexerFactory,
                 concatenationLexerFactory);

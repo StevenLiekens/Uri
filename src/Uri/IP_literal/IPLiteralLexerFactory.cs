@@ -7,7 +7,7 @@ namespace Uri.IP_literal
 {
     public class IPLiteralLexerFactory : ILexerFactory<IPLiteral>
     {
-        private readonly IAlternativeLexerFactory alternativeLexerFactory;
+        private readonly IAlternationLexerFactory alternationLexerFactory;
 
         private readonly ILexerFactory<IPv6Address> ipv6AddressLexerFactory;
 
@@ -19,7 +19,7 @@ namespace Uri.IP_literal
 
         public IPLiteralLexerFactory(
             IConcatenationLexerFactory concatenationLexerFactory,
-            IAlternativeLexerFactory alternativeLexerFactory,
+            IAlternationLexerFactory alternationLexerFactory,
             ITerminalLexerFactory terminalLexerFactory,
             ILexerFactory<IPv6Address> ipv6AddressLexerFactory,
             ILexerFactory<IPvFuture.IPvFuture> ipvFutureLexerFactory)
@@ -29,9 +29,9 @@ namespace Uri.IP_literal
                 throw new ArgumentNullException(nameof(concatenationLexerFactory));
             }
 
-            if (alternativeLexerFactory == null)
+            if (alternationLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(alternativeLexerFactory));
+                throw new ArgumentNullException(nameof(alternationLexerFactory));
             }
 
             if (terminalLexerFactory == null)
@@ -50,7 +50,7 @@ namespace Uri.IP_literal
             }
 
             this.concatenationLexerFactory = concatenationLexerFactory;
-            this.alternativeLexerFactory = alternativeLexerFactory;
+            this.alternationLexerFactory = alternationLexerFactory;
             this.terminalLexerFactory = terminalLexerFactory;
             this.ipv6AddressLexerFactory = ipv6AddressLexerFactory;
             this.ipvFutureLexerFactory = ipvFutureLexerFactory;
@@ -62,7 +62,7 @@ namespace Uri.IP_literal
             var b = terminalLexerFactory.Create(@"]", StringComparer.Ordinal);
             var ipv6 = ipv6AddressLexerFactory.Create();
             var ipvFuture = ipvFutureLexerFactory.Create();
-            var alt = alternativeLexerFactory.Create(ipv6, ipvFuture);
+            var alt = alternationLexerFactory.Create(ipv6, ipvFuture);
             var innerLexer = concatenationLexerFactory.Create(a, alt, b);
             return new IPLiteralLexer(innerLexer);
         }

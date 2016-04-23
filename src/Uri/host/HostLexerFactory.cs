@@ -9,7 +9,7 @@ namespace Uri.host
 {
     public class HostLexerFactory : ILexerFactory<Host>
     {
-        private readonly IAlternativeLexerFactory alternativeLexerFactory;
+        private readonly IAlternationLexerFactory alternationLexerFactory;
 
         private readonly ILexerFactory<IPLiteral> ipLiteralLexerFactory;
 
@@ -18,14 +18,14 @@ namespace Uri.host
         private readonly ILexerFactory<RegisteredName> registeredNameLexerFactory;
 
         public HostLexerFactory(
-            IAlternativeLexerFactory alternativeLexerFactory,
+            IAlternationLexerFactory alternationLexerFactory,
             ILexerFactory<IPLiteral> ipLiteralLexerFactory,
             ILexerFactory<IPv4Address> ipv4AddressLexerFactory,
             ILexerFactory<RegisteredName> registeredNameLexerFactory)
         {
-            if (alternativeLexerFactory == null)
+            if (alternationLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(alternativeLexerFactory));
+                throw new ArgumentNullException(nameof(alternationLexerFactory));
             }
 
             if (ipLiteralLexerFactory == null)
@@ -43,7 +43,7 @@ namespace Uri.host
                 throw new ArgumentNullException(nameof(registeredNameLexerFactory));
             }
 
-            this.alternativeLexerFactory = alternativeLexerFactory;
+            this.alternationLexerFactory = alternationLexerFactory;
             this.ipLiteralLexerFactory = ipLiteralLexerFactory;
             this.ipv4AddressLexerFactory = ipv4AddressLexerFactory;
             this.registeredNameLexerFactory = registeredNameLexerFactory;
@@ -54,7 +54,7 @@ namespace Uri.host
             var ipliteral = ipLiteralLexerFactory.Create();
             var ipv4 = ipv4AddressLexerFactory.Create();
             var regName = registeredNameLexerFactory.Create();
-            var innerLexer = alternativeLexerFactory.Create(ipliteral, ipv4, regName);
+            var innerLexer = alternationLexerFactory.Create(ipliteral, ipv4, regName);
             return new HostLexer(innerLexer);
         }
     }

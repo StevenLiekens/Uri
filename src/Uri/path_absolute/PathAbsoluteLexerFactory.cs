@@ -10,7 +10,7 @@ namespace Uri.path_absolute
     {
         private readonly IOptionLexerFactory optionLexerFactory;
 
-        private readonly RepetitionLexerFactory repetitionLexerFactory;
+        private readonly IRepetitionLexerFactory repetitionLexerFactory;
 
         private readonly ILexerFactory<Segment> segmentLexerFactory;
 
@@ -24,7 +24,7 @@ namespace Uri.path_absolute
             ITerminalLexerFactory terminalLexerFactory,
             IOptionLexerFactory optionLexerFactory,
             IConcatenationLexerFactory concatenationLexerFactory,
-            RepetitionLexerFactory repetitionLexerFactory,
+            IRepetitionLexerFactory repetitionLexerFactory,
             ILexerFactory<Segment> segmentLexerFactory,
             ILexerFactory<SegmentNonZeroLength> segmentNonZeroLengthLexerFactory)
         {

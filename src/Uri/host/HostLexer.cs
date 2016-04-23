@@ -6,9 +6,9 @@ namespace Uri.host
 {
     public sealed class HostLexer : Lexer<Host>
     {
-        private readonly ILexer<Alternative> innerLexer;
+        private readonly ILexer<Alternation> innerLexer;
 
-        public HostLexer(ILexer<Alternative> innerLexer)
+        public HostLexer(ILexer<Alternation> innerLexer)
         {
             if (innerLexer == null)
             {

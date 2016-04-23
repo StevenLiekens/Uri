@@ -6,9 +6,9 @@ namespace Uri.gen_delims
 {
     public sealed class GenericDelimiterLexer : Lexer<GenericDelimiter>
     {
-        private readonly ILexer<Alternative> innerLexer;
+        private readonly ILexer<Alternation> innerLexer;
 
-        public GenericDelimiterLexer(ILexer<Alternative> innerLexer)
+        public GenericDelimiterLexer(ILexer<Alternation> innerLexer)
         {
             if (innerLexer == null)
             {

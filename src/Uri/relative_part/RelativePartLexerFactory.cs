@@ -11,7 +11,7 @@ namespace Uri.relative_part
 {
     public class RelativePartLexerFactory : ILexerFactory<RelativePart>
     {
-        private readonly IAlternativeLexerFactory alternativeLexerFactory;
+        private readonly IAlternationLexerFactory alternationLexerFactory;
 
         private readonly ILexerFactory<Authority> authorityLexerFactory;
 
@@ -28,7 +28,7 @@ namespace Uri.relative_part
         private readonly ITerminalLexerFactory terminalLexerFactory;
 
         public RelativePartLexerFactory(
-            IAlternativeLexerFactory alternativeLexerFactory,
+            IAlternationLexerFactory alternationLexerFactory,
             IConcatenationLexerFactory concatenationLexerFactory,
             ITerminalLexerFactory terminalLexerFactory,
             ILexerFactory<Authority> authorityLexerFactory,
@@ -37,9 +37,9 @@ namespace Uri.relative_part
             ILexerFactory<PathNoScheme> pathNoSchemeLexerFactory,
             ILexerFactory<PathEmpty> pathEmptyLexerFactory)
         {
-            if (alternativeLexerFactory == null)
+            if (alternationLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(alternativeLexerFactory));
+                throw new ArgumentNullException(nameof(alternationLexerFactory));
             }
 
             if (concatenationLexerFactory == null)
@@ -77,7 +77,7 @@ namespace Uri.relative_part
                 throw new ArgumentNullException(nameof(pathEmptyLexerFactory));
             }
 
-            this.alternativeLexerFactory = alternativeLexerFactory;
+            this.alternationLexerFactory = alternationLexerFactory;
             this.concatenationLexerFactory = concatenationLexerFactory;
             this.terminalLexerFactory = terminalLexerFactory;
             this.authorityLexerFactory = authorityLexerFactory;
@@ -96,7 +96,7 @@ namespace Uri.relative_part
             var pathAbsolute = pathAbsoluteLexerFactory.Create();
             var pathNoScheme = pathNoSchemeLexerFactory.Create();
             var pathEmpty = pathEmptyLexerFactory.Create();
-            var innerLexer = alternativeLexerFactory.Create(seq, pathAbsolute, pathNoScheme, pathEmpty);
+            var innerLexer = alternationLexerFactory.Create(seq, pathAbsolute, pathNoScheme, pathEmpty);
             return new RelativePartLexer(innerLexer);
         }
     }

@@ -2,10 +2,10 @@
 
 namespace Uri.reserved
 {
-    public class Reserved : Alternative
+    public class Reserved : Alternation
     {
-        public Reserved(Alternative alternative)
-            : base(alternative)
+        public Reserved(Alternation alternation)
+            : base(alternation)
         {
         }
     }

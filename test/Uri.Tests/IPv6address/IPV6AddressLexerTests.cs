@@ -73,13 +73,13 @@ namespace Uri.IPv6address
             var terminalLexerFactory = new TerminalLexerFactory();
             var concatenationLexerFactory = new ConcatenationLexerFactory();
             var valueRangeLexerFactory = new ValueRangeLexerFactory();
-            var alternativeLexerFactory = new AlternativeLexerFactory();
+            var alternationLexerFactory = new AlternationLexerFactory();
             var repetitionLexerFactory = new RepetitionLexerFactory();
             var digitLexerFactory = new DigitLexerFactory(valueRangeLexerFactory);
             var decimalOctetLexerFactory = new DecimalOctetLexerFactory(
                 valueRangeLexerFactory,
                 terminalLexerFactory,
-                alternativeLexerFactory,
+                alternationLexerFactory,
                 repetitionLexerFactory,
                 digitLexerFactory,
                 concatenationLexerFactory);
@@ -87,7 +87,7 @@ namespace Uri.IPv6address
             var hexadecimalDigitLexerFactory = new HexadecimalDigitLexerFactory(
                 digitLexerFactory,
                 terminalLexerFactory,
-                alternativeLexerFactory);
+                alternationLexerFactory);
             var hexadecimalInt16LexerFactory = new HexadecimalInt16LexerFactory(
                 repetitionLexerFactory,
                 hexadecimalDigitLexerFactory);
@@ -96,13 +96,13 @@ namespace Uri.IPv6address
                 terminalLexerFactory,
                 decimalOctetLexerFactory);
             var leastSignificantInt32LexerFactory = new LeastSignificantInt32LexerFactory(
-                alternativeLexerFactory,
+                alternationLexerFactory,
                 concatenationLexerFactory,
                 terminalLexerFactory,
                 hexadecimalInt16LexerFactory,
                 ipv4AddressLexerFactory);
             var factory = new IPv6AddressLexerFactory(
-                alternativeLexerFactory,
+                alternationLexerFactory,
                 concatenationLexerFactory,
                 terminalLexerFactory,
                 repetitionLexerFactory,

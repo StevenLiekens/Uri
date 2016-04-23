@@ -6,9 +6,9 @@ namespace Uri.relative_part
 {
     public sealed class RelativePartLexer : Lexer<RelativePart>
     {
-        private readonly ILexer<Alternative> innerLexer;
+        private readonly ILexer<Alternation> innerLexer;
 
-        public RelativePartLexer(ILexer<Alternative> innerLexer)
+        public RelativePartLexer(ILexer<Alternation> innerLexer)
         {
             if (innerLexer == null)
             {

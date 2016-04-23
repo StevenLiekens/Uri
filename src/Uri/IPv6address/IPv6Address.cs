@@ -7,10 +7,10 @@ using Uri.ls32;
 
 namespace Uri.IPv6address
 {
-    public class IPv6Address : Alternative
+    public class IPv6Address : Alternation
     {
-        public IPv6Address(Alternative alternative)
-            : base(alternative)
+        public IPv6Address(Alternation alternation)
+            : base(alternation)
         {
         }
 
@@ -112,7 +112,7 @@ namespace Uri.IPv6address
             var opt1 = (Repetition)concatenation.Elements[0];
             if (opt1.Elements.Count != 0)
             {
-                GetBytesh16Alt2((Alternative)opt1.Elements[0], ctx);
+                GetBytesh16Alt2((Alternation)opt1.Elements[0], ctx);
             }
 
             var rep = (Repetition)concatenation.Elements[2];
@@ -135,7 +135,7 @@ namespace Uri.IPv6address
             var opt1 = (Repetition)concatenation.Elements[0];
             if (opt1.Elements.Count != 0)
             {
-                GetBytesh16Alt3((Alternative)opt1.Elements[0], ctx);
+                GetBytesh16Alt3((Alternation)opt1.Elements[0], ctx);
             }
 
             var rep = (Repetition)concatenation.Elements[2];
@@ -158,7 +158,7 @@ namespace Uri.IPv6address
             var opt1 = (Repetition)concatenation.Elements[0];
             if (opt1.Elements.Count != 0)
             {
-                GetBytesh16Alt4((Alternative)opt1.Elements[0], ctx);
+                GetBytesh16Alt4((Alternation)opt1.Elements[0], ctx);
             }
 
             var h16 = (HexadecimalInt16)concatenation.Elements[2];
@@ -176,7 +176,7 @@ namespace Uri.IPv6address
             var opt1 = (Repetition)concatenation.Elements[0];
             if (opt1.Elements.Count != 0)
             {
-                GetBytesh16Alt5((Alternative)opt1.Elements[0], ctx);
+                GetBytesh16Alt5((Alternation)opt1.Elements[0], ctx);
             }
 
             var ls32 = (LeastSignificantInt32)concatenation.Elements[2];
@@ -191,7 +191,7 @@ namespace Uri.IPv6address
             var opt1 = (Repetition)concatenation.Elements[0];
             if (opt1.Elements.Count != 0)
             {
-                GetBytesh16Alt6((Alternative)opt1.Elements[0], ctx);
+                GetBytesh16Alt6((Alternation)opt1.Elements[0], ctx);
             }
 
             var h16 = (HexadecimalInt16)concatenation.Elements[2];
@@ -206,34 +206,34 @@ namespace Uri.IPv6address
             var opt1 = (Repetition)concatenation.Elements[0];
             if (opt1.Elements.Count != 0)
             {
-                GetBytesh16Alt7((Alternative)opt1.Elements[0], ctx);
+                GetBytesh16Alt7((Alternation)opt1.Elements[0], ctx);
             }
 
             return ctx.GetResult();
         }
 
-        private static void GetBytesh16Alt2(Alternative alternative, BytesFactoryContext ctx)
+        private static void GetBytesh16Alt2(Alternation alternation, BytesFactoryContext ctx)
         {
-            if (alternative.Ordinal == 2)
+            if (alternation.Ordinal == 2)
             {
-                ctx.LeftAlign.Add(((HexadecimalInt16)alternative.Element).GetBytes);
+                ctx.LeftAlign.Add(((HexadecimalInt16)alternation.Element).GetBytes);
                 return;
             }
 
-            var seq = (Concatenation)alternative.Element;
+            var seq = (Concatenation)alternation.Element;
             ctx.LeftAlign.Add(((HexadecimalInt16)seq.Elements[0]).GetBytes);
             ctx.LeftAlign.Add(((HexadecimalInt16)seq.Elements[2]).GetBytes);
         }
 
-        private static void GetBytesh16Alt3(Alternative alternative, BytesFactoryContext ctx)
+        private static void GetBytesh16Alt3(Alternation alternation, BytesFactoryContext ctx)
         {
-            if (alternative.Ordinal == 2)
+            if (alternation.Ordinal == 2)
             {
-                GetBytesh16Alt2((Alternative)alternative.Element, ctx);
+                GetBytesh16Alt2((Alternation)alternation.Element, ctx);
                 return;
             }
 
-            var concatenation = (Concatenation)alternative.Element;
+            var concatenation = (Concatenation)alternation.Element;
             var rep = (Repetition)concatenation.Elements[0];
             for (var i = 0; i < 2; i++)
             {
@@ -246,15 +246,15 @@ namespace Uri.IPv6address
             ctx.LeftAlign.Add(trailer.GetBytes);
         }
 
-        private static void GetBytesh16Alt4(Alternative alternative, BytesFactoryContext ctx)
+        private static void GetBytesh16Alt4(Alternation alternation, BytesFactoryContext ctx)
         {
-            if (alternative.Ordinal == 2)
+            if (alternation.Ordinal == 2)
             {
-                GetBytesh16Alt3((Alternative)alternative.Element, ctx);
+                GetBytesh16Alt3((Alternation)alternation.Element, ctx);
                 return;
             }
 
-            var concatenation = (Concatenation)alternative.Element;
+            var concatenation = (Concatenation)alternation.Element;
             var rep = (Repetition)concatenation.Elements[0];
             for (var i = 0; i < 3; i++)
             {
@@ -267,15 +267,15 @@ namespace Uri.IPv6address
             ctx.LeftAlign.Add(trailer.GetBytes);
         }
 
-        private static void GetBytesh16Alt5(Alternative alternative, BytesFactoryContext ctx)
+        private static void GetBytesh16Alt5(Alternation alternation, BytesFactoryContext ctx)
         {
-            if (alternative.Ordinal == 2)
+            if (alternation.Ordinal == 2)
             {
-                GetBytesh16Alt4((Alternative)alternative.Element, ctx);
+                GetBytesh16Alt4((Alternation)alternation.Element, ctx);
                 return;
             }
 
-            var concatenation = (Concatenation)alternative.Element;
+            var concatenation = (Concatenation)alternation.Element;
             var rep = (Repetition)concatenation.Elements[0];
             for (var i = 0; i < 4; i++)
             {
@@ -288,15 +288,15 @@ namespace Uri.IPv6address
             ctx.LeftAlign.Add(trailer.GetBytes);
         }
 
-        private static void GetBytesh16Alt6(Alternative alternative, BytesFactoryContext ctx)
+        private static void GetBytesh16Alt6(Alternation alternation, BytesFactoryContext ctx)
         {
-            if (alternative.Ordinal == 2)
+            if (alternation.Ordinal == 2)
             {
-                GetBytesh16Alt5((Alternative)alternative.Element, ctx);
+                GetBytesh16Alt5((Alternation)alternation.Element, ctx);
                 return;
             }
 
-            var concatenation = (Concatenation)alternative.Element;
+            var concatenation = (Concatenation)alternation.Element;
             var rep = (Repetition)concatenation.Elements[0];
             for (var i = 0; i < 5; i++)
             {
@@ -309,15 +309,15 @@ namespace Uri.IPv6address
             ctx.LeftAlign.Add(trailer.GetBytes);
         }
 
-        private static void GetBytesh16Alt7(Alternative alternative, BytesFactoryContext ctx)
+        private static void GetBytesh16Alt7(Alternation alternation, BytesFactoryContext ctx)
         {
-            if (alternative.Ordinal == 2)
+            if (alternation.Ordinal == 2)
             {
-                GetBytesh16Alt6((Alternative)alternative.Element, ctx);
+                GetBytesh16Alt6((Alternation)alternation.Element, ctx);
                 return;
             }
 
-            var concatenation = (Concatenation)alternative.Element;
+            var concatenation = (Concatenation)alternation.Element;
             var rep = (Repetition)concatenation.Elements[0];
             for (var i = 0; i < 6; i++)
             {
