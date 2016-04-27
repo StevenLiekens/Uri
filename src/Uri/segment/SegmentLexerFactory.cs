@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using Txt;
 using Txt.ABNF;
 using Uri.pchar;
@@ -7,31 +8,30 @@ namespace Uri.segment
 {
     public class SegmentLexerFactory : ILexerFactory<Segment>
     {
-        private readonly ILexerFactory<PathCharacter> pathCharacterLexerFactory;
+        private readonly ILexer<PathCharacter> pathCharacterLexer;
 
         private readonly IRepetitionLexerFactory repetitionLexerFactory;
 
-        public SegmentLexerFactory(ILexerFactory<PathCharacter> pathCharacterLexerFactory, IRepetitionLexerFactory repetitionLexerFactory)
+        public SegmentLexerFactory(
+            [NotNull] IRepetitionLexerFactory repetitionLexerFactory,
+            [NotNull] ILexer<PathCharacter> pathCharacterLexer)
         {
-            if (pathCharacterLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(pathCharacterLexerFactory));
-            }
-
             if (repetitionLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(repetitionLexerFactory));
             }
-
-            this.pathCharacterLexerFactory = pathCharacterLexerFactory;
+            if (pathCharacterLexer == null)
+            {
+                throw new ArgumentNullException(nameof(pathCharacterLexer));
+            }
             this.repetitionLexerFactory = repetitionLexerFactory;
+            this.pathCharacterLexer = pathCharacterLexer;
         }
 
         public ILexer<Segment> Create()
         {
-            var pathCharacterLexer = pathCharacterLexerFactory.Create();
-            var segmentRepetitionLexer = repetitionLexerFactory.Create(pathCharacterLexer, 0, int.MaxValue);
-            return new SegmentLexer(segmentRepetitionLexer);
+            var innerLexer = repetitionLexerFactory.Create(pathCharacterLexer, 0, int.MaxValue);
+            return new SegmentLexer(innerLexer);
         }
     }
 }

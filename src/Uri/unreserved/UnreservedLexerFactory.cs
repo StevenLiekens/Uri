@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using Txt;
 using Txt.ABNF;
 using Txt.ABNF.Core.ALPHA;
@@ -8,52 +9,52 @@ namespace Uri.unreserved
 {
     public class UnreservedLexerFactory : ILexerFactory<Unreserved>
     {
-        private readonly ILexerFactory<Alpha> alphaLexerFactory;
+        private readonly ILexer<Alpha> alphaLexer;
 
         private readonly IAlternationLexerFactory alternationLexerFactory;
 
-        private readonly ILexerFactory<Digit> digitLexerFactory;
+        private readonly ILexer<Digit> digitLexer;
 
         private readonly ITerminalLexerFactory terminalLexerFactory;
 
         public UnreservedLexerFactory(
-            ILexerFactory<Alpha> alphaLexerFactory,
-            ILexerFactory<Digit> digitLexerFactory,
-            ITerminalLexerFactory terminalLexerFactory,
-            IAlternationLexerFactory alternationLexerFactory)
+            [NotNull] ITerminalLexerFactory terminalLexerFactory,
+            [NotNull] IAlternationLexerFactory alternationLexerFactory,
+            [NotNull] ILexer<Alpha> alphaLexer,
+            [NotNull] ILexer<Digit> digitLexer)
         {
-            if (alphaLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(alphaLexerFactory));
-            }
-            if (digitLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(digitLexerFactory));
-            }
             if (terminalLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(terminalLexerFactory));
             }
-            if (alphaLexerFactory == null)
+            if (alternationLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(alphaLexerFactory));
+                throw new ArgumentNullException(nameof(alternationLexerFactory));
             }
-            this.alphaLexerFactory = alphaLexerFactory;
-            this.digitLexerFactory = digitLexerFactory;
+            if (alphaLexer == null)
+            {
+                throw new ArgumentNullException(nameof(alphaLexer));
+            }
+            if (digitLexer == null)
+            {
+                throw new ArgumentNullException(nameof(digitLexer));
+            }
             this.terminalLexerFactory = terminalLexerFactory;
             this.alternationLexerFactory = alternationLexerFactory;
+            this.alphaLexer = alphaLexer;
+            this.digitLexer = digitLexer;
         }
 
         public ILexer<Unreserved> Create()
         {
-            var unreservedAlternationLexer = alternationLexerFactory.Create(
-                alphaLexerFactory.Create(),
-                digitLexerFactory.Create(),
+            var innerLexer = alternationLexerFactory.Create(
+                alphaLexer,
+                digitLexer,
                 terminalLexerFactory.Create(@"-", StringComparer.Ordinal),
                 terminalLexerFactory.Create(@".", StringComparer.Ordinal),
                 terminalLexerFactory.Create(@"_", StringComparer.Ordinal),
                 terminalLexerFactory.Create(@"~", StringComparer.Ordinal));
-            return new UnreservedLexer(unreservedAlternationLexer);
+            return new UnreservedLexer(innerLexer);
         }
     }
 }

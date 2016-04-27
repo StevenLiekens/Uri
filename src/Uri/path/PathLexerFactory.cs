@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using Txt;
 using Txt.ABNF;
 using Uri.path_abempty;
@@ -13,73 +14,65 @@ namespace Uri.path
     {
         private readonly IAlternationLexerFactory alternationLexerFactory;
 
-        private readonly ILexerFactory<PathAbsolute> pathAbsoluteLexerFactory;
+        private readonly ILexer<PathAbsolute> pathAbsoluteLexer;
 
-        private readonly ILexerFactory<PathAbsoluteOrEmpty> pathAbsoluteOrEmptyLexerFactory;
+        private readonly ILexer<PathAbsoluteOrEmpty> pathAbsoluteOrEmptyLexer;
 
-        private readonly ILexerFactory<PathEmpty> pathEmptyLexerFactory;
+        private readonly ILexer<PathEmpty> pathEmptyLexer;
 
-        private readonly ILexerFactory<PathNoScheme> pathNoSchemeLexerFactory;
+        private readonly ILexer<PathNoScheme> pathNoSchemeLexer;
 
-        private readonly ILexerFactory<PathRootless> pathRootlessLexerFactory;
+        private readonly ILexer<PathRootless> pathRootlessLexer;
 
         public PathLexerFactory(
-            IAlternationLexerFactory alternationLexerFactory,
-            ILexerFactory<PathAbsoluteOrEmpty> pathAbsoluteOrEmptyLexerFactory,
-            ILexerFactory<PathAbsolute> pathAbsoluteLexerFactory,
-            ILexerFactory<PathNoScheme> pathNoSchemeLexerFactory,
-            ILexerFactory<PathRootless> pathRootlessLexerFactory,
-            ILexerFactory<PathEmpty> pathEmptyLexerFactory)
+            [NotNull] IAlternationLexerFactory alternationLexerFactory,
+            [NotNull] ILexer<PathAbsoluteOrEmpty> pathAbsoluteOrEmptyLexer,
+            [NotNull] ILexer<PathAbsolute> pathAbsoluteLexer,
+            [NotNull] ILexer<PathNoScheme> pathNoSchemeLexer,
+            [NotNull] ILexer<PathRootless> pathRootlessLexer,
+            [NotNull] ILexer<PathEmpty> pathEmptyLexer)
         {
             if (alternationLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(alternationLexerFactory));
             }
-
-            if (pathAbsoluteOrEmptyLexerFactory == null)
+            if (pathAbsoluteOrEmptyLexer == null)
             {
-                throw new ArgumentNullException(nameof(pathAbsoluteOrEmptyLexerFactory));
+                throw new ArgumentNullException(nameof(pathAbsoluteOrEmptyLexer));
             }
-
-            if (pathAbsoluteLexerFactory == null)
+            if (pathAbsoluteLexer == null)
             {
-                throw new ArgumentNullException(nameof(pathAbsoluteLexerFactory));
+                throw new ArgumentNullException(nameof(pathAbsoluteLexer));
             }
-
-            if (pathNoSchemeLexerFactory == null)
+            if (pathNoSchemeLexer == null)
             {
-                throw new ArgumentNullException(nameof(pathNoSchemeLexerFactory));
+                throw new ArgumentNullException(nameof(pathNoSchemeLexer));
             }
-
-            if (pathRootlessLexerFactory == null)
+            if (pathRootlessLexer == null)
             {
-                throw new ArgumentNullException(nameof(pathRootlessLexerFactory));
+                throw new ArgumentNullException(nameof(pathRootlessLexer));
             }
-
-            if (pathEmptyLexerFactory == null)
+            if (pathEmptyLexer == null)
             {
-                throw new ArgumentNullException(nameof(pathEmptyLexerFactory));
+                throw new ArgumentNullException(nameof(pathEmptyLexer));
             }
-
             this.alternationLexerFactory = alternationLexerFactory;
-            this.pathAbsoluteOrEmptyLexerFactory = pathAbsoluteOrEmptyLexerFactory;
-            this.pathAbsoluteLexerFactory = pathAbsoluteLexerFactory;
-            this.pathNoSchemeLexerFactory = pathNoSchemeLexerFactory;
-            this.pathRootlessLexerFactory = pathRootlessLexerFactory;
-            this.pathEmptyLexerFactory = pathEmptyLexerFactory;
+            this.pathAbsoluteOrEmptyLexer = pathAbsoluteOrEmptyLexer;
+            this.pathAbsoluteLexer = pathAbsoluteLexer;
+            this.pathNoSchemeLexer = pathNoSchemeLexer;
+            this.pathRootlessLexer = pathRootlessLexer;
+            this.pathEmptyLexer = pathEmptyLexer;
         }
 
         public ILexer<Path> Create()
         {
-            ILexer[] a =
-                {
-                    pathAbsoluteOrEmptyLexerFactory.Create(), pathAbsoluteLexerFactory.Create(),
-                    pathNoSchemeLexerFactory.Create(), pathRootlessLexerFactory.Create(),
-                    pathEmptyLexerFactory.Create()
-                };
-
-            var b = alternationLexerFactory.Create(a);
-            return new PathLexer(b);
+            var innerLexer = alternationLexerFactory.Create(
+                pathAbsoluteOrEmptyLexer,
+                pathAbsoluteLexer,
+                pathNoSchemeLexer,
+                pathRootlessLexer,
+                pathEmptyLexer);
+            return new PathLexer(innerLexer);
         }
     }
 }

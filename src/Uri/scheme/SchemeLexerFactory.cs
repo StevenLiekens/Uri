@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using Txt;
 using Txt.ABNF;
 using Txt.ABNF.Core.ALPHA;
@@ -8,68 +9,71 @@ namespace Uri.scheme
 {
     public class SchemeLexerFactory : ILexerFactory<Scheme>
     {
-        private readonly ILexerFactory<Alpha> alphaLexerFactory;
+        private readonly ILexer<Alpha> alphaLexer;
 
         private readonly IAlternationLexerFactory alternationLexerFactory;
 
         private readonly IConcatenationLexerFactory concatenationLexerFactory;
 
-        private readonly ILexerFactory<Digit> digitLexerFactory;
+        private readonly ILexer<Digit> digitLexer;
 
         private readonly IRepetitionLexerFactory repetitionLexerFactory;
 
         private readonly ITerminalLexerFactory terminalLexerFactory;
 
         public SchemeLexerFactory(
-            IConcatenationLexerFactory concatenationLexerFactory,
-            IAlternationLexerFactory alternationLexerFactory,
-            IRepetitionLexerFactory repetitionLexerFactory,
-            ILexerFactory<Alpha> alphaLexerFactory,
-            ILexerFactory<Digit> digitLexerFactory,
-            ITerminalLexerFactory terminalLexerFactory)
+            [NotNull] ITerminalLexerFactory terminalLexerFactory,
+            [NotNull] IAlternationLexerFactory alternationLexerFactory,
+            [NotNull] IConcatenationLexerFactory concatenationLexerFactory,
+            [NotNull] IRepetitionLexerFactory repetitionLexerFactory,
+            [NotNull] ILexer<Alpha> alphaLexer,
+            [NotNull] ILexer<Digit> digitLexer)
         {
-            if (concatenationLexerFactory == null)
+            if (terminalLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(concatenationLexerFactory));
+                throw new ArgumentNullException(nameof(terminalLexerFactory));
             }
             if (alternationLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(alternationLexerFactory));
             }
+            if (concatenationLexerFactory == null)
+            {
+                throw new ArgumentNullException(nameof(concatenationLexerFactory));
+            }
             if (repetitionLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(repetitionLexerFactory));
             }
-            if (alphaLexerFactory == null)
+            if (alphaLexer == null)
             {
-                throw new ArgumentNullException(nameof(alphaLexerFactory));
+                throw new ArgumentNullException(nameof(alphaLexer));
             }
-            if (digitLexerFactory == null)
+            if (digitLexer == null)
             {
-                throw new ArgumentNullException(nameof(digitLexerFactory));
+                throw new ArgumentNullException(nameof(digitLexer));
             }
-            if (terminalLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(terminalLexerFactory));
-            }
-            this.concatenationLexerFactory = concatenationLexerFactory;
-            this.alternationLexerFactory = alternationLexerFactory;
-            this.repetitionLexerFactory = repetitionLexerFactory;
-            this.alphaLexerFactory = alphaLexerFactory;
-            this.digitLexerFactory = digitLexerFactory;
             this.terminalLexerFactory = terminalLexerFactory;
+            this.alternationLexerFactory = alternationLexerFactory;
+            this.concatenationLexerFactory = concatenationLexerFactory;
+            this.repetitionLexerFactory = repetitionLexerFactory;
+            this.alphaLexer = alphaLexer;
+            this.digitLexer = digitLexer;
         }
 
         public ILexer<Scheme> Create()
         {
-            var alpha = alphaLexerFactory.Create();
-            var digit = digitLexerFactory.Create();
-            var plus = terminalLexerFactory.Create(@"+", StringComparer.Ordinal);
-            var minus = terminalLexerFactory.Create(@"-", StringComparer.Ordinal);
-            var dot = terminalLexerFactory.Create(@".", StringComparer.Ordinal);
-            var alt = alternationLexerFactory.Create(alpha, digit, plus, minus, dot);
-            var rep = repetitionLexerFactory.Create(alt, 0, int.MaxValue);
-            var innerLexer = concatenationLexerFactory.Create(alpha, rep);
+            var innerLexer = concatenationLexerFactory.Create(
+                alphaLexer,
+                repetitionLexerFactory.Create(
+                    alternationLexerFactory.Create(
+                        alphaLexer,
+                        digitLexer,
+                        terminalLexerFactory.Create(@"+", StringComparer.Ordinal),
+                        terminalLexerFactory.Create(@"-", StringComparer.Ordinal),
+                        terminalLexerFactory.Create(@".", StringComparer.Ordinal)),
+                    0,
+                    int.MaxValue));
             return new SchemeLexer(innerLexer);
         }
     }

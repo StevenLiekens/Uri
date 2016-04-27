@@ -1,10 +1,9 @@
 ﻿using Txt;
-using Txt.ABNF;
 using Xunit;
 
-namespace Uri.sub_delims
+namespace Uri.reserved
 {
-    public class SubcomponentsDelimiterLexerTests
+    public class ReservedLexerTest : LexerTestBase
     {
         [Theory]
         [InlineData(@"!")]
@@ -18,12 +17,20 @@ namespace Uri.sub_delims
         [InlineData(@",")]
         [InlineData(@";")]
         [InlineData(@"=")]
+        [InlineData(@"!")]
+        [InlineData(@"$")]
+        [InlineData(@"&")]
+        [InlineData(@"'")]
+        [InlineData(@"(")]
+        [InlineData(@")")]
+        [InlineData(@"*")]
+        [InlineData(@"+")]
+        [InlineData(@",")]
+        [InlineData(@";")]
+        [InlineData(@"=")]
         public void Read_ShouldSucceed(string input)
         {
-            var terminalLexerFactory = new TerminalLexerFactory();
-            var alternationLexerFactory = new AlternationLexerFactory();
-            var factory = new SubcomponentsDelimiterLexerFactory(terminalLexerFactory, alternationLexerFactory);
-            var lexer = factory.Create();
+            var lexer = Container.GetInstance<ILexer<Reserved>>();
             using (var scanner = new TextScanner(new StringTextSource(input)))
             {
                 var result = lexer.Read(scanner);

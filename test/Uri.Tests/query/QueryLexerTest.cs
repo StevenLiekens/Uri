@@ -1,25 +1,18 @@
 ﻿using Txt;
-using Txt.ABNF;
 using Xunit;
 
-namespace Uri.gen_delims
+namespace Uri.query
 {
-    public class GenericDelimiterLexerTests
+    public class QueryLexerTest : LexerTestBase
     {
         [Theory]
         [InlineData(@":")]
+        [InlineData(@"@")]
         [InlineData(@"/")]
         [InlineData(@"?")]
-        [InlineData(@"#")]
-        [InlineData(@"[")]
-        [InlineData(@"]")]
-        [InlineData(@"@")]
         public void Read_ShouldSucceed(string input)
         {
-            var terminalLexerFactory = new TerminalLexerFactory();
-            var alternationLexerFactory = new AlternationLexerFactory();
-            var factory = new GenericDelimiterLexerFactory(terminalLexerFactory, alternationLexerFactory);
-            var lexer = factory.Create();
+            var lexer = Container.GetInstance<ILexer<Query>>();
             using (var scanner = new TextScanner(new StringTextSource(input)))
             {
                 var result = lexer.Read(scanner);

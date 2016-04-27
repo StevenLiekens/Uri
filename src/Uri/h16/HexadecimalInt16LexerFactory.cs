@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using Txt;
 using Txt.ABNF;
 using Txt.ABNF.Core.HEXDIG;
@@ -7,36 +8,30 @@ namespace Uri.h16
 {
     public class HexadecimalInt16LexerFactory : ILexerFactory<HexadecimalInt16>
     {
-        private readonly ILexerFactory<HexadecimalDigit> hexadecimalLexerFactory;
+        private readonly ILexer<HexadecimalDigit> hexadecimalLexer;
 
         private readonly IRepetitionLexerFactory repetitionLexerFactory;
 
         public HexadecimalInt16LexerFactory(
-            IRepetitionLexerFactory repetitionLexerFactory,
-            ILexerFactory<HexadecimalDigit> hexadecimalLexerFactory)
+            [NotNull] IRepetitionLexerFactory repetitionLexerFactory,
+            [NotNull] ILexer<HexadecimalDigit> hexadecimalLexer)
         {
             if (repetitionLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(repetitionLexerFactory));
             }
-            if (hexadecimalLexerFactory == null)
+            if (hexadecimalLexer == null)
             {
-                throw new ArgumentNullException(nameof(hexadecimalLexerFactory));
+                throw new ArgumentNullException(nameof(hexadecimalLexer));
             }
             this.repetitionLexerFactory = repetitionLexerFactory;
-            this.hexadecimalLexerFactory = hexadecimalLexerFactory;
+            this.hexadecimalLexer = hexadecimalLexer;
         }
 
         public ILexer<HexadecimalInt16> Create()
         {
-            // HEXDIG
-            var a = hexadecimalLexerFactory.Create();
-
-            // 1*4HEXDIG
-            var b = repetitionLexerFactory.Create(a, 1, 4);
-
-            // h16
-            return new HexadecimalInt16Lexer(b);
+            var innerLexer = repetitionLexerFactory.Create(hexadecimalLexer, 1, 4);
+            return new HexadecimalInt16Lexer(innerLexer);
         }
     }
 }

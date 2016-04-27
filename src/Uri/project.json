@@ -18,6 +18,6 @@
     }
   },
     "dependencies": {
-        "Txt.ABNF": "2.0.0-CI00191"
+        "Txt.ABNF": "2.0.0-*"
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using Txt;
 using Txt.ABNF;
 using Uri.dec_octet;
@@ -7,50 +8,47 @@ namespace Uri.IPv4address
 {
     public class IPv4AddressLexerFactory : ILexerFactory<IPv4Address>
     {
-        private readonly ILexerFactory<DecimalOctet> decimaOctetLexerFactory;
-
         private readonly IConcatenationLexerFactory concatenationLexerFactory;
+
+        private readonly ILexer<DecimalOctet> decimaOctetLexer;
 
         private readonly ITerminalLexerFactory terminalLexerFactory;
 
         public IPv4AddressLexerFactory(
-            IConcatenationLexerFactory concatenationLexerFactory,
-            ITerminalLexerFactory terminalLexerFactory,
-            ILexerFactory<DecimalOctet> decimaOctetLexerFactory)
+            [NotNull] ITerminalLexerFactory terminalLexerFactory,
+            [NotNull] IConcatenationLexerFactory concatenationLexerFactory,
+            [NotNull] ILexer<DecimalOctet> decimaOctetLexer)
         {
-            if (concatenationLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(concatenationLexerFactory));
-            }
-
             if (terminalLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(terminalLexerFactory));
             }
-
-            if (decimaOctetLexerFactory == null)
+            if (concatenationLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(decimaOctetLexerFactory));
+                throw new ArgumentNullException(nameof(concatenationLexerFactory));
             }
-
-            this.concatenationLexerFactory = concatenationLexerFactory;
+            if (decimaOctetLexer == null)
+            {
+                throw new ArgumentNullException(nameof(decimaOctetLexer));
+            }
             this.terminalLexerFactory = terminalLexerFactory;
-            this.decimaOctetLexerFactory = decimaOctetLexerFactory;
+            this.concatenationLexerFactory = concatenationLexerFactory;
+            this.decimaOctetLexer = decimaOctetLexer;
         }
 
         public ILexer<IPv4Address> Create()
         {
             // dec-octet
-            var a = decimaOctetLexerFactory.Create();
+            var a = decimaOctetLexer;
 
             // "."
             var b = terminalLexerFactory.Create(@".", StringComparer.Ordinal);
 
             // dec-octet "." dec-octet "." dec-octet "." dec-octet
-            var c = concatenationLexerFactory.Create(a, b, a, b, a, b, a);
+            var innerLexer = concatenationLexerFactory.Create(a, b, a, b, a, b, a);
 
             // IPv4address
-            return new IPv4AddressLexer(c);
+            return new IPv4AddressLexer(innerLexer);
         }
     }
 }

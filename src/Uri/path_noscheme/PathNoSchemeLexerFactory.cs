@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using Txt;
 using Txt.ABNF;
 using Uri.segment;
@@ -8,77 +9,64 @@ namespace Uri.path_noscheme
 {
     public class PathNoSchemeLexerFactory : ILexerFactory<PathNoScheme>
     {
+        private readonly IConcatenationLexerFactory concatenationLexerFactory;
+
         private readonly IRepetitionLexerFactory repetitionLexerFactory;
 
-        private readonly ILexerFactory<Segment> segmentLexerFactory;
+        private readonly ILexer<Segment> segmentLexer;
 
-        private readonly ILexerFactory<SegmentNonZeroLengthNoColons> segmentNonZeroLengthNoColonsLexerFactory;
-
-        private readonly IConcatenationLexerFactory concatenationLexerFactory;
+        private readonly ILexer<SegmentNonZeroLengthNoColons> segmentNonZeroLengthNoColonsLexer;
 
         private readonly ITerminalLexerFactory terminalLexerFactory;
 
         public PathNoSchemeLexerFactory(
-            IConcatenationLexerFactory concatenationLexerFactory,
-            IRepetitionLexerFactory repetitionLexerFactory,
-            ITerminalLexerFactory terminalLexerFactory,
-            ILexerFactory<Segment> segmentLexerFactory,
-            ILexerFactory<SegmentNonZeroLengthNoColons> segmentNonZeroLengthNoColonsLexerFactory)
+            [NotNull] ITerminalLexerFactory terminalLexerFactory,
+            [NotNull] IConcatenationLexerFactory concatenationLexerFactory,
+            [NotNull] IRepetitionLexerFactory repetitionLexerFactory,
+            [NotNull] ILexer<Segment> segmentLexer,
+            [NotNull] ILexer<SegmentNonZeroLengthNoColons> segmentNonZeroLengthNoColonsLexer)
         {
-            if (concatenationLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(concatenationLexerFactory));
-            }
-
-            if (repetitionLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(repetitionLexerFactory));
-            }
-
             if (terminalLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(terminalLexerFactory));
             }
-
-            if (segmentLexerFactory == null)
+            if (concatenationLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(segmentLexerFactory));
+                throw new ArgumentNullException(nameof(concatenationLexerFactory));
             }
-
-            if (segmentNonZeroLengthNoColonsLexerFactory == null)
+            if (repetitionLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(segmentNonZeroLengthNoColonsLexerFactory));
+                throw new ArgumentNullException(nameof(repetitionLexerFactory));
             }
-
+            if (segmentLexer == null)
+            {
+                throw new ArgumentNullException(nameof(segmentLexer));
+            }
+            if (segmentNonZeroLengthNoColonsLexer == null)
+            {
+                throw new ArgumentNullException(nameof(segmentNonZeroLengthNoColonsLexer));
+            }
+            this.terminalLexerFactory = terminalLexerFactory;
             this.concatenationLexerFactory = concatenationLexerFactory;
             this.repetitionLexerFactory = repetitionLexerFactory;
-            this.terminalLexerFactory = terminalLexerFactory;
-            this.segmentLexerFactory = segmentLexerFactory;
-            this.segmentNonZeroLengthNoColonsLexerFactory = segmentNonZeroLengthNoColonsLexerFactory;
+            this.segmentLexer = segmentLexer;
+            this.segmentNonZeroLengthNoColonsLexer = segmentNonZeroLengthNoColonsLexer;
         }
 
         public ILexer<PathNoScheme> Create()
         {
-            // "/"
-            var a = terminalLexerFactory.Create(@"/", StringComparer.Ordinal);
-
-            // segment
-            var b = segmentLexerFactory.Create();
-
-            // "/" segment
-            var c = concatenationLexerFactory.Create(a, b);
-
-            // *( "/" segment )
-            var d = repetitionLexerFactory.Create(c, 0, int.MaxValue);
-
-            // segment-nz-nc
-            var e = segmentNonZeroLengthNoColonsLexerFactory.Create();
-
             // segment-nz-nc *( "/" segment )
-            var f = concatenationLexerFactory.Create(e, d);
+            var innerLexer = concatenationLexerFactory.Create(
+                segmentNonZeroLengthNoColonsLexer,
+                repetitionLexerFactory.Create(
+                    concatenationLexerFactory.Create(
+                        terminalLexerFactory.Create(@"/", StringComparer.Ordinal),
+                        segmentLexer),
+                    0,
+                    int.MaxValue));
 
             // path-noscheme
-            return new PathNoSchemeLexer(f);
+            return new PathNoSchemeLexer(innerLexer);
         }
     }
 }

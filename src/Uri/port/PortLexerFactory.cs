@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using Txt;
 using Txt.ABNF;
 using Txt.ABNF.Core.DIGIT;
@@ -7,30 +8,29 @@ namespace Uri.port
 {
     public class PortLexerFactory : ILexerFactory<Port>
     {
-        private readonly ILexerFactory<Digit> digitLexerFactory;
+        private readonly ILexer<Digit> digitLexer;
 
         private readonly IRepetitionLexerFactory repetitionLexerFactory;
 
-        public PortLexerFactory(IRepetitionLexerFactory repetitionLexerFactory, ILexerFactory<Digit> digitLexerFactory)
+        public PortLexerFactory(
+            [NotNull] IRepetitionLexerFactory repetitionLexerFactory,
+            [NotNull] ILexer<Digit> digitLexer)
         {
             if (repetitionLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(repetitionLexerFactory));
             }
-
-            if (digitLexerFactory == null)
+            if (digitLexer == null)
             {
-                throw new ArgumentNullException(nameof(digitLexerFactory));
+                throw new ArgumentNullException(nameof(digitLexer));
             }
-
             this.repetitionLexerFactory = repetitionLexerFactory;
-            this.digitLexerFactory = digitLexerFactory;
+            this.digitLexer = digitLexer;
         }
 
         public ILexer<Port> Create()
         {
-            var digit = digitLexerFactory.Create();
-            var innerLexer = repetitionLexerFactory.Create(digit, 0, int.MaxValue);
+            var innerLexer = repetitionLexerFactory.Create(digitLexer, 0, int.MaxValue);
             return new PortLexer(innerLexer);
         }
     }

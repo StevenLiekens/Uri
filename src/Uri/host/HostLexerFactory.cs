@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using Txt;
 using Txt.ABNF;
 using Uri.IPv4address;
@@ -11,50 +12,43 @@ namespace Uri.host
     {
         private readonly IAlternationLexerFactory alternationLexerFactory;
 
-        private readonly ILexerFactory<IPLiteral> ipLiteralLexerFactory;
+        private readonly ILexer<IPLiteral> ipLiteralLexer;
 
-        private readonly ILexerFactory<IPv4Address> ipv4AddressLexerFactory;
+        private readonly ILexer<IPv4Address> ipv4AddressLexer;
 
-        private readonly ILexerFactory<RegisteredName> registeredNameLexerFactory;
+        private readonly ILexer<RegisteredName> registeredNameLexer;
 
         public HostLexerFactory(
-            IAlternationLexerFactory alternationLexerFactory,
-            ILexerFactory<IPLiteral> ipLiteralLexerFactory,
-            ILexerFactory<IPv4Address> ipv4AddressLexerFactory,
-            ILexerFactory<RegisteredName> registeredNameLexerFactory)
+            [NotNull] IAlternationLexerFactory alternationLexerFactory,
+            [NotNull] ILexer<IPLiteral> ipLiteralLexer,
+            [NotNull] ILexer<IPv4Address> ipv4AddressLexer,
+            [NotNull] ILexer<RegisteredName> registeredNameLexer)
         {
             if (alternationLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(alternationLexerFactory));
             }
-
-            if (ipLiteralLexerFactory == null)
+            if (ipLiteralLexer == null)
             {
-                throw new ArgumentNullException(nameof(ipLiteralLexerFactory));
+                throw new ArgumentNullException(nameof(ipLiteralLexer));
             }
-
-            if (ipv4AddressLexerFactory == null)
+            if (ipv4AddressLexer == null)
             {
-                throw new ArgumentNullException(nameof(ipv4AddressLexerFactory));
+                throw new ArgumentNullException(nameof(ipv4AddressLexer));
             }
-
-            if (registeredNameLexerFactory == null)
+            if (registeredNameLexer == null)
             {
-                throw new ArgumentNullException(nameof(registeredNameLexerFactory));
+                throw new ArgumentNullException(nameof(registeredNameLexer));
             }
-
             this.alternationLexerFactory = alternationLexerFactory;
-            this.ipLiteralLexerFactory = ipLiteralLexerFactory;
-            this.ipv4AddressLexerFactory = ipv4AddressLexerFactory;
-            this.registeredNameLexerFactory = registeredNameLexerFactory;
+            this.ipLiteralLexer = ipLiteralLexer;
+            this.ipv4AddressLexer = ipv4AddressLexer;
+            this.registeredNameLexer = registeredNameLexer;
         }
 
         public ILexer<Host> Create()
         {
-            var ipliteral = ipLiteralLexerFactory.Create();
-            var ipv4 = ipv4AddressLexerFactory.Create();
-            var regName = registeredNameLexerFactory.Create();
-            var innerLexer = alternationLexerFactory.Create(ipliteral, ipv4, regName);
+            var innerLexer = alternationLexerFactory.Create(ipLiteralLexer, ipv4AddressLexer, registeredNameLexer);
             return new HostLexer(innerLexer);
         }
     }

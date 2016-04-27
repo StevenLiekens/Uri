@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using Txt;
 using Txt.ABNF;
 using Uri.fragment;
@@ -10,87 +11,80 @@ namespace Uri.URI
 {
     public class UniformResourceIdentifierLexerFactory : ILexerFactory<UniformResourceIdentifier>
     {
-        private readonly ILexerFactory<Fragment> fragmentLexerFactory;
+        private readonly IConcatenationLexerFactory concatenationLexerFactory;
 
-        private readonly ILexerFactory<HierarchicalPart> hierarchicalPartLexerFactory;
+        private readonly ILexer<Fragment> fragmentLexer;
+
+        private readonly ILexer<HierarchicalPart> hierarchicalPartLexer;
 
         private readonly IOptionLexerFactory optionLexerFactory;
 
-        private readonly ILexerFactory<Query> queryLexerFactory;
+        private readonly ILexer<Query> queryLexer;
 
-        private readonly ILexerFactory<Scheme> schemeLexerFactory;
-
-        private readonly IConcatenationLexerFactory concatenationLexerFactory;
+        private readonly ILexer<Scheme> schemeLexer;
 
         private readonly ITerminalLexerFactory terminalLexerFactory;
 
         public UniformResourceIdentifierLexerFactory(
-            IConcatenationLexerFactory concatenationLexerFactory,
-            IOptionLexerFactory optionLexerFactory,
-            ITerminalLexerFactory terminalLexerFactory,
-            ILexerFactory<Scheme> schemeLexerFactory,
-            ILexerFactory<HierarchicalPart> hierarchicalPartLexerFactory,
-            ILexerFactory<Query> queryLexerFactory,
-            ILexerFactory<Fragment> fragmentLexerFactory)
+            [NotNull] ITerminalLexerFactory terminalLexerFactory,
+            [NotNull] IConcatenationLexerFactory concatenationLexerFactory,
+            [NotNull] IOptionLexerFactory optionLexerFactory,
+            [NotNull] ILexer<Scheme> schemeLexer,
+            [NotNull] ILexer<HierarchicalPart> hierarchicalPartLexer,
+            [NotNull] ILexer<Query> queryLexer,
+            [NotNull] ILexer<Fragment> fragmentLexer)
         {
-            if (concatenationLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(concatenationLexerFactory));
-            }
-
-            if (optionLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(optionLexerFactory));
-            }
-
             if (terminalLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(terminalLexerFactory));
             }
-
-            if (schemeLexerFactory == null)
+            if (concatenationLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(schemeLexerFactory));
+                throw new ArgumentNullException(nameof(concatenationLexerFactory));
             }
-
-            if (hierarchicalPartLexerFactory == null)
+            if (optionLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(hierarchicalPartLexerFactory));
+                throw new ArgumentNullException(nameof(optionLexerFactory));
             }
-
-            if (queryLexerFactory == null)
+            if (schemeLexer == null)
             {
-                throw new ArgumentNullException(nameof(queryLexerFactory));
+                throw new ArgumentNullException(nameof(schemeLexer));
             }
-
-            if (fragmentLexerFactory == null)
+            if (hierarchicalPartLexer == null)
             {
-                throw new ArgumentNullException(nameof(fragmentLexerFactory));
+                throw new ArgumentNullException(nameof(hierarchicalPartLexer));
             }
-
-            this.concatenationLexerFactory = concatenationLexerFactory;
-            this.optionLexerFactory = optionLexerFactory;
+            if (queryLexer == null)
+            {
+                throw new ArgumentNullException(nameof(queryLexer));
+            }
+            if (fragmentLexer == null)
+            {
+                throw new ArgumentNullException(nameof(fragmentLexer));
+            }
             this.terminalLexerFactory = terminalLexerFactory;
-            this.schemeLexerFactory = schemeLexerFactory;
-            this.hierarchicalPartLexerFactory = hierarchicalPartLexerFactory;
-            this.queryLexerFactory = queryLexerFactory;
-            this.fragmentLexerFactory = fragmentLexerFactory;
+            this.optionLexerFactory = optionLexerFactory;
+            this.schemeLexer = schemeLexer;
+            this.hierarchicalPartLexer = hierarchicalPartLexer;
+            this.queryLexer = queryLexer;
+            this.fragmentLexer = fragmentLexer;
+            this.concatenationLexerFactory = concatenationLexerFactory;
         }
 
         public ILexer<UniformResourceIdentifier> Create()
         {
-            var scheme = schemeLexerFactory.Create();
-            var colon = terminalLexerFactory.Create(@":", StringComparer.Ordinal);
-            var hierPart = hierarchicalPartLexerFactory.Create();
-            var qm = terminalLexerFactory.Create(@"?", StringComparer.Ordinal);
-            var query = queryLexerFactory.Create();
-            var queryPart = concatenationLexerFactory.Create(qm, query);
-            var optQuery = optionLexerFactory.Create(queryPart);
-            var ht = terminalLexerFactory.Create(@"#", StringComparer.Ordinal);
-            var fragment = fragmentLexerFactory.Create();
-            var fragmentPart = concatenationLexerFactory.Create(ht, fragment);
-            var optFragment = optionLexerFactory.Create(fragmentPart);
-            var innerLexer = concatenationLexerFactory.Create(scheme, colon, hierPart, optQuery, optFragment);
+            var innerLexer = concatenationLexerFactory.Create(
+                schemeLexer,
+                terminalLexerFactory.Create(@":", StringComparer.Ordinal),
+                hierarchicalPartLexer,
+                optionLexerFactory.Create(
+                    concatenationLexerFactory.Create(
+                        terminalLexerFactory.Create(@"?", StringComparer.Ordinal),
+                        queryLexer)),
+                optionLexerFactory.Create(
+                    concatenationLexerFactory.Create(
+                        terminalLexerFactory.Create(@"#", StringComparer.Ordinal),
+                        fragmentLexer)));
             return new UniformResourceIdentifierLexer(innerLexer);
         }
     }

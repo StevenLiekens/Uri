@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using Txt;
 using Txt.ABNF;
 using Uri.relative_ref;
@@ -10,40 +11,35 @@ namespace Uri.URI_reference
     {
         private readonly IAlternationLexerFactory alternationLexerFactory;
 
-        private readonly ILexerFactory<RelativeReference> relativeReferenceLexerFactory;
+        private readonly ILexer<RelativeReference> relativeReferenceLexer;
 
-        private readonly ILexerFactory<UniformResourceIdentifier> uriLexerFactory;
+        private readonly ILexer<UniformResourceIdentifier> uriLexer;
 
         public UriReferenceLexerFactory(
-            IAlternationLexerFactory alternationLexerFactory,
-            ILexerFactory<UniformResourceIdentifier> uriLexerFactory,
-            ILexerFactory<RelativeReference> relativeReferenceLexerFactory)
+            [NotNull] IAlternationLexerFactory alternationLexerFactory,
+            [NotNull] ILexer<UniformResourceIdentifier> uriLexer,
+            [NotNull] ILexer<RelativeReference> relativeReferenceLexer)
         {
             if (alternationLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(alternationLexerFactory));
             }
-
-            if (uriLexerFactory == null)
+            if (uriLexer == null)
             {
-                throw new ArgumentNullException(nameof(uriLexerFactory));
+                throw new ArgumentNullException(nameof(uriLexer));
             }
-
-            if (relativeReferenceLexerFactory == null)
+            if (relativeReferenceLexer == null)
             {
-                throw new ArgumentNullException(nameof(relativeReferenceLexerFactory));
+                throw new ArgumentNullException(nameof(relativeReferenceLexer));
             }
-
             this.alternationLexerFactory = alternationLexerFactory;
-            this.uriLexerFactory = uriLexerFactory;
-            this.relativeReferenceLexerFactory = relativeReferenceLexerFactory;
+            this.uriLexer = uriLexer;
+            this.relativeReferenceLexer = relativeReferenceLexer;
         }
 
         public ILexer<UriReference> Create()
         {
-            var uri = uriLexerFactory.Create();
-            var relativeRef = relativeReferenceLexerFactory.Create();
-            var innerLexer = alternationLexerFactory.Create(uri, relativeRef);
+            var innerLexer = alternationLexerFactory.Create(uriLexer, relativeReferenceLexer);
             return new UriReferenceLexer(innerLexer);
         }
     }

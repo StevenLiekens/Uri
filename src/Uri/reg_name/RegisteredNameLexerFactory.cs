@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using Txt;
 using Txt.ABNF;
 using Uri.pct_encoded;
@@ -11,66 +12,56 @@ namespace Uri.reg_name
     {
         private readonly IAlternationLexerFactory alternationLexerFactory;
 
-        private readonly ILexerFactory<PercentEncoding> percentEncodingLexerFactory;
+        private readonly ILexer<PercentEncoding> percentEncodingLexer;
 
         private readonly IRepetitionLexerFactory repetitionLexerFactory;
 
-        private readonly ILexerFactory<SubcomponentsDelimiter> subcomponentsDelimiterLexerFactory;
+        private readonly ILexer<SubcomponentsDelimiter> subcomponentsDelimiterLexer;
 
-        private readonly ILexerFactory<Unreserved> unreservedLexerFactory;
+        private readonly ILexer<Unreserved> unreservedLexer;
 
         public RegisteredNameLexerFactory(
-            IRepetitionLexerFactory repetitionLexerFactory,
-            IAlternationLexerFactory alternationLexerFactory,
-            ILexerFactory<Unreserved> unreservedLexerFactory,
-            ILexerFactory<PercentEncoding> percentEncodingLexerFactory,
-            ILexerFactory<SubcomponentsDelimiter> subcomponentsDelimiterLexerFactory)
+            [NotNull] IAlternationLexerFactory alternationLexerFactory,
+            [NotNull] IRepetitionLexerFactory repetitionLexerFactory,
+            [NotNull] ILexer<Unreserved> unreservedLexer,
+            [NotNull] ILexer<PercentEncoding> percentEncodingLexer,
+            [NotNull] ILexer<SubcomponentsDelimiter> subcomponentsDelimiterLexer)
         {
-            if (repetitionLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(repetitionLexerFactory));
-            }
-
             if (alternationLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(alternationLexerFactory));
             }
-
-            if (unreservedLexerFactory == null)
+            if (repetitionLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(unreservedLexerFactory));
+                throw new ArgumentNullException(nameof(repetitionLexerFactory));
             }
-
-            if (percentEncodingLexerFactory == null)
+            if (unreservedLexer == null)
             {
-                throw new ArgumentNullException(nameof(percentEncodingLexerFactory));
+                throw new ArgumentNullException(nameof(unreservedLexer));
             }
-
-            if (subcomponentsDelimiterLexerFactory == null)
+            if (percentEncodingLexer == null)
             {
-                throw new ArgumentNullException(nameof(subcomponentsDelimiterLexerFactory));
+                throw new ArgumentNullException(nameof(percentEncodingLexer));
             }
-
-            this.repetitionLexerFactory = repetitionLexerFactory;
+            if (subcomponentsDelimiterLexer == null)
+            {
+                throw new ArgumentNullException(nameof(subcomponentsDelimiterLexer));
+            }
             this.alternationLexerFactory = alternationLexerFactory;
-            this.unreservedLexerFactory = unreservedLexerFactory;
-            this.percentEncodingLexerFactory = percentEncodingLexerFactory;
-            this.subcomponentsDelimiterLexerFactory = subcomponentsDelimiterLexerFactory;
+            this.repetitionLexerFactory = repetitionLexerFactory;
+            this.unreservedLexer = unreservedLexer;
+            this.percentEncodingLexer = percentEncodingLexer;
+            this.subcomponentsDelimiterLexer = subcomponentsDelimiterLexer;
         }
 
         public ILexer<RegisteredName> Create()
         {
-            ILexer[] a =
-                {
-                    unreservedLexerFactory.Create(), percentEncodingLexerFactory.Create(),
-                    subcomponentsDelimiterLexerFactory.Create()
-                };
-
-            var b = alternationLexerFactory.Create(a);
-
-            var c = repetitionLexerFactory.Create(b, 0, int.MaxValue);
-
-            return new RegisteredNameLexer(c);
+            var innerLexer =
+                repetitionLexerFactory.Create(
+                    alternationLexerFactory.Create(unreservedLexer, percentEncodingLexer, subcomponentsDelimiterLexer),
+                    0,
+                    int.MaxValue);
+            return new RegisteredNameLexer(innerLexer);
         }
     }
 }

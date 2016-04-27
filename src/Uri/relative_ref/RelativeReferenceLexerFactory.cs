@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using Txt;
 using Txt.ABNF;
 using Uri.fragment;
@@ -9,76 +10,70 @@ namespace Uri.relative_ref
 {
     public class RelativeReferenceLexerFactory : ILexerFactory<RelativeReference>
     {
-        private readonly ILexerFactory<Fragment> fragmentLexerFactory;
+        private readonly IConcatenationLexerFactory concatenationLexerFactory;
+
+        private readonly ILexer<Fragment> fragmentLexer;
 
         private readonly IOptionLexerFactory optionLexerFactory;
 
-        private readonly ILexerFactory<Query> queryLexerFactory;
+        private readonly ILexer<Query> queryLexer;
 
-        private readonly ILexerFactory<RelativePart> relativePartLexerFactory;
-
-        private readonly IConcatenationLexerFactory concatenationLexerFactory;
+        private readonly ILexer<RelativePart> relativePartLexer;
 
         private readonly ITerminalLexerFactory terminalLexerFactory;
 
         public RelativeReferenceLexerFactory(
-            IConcatenationLexerFactory concatenationLexerFactory,
-            IOptionLexerFactory optionLexerFactory,
-            ITerminalLexerFactory terminalLexerFactory,
-            ILexerFactory<RelativePart> relativePartLexerFactory,
-            ILexerFactory<Query> queryLexerFactory,
-            ILexerFactory<Fragment> fragmentLexerFactory)
+            [NotNull] ITerminalLexerFactory terminalLexerFactory,
+            [NotNull] IConcatenationLexerFactory concatenationLexerFactory,
+            [NotNull] IOptionLexerFactory optionLexerFactory,
+            [NotNull] ILexer<RelativePart> relativePartLexer,
+            [NotNull] ILexer<Query> queryLexer,
+            [NotNull] ILexer<Fragment> fragmentLexer)
         {
-            if (concatenationLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(concatenationLexerFactory));
-            }
-
-            if (optionLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(optionLexerFactory));
-            }
-
             if (terminalLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(terminalLexerFactory));
             }
-
-            if (relativePartLexerFactory == null)
+            if (concatenationLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(relativePartLexerFactory));
+                throw new ArgumentNullException(nameof(concatenationLexerFactory));
             }
-
-            if (queryLexerFactory == null)
+            if (optionLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(queryLexerFactory));
+                throw new ArgumentNullException(nameof(optionLexerFactory));
             }
-
-            if (fragmentLexerFactory == null)
+            if (relativePartLexer == null)
             {
-                throw new ArgumentNullException(nameof(fragmentLexerFactory));
+                throw new ArgumentNullException(nameof(relativePartLexer));
             }
-
+            if (queryLexer == null)
+            {
+                throw new ArgumentNullException(nameof(queryLexer));
+            }
+            if (fragmentLexer == null)
+            {
+                throw new ArgumentNullException(nameof(fragmentLexer));
+            }
+            this.terminalLexerFactory = terminalLexerFactory;
             this.concatenationLexerFactory = concatenationLexerFactory;
             this.optionLexerFactory = optionLexerFactory;
-            this.terminalLexerFactory = terminalLexerFactory;
-            this.relativePartLexerFactory = relativePartLexerFactory;
-            this.queryLexerFactory = queryLexerFactory;
-            this.fragmentLexerFactory = fragmentLexerFactory;
+            this.relativePartLexer = relativePartLexer;
+            this.queryLexer = queryLexer;
+            this.fragmentLexer = fragmentLexer;
         }
 
         public ILexer<RelativeReference> Create()
         {
-            var relativePart = relativePartLexerFactory.Create();
-            var qm = terminalLexerFactory.Create(@"?", StringComparer.Ordinal);
-            var query = queryLexerFactory.Create();
-            var queryPart = concatenationLexerFactory.Create(qm, query);
-            var optQuery = optionLexerFactory.Create(queryPart);
-            var ht = terminalLexerFactory.Create(@"#", StringComparer.Ordinal);
-            var fragment = fragmentLexerFactory.Create();
-            var fragmentPart = concatenationLexerFactory.Create(ht, fragment);
-            var optFragment = optionLexerFactory.Create(fragmentPart);
-            var innerLexer = concatenationLexerFactory.Create(relativePart, optQuery, optFragment);
+            var innerLexer = concatenationLexerFactory.Create(
+                relativePartLexer,
+                optionLexerFactory.Create(
+                    concatenationLexerFactory.Create(
+                        terminalLexerFactory.Create(@"?", StringComparer.Ordinal),
+                        queryLexer)),
+                optionLexerFactory.Create(
+                    concatenationLexerFactory.Create(
+                        terminalLexerFactory.Create(@"#", StringComparer.Ordinal),
+                        fragmentLexer)));
             return new RelativeReferenceLexer(innerLexer);
         }
     }

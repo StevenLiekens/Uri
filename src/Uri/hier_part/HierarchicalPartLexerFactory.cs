@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using Txt;
 using Txt.ABNF;
 using Uri.authority;
@@ -13,92 +14,78 @@ namespace Uri.hier_part
     {
         private readonly IAlternationLexerFactory alternationLexerFactory;
 
-        private readonly ILexerFactory<Authority> authorityLexerFactory;
-
-        private readonly ILexerFactory<PathAbsolute> pathAbsoluteLexerFactory;
-
-        private readonly ILexerFactory<PathAbsoluteOrEmpty> pathAbsoluteOrEmptyLexerFactory;
-
-        private readonly ILexerFactory<PathEmpty> pathEmptyLexerFactory;
-
-        private readonly ILexerFactory<PathRootless> pathRootlessLexerFactory;
+        private readonly ILexer<Authority> authorityLexer;
 
         private readonly IConcatenationLexerFactory concatenationLexerFactory;
+
+        private readonly ILexer<PathAbsolute> pathAbsoluteLexer;
+
+        private readonly ILexer<PathAbsoluteOrEmpty> pathAbsoluteOrEmptyLexer;
+
+        private readonly ILexer<PathEmpty> pathEmptyLexer;
+
+        private readonly ILexer<PathRootless> pathRootlessLexer;
 
         private readonly ITerminalLexerFactory terminalLexerFactory;
 
         public HierarchicalPartLexerFactory(
-            IAlternationLexerFactory alternationLexerFactory,
-            ILexerFactory<Authority> authorityLexerFactory,
-            ILexerFactory<PathAbsolute> pathAbsoluteLexerFactory,
-            ILexerFactory<PathAbsoluteOrEmpty> pathAbsoluteOrEmptyLexerFactory,
-            ILexerFactory<PathEmpty> pathEmptyLexerFactory,
-            ILexerFactory<PathRootless> pathRootlessLexerFactory,
-            IConcatenationLexerFactory concatenationLexerFactory,
-            ITerminalLexerFactory terminalLexerFactory)
+            [NotNull] ITerminalLexerFactory terminalLexerFactory,
+            [NotNull] IAlternationLexerFactory alternationLexerFactory,
+            [NotNull] IConcatenationLexerFactory concatenationLexerFactory,
+            [NotNull] ILexer<Authority> authorityLexer,
+            [NotNull] ILexer<PathAbsoluteOrEmpty> pathAbsoluteOrEmptyLexer,
+            [NotNull] ILexer<PathAbsolute> pathAbsoluteLexer,
+            [NotNull] ILexer<PathRootless> pathRootlessLexer,
+            [NotNull] ILexer<PathEmpty> pathEmptyLexer)
         {
-            if (alternationLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(alternationLexerFactory));
-            }
-
-            if (authorityLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(authorityLexerFactory));
-            }
-
-            if (pathAbsoluteLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(pathAbsoluteLexerFactory));
-            }
-
-            if (pathAbsoluteOrEmptyLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(pathAbsoluteOrEmptyLexerFactory));
-            }
-
-            if (pathEmptyLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(pathEmptyLexerFactory));
-            }
-
-            if (pathRootlessLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(pathRootlessLexerFactory));
-            }
-
-            if (concatenationLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(concatenationLexerFactory));
-            }
-
             if (terminalLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(terminalLexerFactory));
             }
-
-            this.alternationLexerFactory = alternationLexerFactory;
-            this.authorityLexerFactory = authorityLexerFactory;
-            this.pathAbsoluteLexerFactory = pathAbsoluteLexerFactory;
-            this.pathAbsoluteOrEmptyLexerFactory = pathAbsoluteOrEmptyLexerFactory;
-            this.pathEmptyLexerFactory = pathEmptyLexerFactory;
-            this.pathRootlessLexerFactory = pathRootlessLexerFactory;
-            this.concatenationLexerFactory = concatenationLexerFactory;
+            if (alternationLexerFactory == null)
+            {
+                throw new ArgumentNullException(nameof(alternationLexerFactory));
+            }
+            if (concatenationLexerFactory == null)
+            {
+                throw new ArgumentNullException(nameof(concatenationLexerFactory));
+            }
+            if (authorityLexer == null)
+            {
+                throw new ArgumentNullException(nameof(authorityLexer));
+            }
+            if (pathAbsoluteOrEmptyLexer == null)
+            {
+                throw new ArgumentNullException(nameof(pathAbsoluteOrEmptyLexer));
+            }
+            if (pathAbsoluteLexer == null)
+            {
+                throw new ArgumentNullException(nameof(pathAbsoluteLexer));
+            }
+            if (pathRootlessLexer == null)
+            {
+                throw new ArgumentNullException(nameof(pathRootlessLexer));
+            }
+            if (pathEmptyLexer == null)
+            {
+                throw new ArgumentNullException(nameof(pathEmptyLexer));
+            }
             this.terminalLexerFactory = terminalLexerFactory;
+            this.alternationLexerFactory = alternationLexerFactory;
+            this.concatenationLexerFactory = concatenationLexerFactory;
+            this.authorityLexer = authorityLexer;
+            this.pathAbsoluteOrEmptyLexer = pathAbsoluteOrEmptyLexer;
+            this.pathAbsoluteLexer = pathAbsoluteLexer;
+            this.pathRootlessLexer = pathRootlessLexer;
+            this.pathEmptyLexer = pathEmptyLexer;
         }
 
         public ILexer<HierarchicalPart> Create()
         {
             var delim = terminalLexerFactory.Create(@"//", StringComparer.Ordinal);
-            var authority = authorityLexerFactory.Create();
-            var pathAbEmpty = pathAbsoluteOrEmptyLexerFactory.Create();
-            var seq = concatenationLexerFactory.Create(delim, authority, pathAbEmpty);
-            var pathAbsolute = pathAbsoluteLexerFactory.Create();
-            var pathRootless = pathRootlessLexerFactory.Create();
-            var pathEmpty = pathEmptyLexerFactory.Create();
-            var innerLexer = alternationLexerFactory.Create(seq, pathAbsolute, pathRootless, pathEmpty);
+            var seq = concatenationLexerFactory.Create(delim, authorityLexer, pathAbsoluteOrEmptyLexer);
+            var innerLexer = alternationLexerFactory.Create(seq, pathAbsoluteLexer, pathRootlessLexer, pathEmptyLexer);
             return new HierarchicalPartLexer(innerLexer);
-
         }
     }
 }

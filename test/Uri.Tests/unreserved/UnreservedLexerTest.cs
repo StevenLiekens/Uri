@@ -1,12 +1,9 @@
 ﻿using Txt;
-using Txt.ABNF;
-using Txt.ABNF.Core.ALPHA;
-using Txt.ABNF.Core.DIGIT;
 using Xunit;
 
 namespace Uri.unreserved
 {
-    public class UnreservedLexerTests
+    public class UnreservedLexerTest : LexerTestBase
     {
         [Theory]
         [InlineData(@"a")]
@@ -21,13 +18,7 @@ namespace Uri.unreserved
         [InlineData(@"~")]
         public void Read_ShouldSucceed(string input)
         {
-            var terminalLexerFactory = new TerminalLexerFactory();
-            var alternationLexerFactory = new AlternationLexerFactory();
-            var valueRangeLexerFactory = new ValueRangeLexerFactory();
-            var alphaLexerFactory = new AlphaLexerFactory(valueRangeLexerFactory, alternationLexerFactory);
-            var digitLexerFactory = new DigitLexerFactory(valueRangeLexerFactory);
-            var factory = new UnreservedLexerFactory(alphaLexerFactory, digitLexerFactory, terminalLexerFactory, alternationLexerFactory);
-            var lexer = factory.Create();
+            var lexer = Container.GetInstance<ILexer<Unreserved>>();
             using (var scanner = new TextScanner(new StringTextSource(input)))
             {
                 var result = lexer.Read(scanner);

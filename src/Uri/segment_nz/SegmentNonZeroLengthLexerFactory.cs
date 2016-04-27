@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using Txt;
 using Txt.ABNF;
 using Uri.pchar;
@@ -7,31 +8,30 @@ namespace Uri.segment_nz
 {
     public class SegmentNonZeroLengthLexerFactory : ILexerFactory<SegmentNonZeroLength>
     {
-        private readonly ILexerFactory<PathCharacter> pathCharacterLexerFactory;
+        private readonly ILexer<PathCharacter> pathCharacterLexer;
 
         private readonly IRepetitionLexerFactory repetitionLexerFactory;
 
-        public SegmentNonZeroLengthLexerFactory(ILexerFactory<PathCharacter> pathCharacterLexerFactory, IRepetitionLexerFactory repetitionLexerFactory)
+        public SegmentNonZeroLengthLexerFactory(
+            [NotNull] IRepetitionLexerFactory repetitionLexerFactory,
+            [NotNull] ILexer<PathCharacter> pathCharacterLexer)
         {
-            if (pathCharacterLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(pathCharacterLexerFactory));
-            }
-
             if (repetitionLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(repetitionLexerFactory));
             }
-
-            this.pathCharacterLexerFactory = pathCharacterLexerFactory;
+            if (pathCharacterLexer == null)
+            {
+                throw new ArgumentNullException(nameof(pathCharacterLexer));
+            }
             this.repetitionLexerFactory = repetitionLexerFactory;
+            this.pathCharacterLexer = pathCharacterLexer;
         }
 
         public ILexer<SegmentNonZeroLength> Create()
         {
-            var pathCharacterLexer = pathCharacterLexerFactory.Create();
-            var segmentRepetitionLexer = repetitionLexerFactory.Create(pathCharacterLexer, 1, int.MaxValue);
-            return new SegmentNonZeroLengthLexer(segmentRepetitionLexer);
+            var innerLexer = repetitionLexerFactory.Create(pathCharacterLexer, 1, int.MaxValue);
+            return new SegmentNonZeroLengthLexer(innerLexer);
         }
     }
 }

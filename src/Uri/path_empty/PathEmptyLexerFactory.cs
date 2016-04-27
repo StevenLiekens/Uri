@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using Txt;
 using Txt.ABNF;
 
@@ -8,13 +9,12 @@ namespace Uri.path_empty
     {
         private readonly ITerminalLexerFactory terminalLexerFactory;
 
-        public PathEmptyLexerFactory(ITerminalLexerFactory terminalLexerFactory)
+        public PathEmptyLexerFactory([NotNull] ITerminalLexerFactory terminalLexerFactory)
         {
             if (terminalLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(terminalLexerFactory));
             }
-
             this.terminalLexerFactory = terminalLexerFactory;
         }
 

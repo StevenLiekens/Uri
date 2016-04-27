@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using Txt;
 using Txt.ABNF;
 using Uri.pchar;
@@ -9,44 +10,44 @@ namespace Uri.query
     {
         private readonly IAlternationLexerFactory alternationLexerFactory;
 
-        private readonly ILexerFactory<PathCharacter> pathCharacterLexerFactory;
+        private readonly ILexer<PathCharacter> pathCharacterLexer;
 
         private readonly IRepetitionLexerFactory repetitionLexerFactory;
 
         private readonly ITerminalLexerFactory terminalLexerFactory;
 
-        public QueryLexerFactory(IAlternationLexerFactory alternationLexerFactory, ILexerFactory<PathCharacter> pathCharacterLexerFactory, IRepetitionLexerFactory repetitionLexerFactory, ITerminalLexerFactory terminalLexerFactory)
+        public QueryLexerFactory(
+            [NotNull] ITerminalLexerFactory terminalLexerFactory,
+            [NotNull] IAlternationLexerFactory alternationLexerFactory,
+            [NotNull] IRepetitionLexerFactory repetitionLexerFactory,
+            [NotNull] ILexer<PathCharacter> pathCharacterLexer)
         {
-            if (alternationLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(alternationLexerFactory));
-            }
-
-            if (pathCharacterLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(pathCharacterLexerFactory));
-            }
-
-            if (repetitionLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(repetitionLexerFactory));
-            }
-
             if (terminalLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(terminalLexerFactory));
             }
-
-            this.alternationLexerFactory = alternationLexerFactory;
-            this.pathCharacterLexerFactory = pathCharacterLexerFactory;
-            this.repetitionLexerFactory = repetitionLexerFactory;
+            if (alternationLexerFactory == null)
+            {
+                throw new ArgumentNullException(nameof(alternationLexerFactory));
+            }
+            if (repetitionLexerFactory == null)
+            {
+                throw new ArgumentNullException(nameof(repetitionLexerFactory));
+            }
+            if (pathCharacterLexer == null)
+            {
+                throw new ArgumentNullException(nameof(pathCharacterLexer));
+            }
             this.terminalLexerFactory = terminalLexerFactory;
+            this.alternationLexerFactory = alternationLexerFactory;
+            this.repetitionLexerFactory = repetitionLexerFactory;
+            this.pathCharacterLexer = pathCharacterLexer;
         }
 
         public ILexer<Query> Create()
         {
             var alternationLexer = alternationLexerFactory.Create(
-                pathCharacterLexerFactory.Create(),
+                pathCharacterLexer,
                 terminalLexerFactory.Create(@"/", StringComparer.Ordinal),
                 terminalLexerFactory.Create(@"?", StringComparer.Ordinal));
             var fragmentRepetitionLexer = repetitionLexerFactory.Create(alternationLexer, 0, int.MaxValue);

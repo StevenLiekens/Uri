@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using Txt;
 using Txt.ABNF;
 using Uri.h16;
@@ -10,69 +11,58 @@ namespace Uri.ls32
     {
         private readonly IAlternationLexerFactory alternationLexerFactory;
 
-        private readonly ILexerFactory<HexadecimalInt16> hexadecimalInt16LexerFactory;
-
-        private readonly ILexerFactory<IPv4Address> ipv4AddressLexerFactory;
-
         private readonly IConcatenationLexerFactory concatenationLexerFactory;
+
+        private readonly ILexer<HexadecimalInt16> hexadecimalInt16Lexer;
+
+        private readonly ILexer<IPv4Address> ipv4AddressLexer;
 
         private readonly ITerminalLexerFactory terminalLexerFactory;
 
         public LeastSignificantInt32LexerFactory(
-            IAlternationLexerFactory alternationLexerFactory,
-            IConcatenationLexerFactory concatenationLexerFactory,
-            ITerminalLexerFactory terminalLexerFactory,
-            ILexerFactory<HexadecimalInt16> hexadecimalInt16LexerFactory,
-            ILexerFactory<IPv4Address> ipv4AddressLexerFactory)
+            [NotNull] ITerminalLexerFactory terminalLexerFactory,
+            [NotNull] IAlternationLexerFactory alternationLexerFactory,
+            [NotNull] IConcatenationLexerFactory concatenationLexerFactory,
+            [NotNull] ILexer<HexadecimalInt16> hexadecimalInt16Lexer,
+            [NotNull] ILexer<IPv4Address> ipv4AddressLexer)
         {
-            if (alternationLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(alternationLexerFactory));
-            }
-
-            if (concatenationLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(concatenationLexerFactory));
-            }
-
             if (terminalLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(terminalLexerFactory));
             }
-
-            if (hexadecimalInt16LexerFactory == null)
+            if (alternationLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(hexadecimalInt16LexerFactory));
+                throw new ArgumentNullException(nameof(alternationLexerFactory));
             }
-
-            if (ipv4AddressLexerFactory == null)
+            if (concatenationLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(ipv4AddressLexerFactory));
+                throw new ArgumentNullException(nameof(concatenationLexerFactory));
             }
-
+            if (hexadecimalInt16Lexer == null)
+            {
+                throw new ArgumentNullException(nameof(hexadecimalInt16Lexer));
+            }
+            if (ipv4AddressLexer == null)
+            {
+                throw new ArgumentNullException(nameof(ipv4AddressLexer));
+            }
+            this.terminalLexerFactory = terminalLexerFactory;
             this.alternationLexerFactory = alternationLexerFactory;
             this.concatenationLexerFactory = concatenationLexerFactory;
-            this.terminalLexerFactory = terminalLexerFactory;
-            this.hexadecimalInt16LexerFactory = hexadecimalInt16LexerFactory;
-            this.ipv4AddressLexerFactory = ipv4AddressLexerFactory;
+            this.hexadecimalInt16Lexer = hexadecimalInt16Lexer;
+            this.ipv4AddressLexer = ipv4AddressLexer;
         }
 
         public ILexer<LeastSignificantInt32> Create()
         {
-            // h16
-            var a = hexadecimalInt16LexerFactory.Create();
-
             // ":"
             var b = terminalLexerFactory.Create(@":", StringComparer.Ordinal);
 
             // h16 ":" h16
-            var c = concatenationLexerFactory.Create(a, b, a);
-
-            // IPv4address
-            var d = ipv4AddressLexerFactory.Create();
+            var c = concatenationLexerFactory.Create(hexadecimalInt16Lexer, b, hexadecimalInt16Lexer);
 
             // ( h16 ":" h16 ) / IPv4address
-            var e = alternationLexerFactory.Create(c, d);
+            var e = alternationLexerFactory.Create(c, ipv4AddressLexer);
 
             // ls32
             return new LeastSignificantInt32Lexer(e);

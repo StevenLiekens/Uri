@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using Txt;
 using Txt.ABNF;
 using Uri.host;
@@ -9,76 +10,67 @@ namespace Uri.authority
 {
     public class AuthorityLexerFactory : ILexerFactory<Authority>
     {
-        private readonly ILexerFactory<Host> hostLexerFactory;
+        private readonly IConcatenationLexerFactory concatenationLexerFactory;
+
+        private readonly ILexer<Host> hostLexer;
 
         private readonly IOptionLexerFactory optionLexerFactory;
 
-        private readonly ILexerFactory<Port> portLexerFactory;
-
-        private readonly IConcatenationLexerFactory concatenationLexerFactory;
+        private readonly ILexer<Port> portLexer;
 
         private readonly ITerminalLexerFactory terminalLexerFactory;
 
-        private readonly ILexerFactory<UserInformation> userInformationLexerFactory;
+        private readonly ILexer<UserInformation> userInformationLexer;
 
         public AuthorityLexerFactory(
-            IOptionLexerFactory optionLexerFactory,
-            IConcatenationLexerFactory concatenationLexerFactory,
-            ILexerFactory<UserInformation> userInformationLexerFactory,
-            ITerminalLexerFactory terminalLexerFactory,
-            ILexerFactory<Host> hostLexerFactory,
-            ILexerFactory<Port> portLexerFactory)
+            [NotNull] ITerminalLexerFactory terminalLexerFactory,
+            [NotNull] IConcatenationLexerFactory concatenationLexerFactory,
+            [NotNull] IOptionLexerFactory optionLexerFactory,
+            [NotNull] ILexer<UserInformation> userInformationLexer,
+            [NotNull] ILexer<Host> hostLexer,
+            [NotNull] ILexer<Port> portLexer)
         {
-            if (optionLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(optionLexerFactory));
-            }
-
-            if (concatenationLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(concatenationLexerFactory));
-            }
-
-            if (userInformationLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(userInformationLexerFactory));
-            }
-
             if (terminalLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(terminalLexerFactory));
             }
-
-            if (hostLexerFactory == null)
+            if (concatenationLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(hostLexerFactory));
+                throw new ArgumentNullException(nameof(concatenationLexerFactory));
             }
-
-            if (portLexerFactory == null)
+            if (optionLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(portLexerFactory));
+                throw new ArgumentNullException(nameof(optionLexerFactory));
             }
-
-            this.optionLexerFactory = optionLexerFactory;
-            this.userInformationLexerFactory = userInformationLexerFactory;
+            if (userInformationLexer == null)
+            {
+                throw new ArgumentNullException(nameof(userInformationLexer));
+            }
+            if (hostLexer == null)
+            {
+                throw new ArgumentNullException(nameof(hostLexer));
+            }
+            if (portLexer == null)
+            {
+                throw new ArgumentNullException(nameof(portLexer));
+            }
             this.terminalLexerFactory = terminalLexerFactory;
-            this.hostLexerFactory = hostLexerFactory;
-            this.portLexerFactory = portLexerFactory;
             this.concatenationLexerFactory = concatenationLexerFactory;
+            this.optionLexerFactory = optionLexerFactory;
+            this.userInformationLexer = userInformationLexer;
+            this.hostLexer = hostLexer;
+            this.portLexer = portLexer;
         }
 
         public ILexer<Authority> Create()
         {
-            var userinfo = userInformationLexerFactory.Create();
             var at = terminalLexerFactory.Create(@"@", StringComparer.Ordinal);
-            var userinfoseq = concatenationLexerFactory.Create(userinfo, at);
+            var userinfoseq = concatenationLexerFactory.Create(userInformationLexer, at);
             var optuserinfo = optionLexerFactory.Create(userinfoseq);
-            var host = hostLexerFactory.Create();
             var colon = terminalLexerFactory.Create(@":", StringComparer.Ordinal);
-            var port = portLexerFactory.Create();
-            var portseq = concatenationLexerFactory.Create(colon, port);
+            var portseq = concatenationLexerFactory.Create(colon, portLexer);
             var optport = optionLexerFactory.Create(portseq);
-            var innerLexer = concatenationLexerFactory.Create(optuserinfo, host, optport);
+            var innerLexer = concatenationLexerFactory.Create(optuserinfo, hostLexer, optport);
             return new AuthorityLexer(innerLexer);
         }
     }
