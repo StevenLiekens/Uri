@@ -1,19 +1,24 @@
-os: Visual Studio 2015
 version: '1.0.{build}'
 configuration:
 - Debug
 - Release
 platform: Any CPU
 init:
- - ps: $Env:DNX_BUILD_VERSION = "CI" + $Env:APPVEYOR_BUILD_NUMBER.PadLeft(5, "0")
+ - ps: $Env:LABEL = "CI" + $Env:APPVEYOR_BUILD_NUMBER.PadLeft(5, "0")
 install:
-- dnvm install -u 1.0.0-rc2-20221
-- appveyor-retry dnu restore
-build:
-  parallel: true
-test: off
+- ps: Start-FileDownload 'https://dotnetcli.blob.core.windows.net/dotnet/beta/Installers/Latest/dotnet-dev-win-x64.latest.exe'
+- dotnet-dev-win-x64.latest.exe /quiet
+- dnvm upgrade -u -r clr
+environment:
+  PATH: $(PATH);$(PROGRAMFILES)\dotnet\
+build_script:
+- appveyor-retry dotnet restore -v Minimal
+- dotnet build **\project.json -c %CONFIGURATION%
+- dotnet pack -c %CONFIGURATION% --no-build --version-suffix %LABEL% -o artifacts .\src\Uri\project.json
+test_script:
+- dotnet test .\test\Uri.Tests\
 artifacts:
-  - path: artifacts\bin\Uri\**\*.nupkg
+  - path: artifacts\*.nupkg
 deploy:
  - provider: NuGet
    server: https://www.myget.org/F/ci/api/v2/package
@@ -21,3 +26,5 @@ deploy:
      secure: Qwf1a1BP2lCg6c9F5xt7hwDVciba1FhiYewLIAGzAVLeNh0TiAamxz78W06ij4tp
    skip_symbols: false
    symbol_server: https://www.myget.org/F/ci/api/v2/package
+cache:
+ - '%USERPROFILE%\.nuget\packages'
