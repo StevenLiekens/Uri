@@ -1,5 +1,5 @@
 ﻿using System;
-using Txt;
+using Txt.Core;
 using Txt.ABNF;
 
 namespace Uri.relative_ref
@@ -17,7 +17,7 @@ namespace Uri.relative_ref
             this.innerLexer = innerLexer;
         }
 
-        public override ReadResult<RelativeReference> Read(ITextScanner scanner)
+        public override ReadResult<RelativeReference> ReadImpl(ITextScanner scanner)
         {
             if (scanner == null)
             {

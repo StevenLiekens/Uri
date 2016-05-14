@@ -1,5 +1,5 @@
 ﻿using System;
-using Txt;
+using Txt.Core;
 using Txt.ABNF;
 
 namespace Uri.sub_delims
@@ -18,7 +18,7 @@ namespace Uri.sub_delims
             this.innerLexer = innerLexer;
         }
 
-        public override ReadResult<SubcomponentsDelimiter> Read(ITextScanner scanner)
+        public override ReadResult<SubcomponentsDelimiter> ReadImpl(ITextScanner scanner)
         {
             if (scanner == null)
             {

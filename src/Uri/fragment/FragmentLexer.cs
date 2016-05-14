@@ -1,5 +1,5 @@
 ﻿using System;
-using Txt;
+using Txt.Core;
 using Txt.ABNF;
 
 namespace Uri.fragment
@@ -18,7 +18,7 @@ namespace Uri.fragment
             this.innerLexer = innerLexer;
         }
 
-        public override ReadResult<Fragment> Read(ITextScanner scanner)
+        public override ReadResult<Fragment> ReadImpl(ITextScanner scanner)
         {
             if (scanner == null)
             {

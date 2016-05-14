@@ -1,5 +1,5 @@
 ﻿using System;
-using Txt;
+using Txt.Core;
 using Txt.ABNF;
 
 namespace Uri.dec_octet
@@ -17,7 +17,7 @@ namespace Uri.dec_octet
             this.innerLexer = innerLexer;
         }
 
-        public override ReadResult<DecimalOctet> Read(ITextScanner scanner)
+        public override ReadResult<DecimalOctet> ReadImpl(ITextScanner scanner)
         {
             if (scanner == null)
             {

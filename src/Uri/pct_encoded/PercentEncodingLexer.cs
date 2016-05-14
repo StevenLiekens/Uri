@@ -1,5 +1,5 @@
 ﻿using System;
-using Txt;
+using Txt.Core;
 using Txt.ABNF;
 
 namespace Uri.pct_encoded
@@ -18,7 +18,7 @@ namespace Uri.pct_encoded
             this.innerLexer = innerLexer;
         }
 
-        public override ReadResult<PercentEncoding> Read(ITextScanner scanner)
+        public override ReadResult<PercentEncoding> ReadImpl(ITextScanner scanner)
         {
             if (scanner == null)
             {

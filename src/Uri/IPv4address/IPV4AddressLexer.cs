@@ -1,5 +1,5 @@
 ﻿using System;
-using Txt;
+using Txt.Core;
 using Txt.ABNF;
 
 namespace Uri.IPv4address
@@ -17,7 +17,7 @@ namespace Uri.IPv4address
             this.innerLexer = innerLexer;
         }
 
-        public override ReadResult<IPv4Address> Read(ITextScanner scanner)
+        public override ReadResult<IPv4Address> ReadImpl(ITextScanner scanner)
         {
             if (scanner == null)
             {

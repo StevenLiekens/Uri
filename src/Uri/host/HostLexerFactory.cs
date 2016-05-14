@@ -1,6 +1,6 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Txt;
+using Txt.Core;
 using Txt.ABNF;
 using Uri.IPv4address;
 using Uri.IP_literal;

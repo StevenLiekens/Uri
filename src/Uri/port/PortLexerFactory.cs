@@ -1,6 +1,6 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Txt;
+using Txt.Core;
 using Txt.ABNF;
 using Txt.ABNF.Core.DIGIT;
 

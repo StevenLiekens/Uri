@@ -1,5 +1,5 @@
 ﻿using System;
-using Txt;
+using Txt.Core;
 using Txt.ABNF;
 
 namespace Uri.path_rootless
@@ -18,7 +18,7 @@ namespace Uri.path_rootless
             this.innerLexer = innerLexer;
         }
 
-        public override ReadResult<PathRootless> Read(ITextScanner scanner)
+        public override ReadResult<PathRootless> ReadImpl(ITextScanner scanner)
         {
             if (scanner == null)
             {

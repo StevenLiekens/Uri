@@ -1,5 +1,5 @@
 ﻿using System;
-using Txt;
+using Txt.Core;
 using Txt.ABNF;
 
 namespace Uri.relative_part
@@ -18,7 +18,7 @@ namespace Uri.relative_part
             this.innerLexer = innerLexer;
         }
 
-        public override ReadResult<RelativePart> Read(ITextScanner scanner)
+        public override ReadResult<RelativePart> ReadImpl(ITextScanner scanner)
         {
             if (scanner == null)
             {

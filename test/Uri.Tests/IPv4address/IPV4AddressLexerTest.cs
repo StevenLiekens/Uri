@@ -1,4 +1,4 @@
-﻿using Txt;
+﻿using Txt.Core;
 using Xunit;
 
 namespace Uri.IPv4address

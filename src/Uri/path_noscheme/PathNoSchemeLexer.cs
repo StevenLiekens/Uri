@@ -1,5 +1,5 @@
 ﻿using System;
-using Txt;
+using Txt.Core;
 using Txt.ABNF;
 
 namespace Uri.path_noscheme
@@ -18,7 +18,7 @@ namespace Uri.path_noscheme
             this.innerLexer = innerLexer;
         }
 
-        public override ReadResult<PathNoScheme> Read(ITextScanner scanner)
+        public override ReadResult<PathNoScheme> ReadImpl(ITextScanner scanner)
         {
             if (scanner == null)
             {

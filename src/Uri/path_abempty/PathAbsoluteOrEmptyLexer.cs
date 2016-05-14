@@ -1,5 +1,5 @@
 ﻿using System;
-using Txt;
+using Txt.Core;
 using Txt.ABNF;
 
 namespace Uri.path_abempty
@@ -17,7 +17,7 @@ namespace Uri.path_abempty
             this.innerLexer = innerLexer;
         }
 
-        public override ReadResult<PathAbsoluteOrEmpty> Read(ITextScanner scanner)
+        public override ReadResult<PathAbsoluteOrEmpty> ReadImpl(ITextScanner scanner)
         {
             if (scanner == null)
             {

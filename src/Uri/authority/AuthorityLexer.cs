@@ -1,5 +1,5 @@
 ﻿using System;
-using Txt;
+using Txt.Core;
 using Txt.ABNF;
 
 namespace Uri.authority
@@ -17,7 +17,7 @@ namespace Uri.authority
             this.innerLexer = innerLexer;
         }
 
-        public override ReadResult<Authority> Read(ITextScanner scanner)
+        public override ReadResult<Authority> ReadImpl(ITextScanner scanner)
         {
             if (scanner == null)
             {

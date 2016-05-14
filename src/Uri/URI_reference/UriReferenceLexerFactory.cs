@@ -1,6 +1,6 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Txt;
+using Txt.Core;
 using Txt.ABNF;
 using Uri.relative_ref;
 using Uri.URI;

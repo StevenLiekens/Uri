@@ -1,5 +1,5 @@
 ﻿using System;
-using Txt;
+using Txt.Core;
 using Txt.ABNF;
 
 namespace Uri.h16
@@ -18,7 +18,7 @@ namespace Uri.h16
             this.innerLexer = innerLexer;
         }
 
-        public override ReadResult<HexadecimalInt16> Read(ITextScanner scanner)
+        public override ReadResult<HexadecimalInt16> ReadImpl(ITextScanner scanner)
         {
             if (scanner == null)
             {

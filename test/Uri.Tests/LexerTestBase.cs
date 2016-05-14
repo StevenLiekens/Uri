@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using SimpleInjector;
 using Txt.ABNF;
-using Registration = Txt.Registration;
+using Registration = Txt.Core.Registration;
 
 namespace Uri
 {

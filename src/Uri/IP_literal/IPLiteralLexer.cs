@@ -1,5 +1,5 @@
 ﻿using System;
-using Txt;
+using Txt.Core;
 using Txt.ABNF;
 
 namespace Uri.IP_literal
@@ -17,7 +17,7 @@ namespace Uri.IP_literal
             this.innerLexer = innerLexer;
         }
 
-        public override ReadResult<IPLiteral> Read(ITextScanner scanner)
+        public override ReadResult<IPLiteral> ReadImpl(ITextScanner scanner)
         {
             if (scanner == null)
             {

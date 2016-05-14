@@ -1,5 +1,5 @@
 ﻿using System;
-using Txt;
+using Txt.Core;
 using Txt.ABNF;
 
 namespace Uri.pchar
@@ -18,7 +18,7 @@ namespace Uri.pchar
             this.innerLexer = innerLexer;
         }
 
-        public override ReadResult<PathCharacter> Read(ITextScanner scanner)
+        public override ReadResult<PathCharacter> ReadImpl(ITextScanner scanner)
         {
             if (scanner == null)
             {

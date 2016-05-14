@@ -1,5 +1,5 @@
 ﻿using System;
-using Txt;
+using Txt.Core;
 using Txt.ABNF;
 
 namespace Uri.IPv6address
@@ -18,7 +18,7 @@ namespace Uri.IPv6address
             this.innerLexer = innerLexer;
         }
 
-        public override ReadResult<IPv6Address> Read(ITextScanner scanner)
+        public override ReadResult<IPv6Address> ReadImpl(ITextScanner scanner)
         {
             if (scanner == null)
             {

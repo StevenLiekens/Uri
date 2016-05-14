@@ -1,5 +1,5 @@
 ﻿using System;
-using Txt;
+using Txt.Core;
 using Txt.ABNF;
 
 namespace Uri.ls32
@@ -17,7 +17,7 @@ namespace Uri.ls32
             this.innerLexer = innerLexer;
         }
 
-        public override ReadResult<LeastSignificantInt32> Read(ITextScanner scanner)
+        public override ReadResult<LeastSignificantInt32> ReadImpl(ITextScanner scanner)
         {
             if (scanner == null)
             {

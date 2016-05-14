@@ -1,6 +1,6 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Txt;
+using Txt.Core;
 using Txt.ABNF;
 
 namespace Uri.path_empty

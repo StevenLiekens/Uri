@@ -1,5 +1,5 @@
 ﻿using System;
-using Txt;
+using Txt.Core;
 using Txt.ABNF;
 
 namespace Uri.hier_part
@@ -18,7 +18,7 @@ namespace Uri.hier_part
             this.innerLexer = innerLexer;
         }
 
-        public override ReadResult<HierarchicalPart> Read(ITextScanner scanner)
+        public override ReadResult<HierarchicalPart> ReadImpl(ITextScanner scanner)
         {
             if (scanner == null)
             {

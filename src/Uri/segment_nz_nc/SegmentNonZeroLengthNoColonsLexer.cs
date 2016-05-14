@@ -1,5 +1,5 @@
 ﻿using System;
-using Txt;
+using Txt.Core;
 using Txt.ABNF;
 
 namespace Uri.segment_nz_nc
@@ -18,7 +18,7 @@ namespace Uri.segment_nz_nc
             this.innerLexer = innerLexer;
         }
 
-        public override ReadResult<SegmentNonZeroLengthNoColons> Read(ITextScanner scanner)
+        public override ReadResult<SegmentNonZeroLengthNoColons> ReadImpl(ITextScanner scanner)
         {
             if (scanner == null)
             {

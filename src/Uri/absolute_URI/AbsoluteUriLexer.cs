@@ -1,5 +1,5 @@
 ﻿using System;
-using Txt;
+using Txt.Core;
 using Txt.ABNF;
 
 namespace Uri.absolute_URI
@@ -17,7 +17,7 @@ namespace Uri.absolute_URI
             this.innerLexer = innerLexer;
         }
 
-        public override ReadResult<AbsoluteUri> Read(ITextScanner scanner)
+        public override ReadResult<AbsoluteUri> ReadImpl(ITextScanner scanner)
         {
             if (scanner == null)
             {

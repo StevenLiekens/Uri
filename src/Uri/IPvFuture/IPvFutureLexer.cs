@@ -1,5 +1,5 @@
 ﻿using System;
-using Txt;
+using Txt.Core;
 using Txt.ABNF;
 
 namespace Uri.IPvFuture
@@ -18,7 +18,7 @@ namespace Uri.IPvFuture
             this.innerLexer = innerLexer;
         }
 
-        public override ReadResult<IPvFuture> Read(ITextScanner scanner)
+        public override ReadResult<IPvFuture> ReadImpl(ITextScanner scanner)
         {
             if (scanner == null)
             {
