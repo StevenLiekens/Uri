@@ -1,19 +1,13 @@
 ﻿{
     "version": "1.0.0-*",
     "description": "Uri Class Library",
-    "authors": ["Steven Liekens"],
-    "tags": [""],
-    "projectUrl": "",
-    "licenseUrl": "",
+    "authors": [ "Steven Liekens" ],
     "frameworks": {
-        "dotnet5.1": {
+        "netstandard1.0": {
+            "NETStandard.Library": {
+                "version": "1.0.0-rc2-*"
+            },
             "dependencies": {
-                "Microsoft.CSharp": "4.0.1-beta-23516",
-                "System.Collections": "4.0.11-beta-23516",
-                "System.Linq": "4.0.1-beta-23516",
-                "System.Runtime": "4.0.21-beta-23516",
-                "System.Threading": "4.0.11-beta-23516",
-                "System.Resources.ResourceManager": "4.0.1-beta-23516",
                 "Txt": "2.0.0-*",
                 "Txt.ABNF": "2.0.0-*"
             }
