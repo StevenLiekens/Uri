@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{13A6CC00-2CC8-47EE-A5FD-81235FBAFAAE}"
 EndProject
@@ -19,6 +19,8 @@ EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Uri", "src\Uri\Uri.xproj", "{6CAACB93-8086-4788-8479-B6E10D1BDCCA}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Uri.Tests", "test\Uri.Tests\Uri.Tests.xproj", "{06E6C7AF-7A75-4AFE-90E4-D972779D63E7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{EC768CEC-E6B2-42EA-A687-DC1036225F7E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,6 +42,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{6CAACB93-8086-4788-8479-B6E10D1BDCCA} = {13A6CC00-2CC8-47EE-A5FD-81235FBAFAAE}
-		{06E6C7AF-7A75-4AFE-90E4-D972779D63E7} = {13A6CC00-2CC8-47EE-A5FD-81235FBAFAAE}
+		{06E6C7AF-7A75-4AFE-90E4-D972779D63E7} = {EC768CEC-E6B2-42EA-A687-DC1036225F7E}
 	EndGlobalSection
 EndGlobal
