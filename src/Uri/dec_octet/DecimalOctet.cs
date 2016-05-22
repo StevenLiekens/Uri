@@ -8,10 +8,5 @@ namespace Uri.dec_octet
             : base(alternation)
         {
         }
-
-        public byte ToByte()
-        {
-            return byte.Parse(Text);
-        }
     }
 }
