@@ -1,5 +1,4 @@
-﻿using System;
-using Txt.ABNF;
+﻿using Txt.ABNF;
 
 namespace Uri.port
 {
@@ -8,11 +7,6 @@ namespace Uri.port
         public Port(Repetition repetition)
             : base(repetition)
         {
-        }
-
-        public int ToInt()
-        {
-            return Convert.ToInt32(Text);
         }
     }
 }
