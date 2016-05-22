@@ -7,7 +7,7 @@ namespace Uri.dec_octet
     {
         protected override byte ParseImpl(DecimalOctet value)
         {
-            return byte.Parse(value.Text, NumberStyles.None, NumberFormatInfo.InvariantInfo)
+            return byte.Parse(value.Text, NumberStyles.None, NumberFormatInfo.InvariantInfo);
         }
     }
 }
