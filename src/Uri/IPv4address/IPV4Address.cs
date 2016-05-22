@@ -14,7 +14,7 @@ namespace Uri.IPv4address
         public byte[] GetBytes()
         {
             var octets = Elements.OfType<DecimalOctet>();
-            return octets.Select(octet => octet.ToByte()).ToArray();
+            return octets.Select(octet => byte.Parse(octet.Text)).ToArray();
         }
     }
 }
