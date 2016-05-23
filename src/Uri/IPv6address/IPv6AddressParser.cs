@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using JetBrains.Annotations;
 using Txt.ABNF;
 using Txt.Core;
 using Uri.h16;
@@ -10,6 +12,17 @@ namespace Uri.IPv6address
 {
     public class IPv6AddressParser : Parser<IPv6Address, byte[]>
     {
+        private readonly IParser<LeastSignificantInt32, byte[]> leastSignificantInt32parser;
+
+        public IPv6AddressParser([NotNull] IParser<LeastSignificantInt32, byte[]> leastSignificantInt32Parser)
+        {
+            if (leastSignificantInt32Parser == null)
+            {
+                throw new ArgumentNullException(nameof(leastSignificantInt32Parser));
+            }
+            leastSignificantInt32parser = leastSignificantInt32Parser;
+        }
+
         private delegate byte[] BytesFactory();
 
         protected override byte[] ParseImpl(IPv6Address value)
@@ -113,7 +126,7 @@ namespace Uri.IPv6address
             return $"{value:x}";
         }
 
-        private static byte[] GetBytes1(Concatenation concatenation)
+        private byte[] GetBytes1(Concatenation concatenation)
         {
             var ctx = new BytesFactoryContext();
             var rep = (Repetition)concatenation.Elements[0];
@@ -124,11 +137,11 @@ namespace Uri.IPv6address
                 ctx.RightAlign.Add(h16.GetBytes);
             }
             var ls32 = (LeastSignificantInt32)concatenation.Elements[1];
-            ctx.RightAlign.Add(ls32.GetBytes);
+            ctx.RightAlign.Add(() => leastSignificantInt32parser.Parse(ls32));
             return ctx.GetResult();
         }
 
-        private static byte[] GetBytes2(Concatenation concatenation)
+        private byte[] GetBytes2(Concatenation concatenation)
         {
             var ctx = new BytesFactoryContext();
             var rep = (Repetition)concatenation.Elements[1];
@@ -139,11 +152,11 @@ namespace Uri.IPv6address
                 ctx.RightAlign.Add(h16.GetBytes);
             }
             var ls32 = (LeastSignificantInt32)concatenation.Elements[2];
-            ctx.RightAlign.Add(ls32.GetBytes);
+            ctx.RightAlign.Add(() => leastSignificantInt32parser.Parse(ls32));
             return ctx.GetResult();
         }
 
-        private static byte[] GetBytes3(Concatenation concatenation)
+        private byte[] GetBytes3(Concatenation concatenation)
         {
             var ctx = new BytesFactoryContext();
             var opt1 = (Repetition)concatenation.Elements[0];
@@ -160,11 +173,11 @@ namespace Uri.IPv6address
                 ctx.RightAlign.Add(h16.GetBytes);
             }
             var ls32 = (LeastSignificantInt32)concatenation.Elements[3];
-            ctx.RightAlign.Add(ls32.GetBytes);
+            ctx.RightAlign.Add(() => leastSignificantInt32parser.Parse(ls32));
             return ctx.GetResult();
         }
 
-        private static byte[] GetBytes4(Concatenation concatenation)
+        private byte[] GetBytes4(Concatenation concatenation)
         {
             var ctx = new BytesFactoryContext();
             var opt1 = (Repetition)concatenation.Elements[0];
@@ -180,11 +193,11 @@ namespace Uri.IPv6address
                 ctx.RightAlign.Add(h16.GetBytes);
             }
             var ls32 = (LeastSignificantInt32)concatenation.Elements[3];
-            ctx.RightAlign.Add(ls32.GetBytes);
+            ctx.RightAlign.Add(() => leastSignificantInt32parser.Parse(ls32));
             return ctx.GetResult();
         }
 
-        private static byte[] GetBytes5(Concatenation concatenation)
+        private byte[] GetBytes5(Concatenation concatenation)
         {
             var ctx = new BytesFactoryContext();
             var opt1 = (Repetition)concatenation.Elements[0];
@@ -200,11 +213,11 @@ namespace Uri.IPv6address
                 ctx.RightAlign.Add(h16.GetBytes);
             }
             var ls32 = (LeastSignificantInt32)concatenation.Elements[3];
-            ctx.RightAlign.Add(ls32.GetBytes);
+            ctx.RightAlign.Add(() => leastSignificantInt32parser.Parse(ls32));
             return ctx.GetResult();
         }
 
-        private static byte[] GetBytes6(Concatenation concatenation)
+        private byte[] GetBytes6(Concatenation concatenation)
         {
             var ctx = new BytesFactoryContext();
             var opt1 = (Repetition)concatenation.Elements[0];
@@ -215,11 +228,11 @@ namespace Uri.IPv6address
             var h16 = (HexadecimalInt16)concatenation.Elements[2];
             ctx.RightAlign.Add(h16.GetBytes);
             var ls32 = (LeastSignificantInt32)concatenation.Elements[4];
-            ctx.RightAlign.Add(ls32.GetBytes);
+            ctx.RightAlign.Add(() => leastSignificantInt32parser.Parse(ls32));
             return ctx.GetResult();
         }
 
-        private static byte[] GetBytes7(Concatenation concatenation)
+        private byte[] GetBytes7(Concatenation concatenation)
         {
             var ctx = new BytesFactoryContext();
             var opt1 = (Repetition)concatenation.Elements[0];
@@ -228,11 +241,11 @@ namespace Uri.IPv6address
                 GetBytesh16Alt5((Alternation)opt1.Elements[0], ctx);
             }
             var ls32 = (LeastSignificantInt32)concatenation.Elements[2];
-            ctx.RightAlign.Add(ls32.GetBytes);
+            ctx.RightAlign.Add(() => leastSignificantInt32parser.Parse(ls32));
             return ctx.GetResult();
         }
 
-        private static byte[] GetBytes8(Concatenation concatenation)
+        private byte[] GetBytes8(Concatenation concatenation)
         {
             var ctx = new BytesFactoryContext();
             var opt1 = (Repetition)concatenation.Elements[0];
@@ -245,7 +258,7 @@ namespace Uri.IPv6address
             return ctx.GetResult();
         }
 
-        private static byte[] GetBytes9(Concatenation concatenation)
+        private byte[] GetBytes9(Concatenation concatenation)
         {
             var ctx = new BytesFactoryContext();
             var opt1 = (Repetition)concatenation.Elements[0];
