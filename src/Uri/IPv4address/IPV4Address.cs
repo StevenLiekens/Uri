@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using Txt.ABNF;
-using Uri.dec_octet;
+﻿using Txt.ABNF;
 
 namespace Uri.IPv4address
 {
@@ -9,12 +7,6 @@ namespace Uri.IPv4address
         public IPv4Address(Concatenation concatenation)
             : base(concatenation)
         {
-        }
-
-        public byte[] GetBytes()
-        {
-            var octets = Elements.OfType<DecimalOctet>();
-            return octets.Select(octet => byte.Parse(octet.Text)).ToArray();
         }
     }
 }
