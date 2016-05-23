@@ -12,14 +12,23 @@ namespace Uri.IPv6address
 {
     public class IPv6AddressParser : Parser<IPv6Address, byte[]>
     {
+        private readonly IParser<HexadecimalInt16, byte[]> hexadecimalInt16Parser;
+
         private readonly IParser<LeastSignificantInt32, byte[]> leastSignificantInt32parser;
 
-        public IPv6AddressParser([NotNull] IParser<LeastSignificantInt32, byte[]> leastSignificantInt32Parser)
+        public IPv6AddressParser(
+            [NotNull] IParser<HexadecimalInt16, byte[]> hexadecimalInt16Parser,
+            [NotNull] IParser<LeastSignificantInt32, byte[]> leastSignificantInt32Parser)
         {
+            if (hexadecimalInt16Parser == null)
+            {
+                throw new ArgumentNullException(nameof(hexadecimalInt16Parser));
+            }
             if (leastSignificantInt32Parser == null)
             {
                 throw new ArgumentNullException(nameof(leastSignificantInt32Parser));
             }
+            this.hexadecimalInt16Parser = hexadecimalInt16Parser;
             leastSignificantInt32parser = leastSignificantInt32Parser;
         }
 
@@ -134,7 +143,7 @@ namespace Uri.IPv6address
             {
                 var seq1 = (Concatenation)rep.Elements[i];
                 var h16 = (HexadecimalInt16)seq1.Elements[0];
-                ctx.RightAlign.Add(h16.GetBytes);
+                ctx.RightAlign.Add(() => hexadecimalInt16Parser.Parse(h16));
             }
             var ls32 = (LeastSignificantInt32)concatenation.Elements[1];
             ctx.RightAlign.Add(() => leastSignificantInt32parser.Parse(ls32));
@@ -149,7 +158,7 @@ namespace Uri.IPv6address
             {
                 var seq1 = (Concatenation)rep.Elements[i];
                 var h16 = (HexadecimalInt16)seq1.Elements[0];
-                ctx.RightAlign.Add(h16.GetBytes);
+                ctx.RightAlign.Add(() => hexadecimalInt16Parser.Parse(h16));
             }
             var ls32 = (LeastSignificantInt32)concatenation.Elements[2];
             ctx.RightAlign.Add(() => leastSignificantInt32parser.Parse(ls32));
@@ -163,14 +172,14 @@ namespace Uri.IPv6address
             if (opt1.Elements.Count != 0)
             {
                 var h16 = (HexadecimalInt16)opt1.Elements[0];
-                ctx.LeftAlign.Add(h16.GetBytes);
+                ctx.LeftAlign.Add(() => hexadecimalInt16Parser.Parse(h16));
             }
             var rep = (Repetition)concatenation.Elements[2];
             for (var i = 0; i < 4; i++)
             {
                 var seq1 = (Concatenation)rep.Elements[i];
                 var h16 = (HexadecimalInt16)seq1.Elements[0];
-                ctx.RightAlign.Add(h16.GetBytes);
+                ctx.RightAlign.Add(() => hexadecimalInt16Parser.Parse(h16));
             }
             var ls32 = (LeastSignificantInt32)concatenation.Elements[3];
             ctx.RightAlign.Add(() => leastSignificantInt32parser.Parse(ls32));
@@ -190,7 +199,7 @@ namespace Uri.IPv6address
             {
                 var seq1 = (Concatenation)rep.Elements[i];
                 var h16 = (HexadecimalInt16)seq1.Elements[0];
-                ctx.RightAlign.Add(h16.GetBytes);
+                ctx.RightAlign.Add(() => hexadecimalInt16Parser.Parse(h16));
             }
             var ls32 = (LeastSignificantInt32)concatenation.Elements[3];
             ctx.RightAlign.Add(() => leastSignificantInt32parser.Parse(ls32));
@@ -210,7 +219,7 @@ namespace Uri.IPv6address
             {
                 var seq1 = (Concatenation)rep.Elements[i];
                 var h16 = (HexadecimalInt16)seq1.Elements[0];
-                ctx.RightAlign.Add(h16.GetBytes);
+                ctx.RightAlign.Add(() => hexadecimalInt16Parser.Parse(h16));
             }
             var ls32 = (LeastSignificantInt32)concatenation.Elements[3];
             ctx.RightAlign.Add(() => leastSignificantInt32parser.Parse(ls32));
@@ -226,7 +235,7 @@ namespace Uri.IPv6address
                 GetBytesh16Alt4((Alternation)opt1.Elements[0], ctx);
             }
             var h16 = (HexadecimalInt16)concatenation.Elements[2];
-            ctx.RightAlign.Add(h16.GetBytes);
+            ctx.RightAlign.Add(() => hexadecimalInt16Parser.Parse(h16));
             var ls32 = (LeastSignificantInt32)concatenation.Elements[4];
             ctx.RightAlign.Add(() => leastSignificantInt32parser.Parse(ls32));
             return ctx.GetResult();
@@ -254,7 +263,7 @@ namespace Uri.IPv6address
                 GetBytesh16Alt6((Alternation)opt1.Elements[0], ctx);
             }
             var h16 = (HexadecimalInt16)concatenation.Elements[2];
-            ctx.RightAlign.Add(h16.GetBytes);
+            ctx.RightAlign.Add(() => hexadecimalInt16Parser.Parse(h16));
             return ctx.GetResult();
         }
 
@@ -269,19 +278,19 @@ namespace Uri.IPv6address
             return ctx.GetResult();
         }
 
-        private static void GetBytesh16Alt2(Alternation alternation, BytesFactoryContext ctx)
+        private void GetBytesh16Alt2(Alternation alternation, BytesFactoryContext ctx)
         {
             if (alternation.Ordinal == 2)
             {
-                ctx.LeftAlign.Add(((HexadecimalInt16)alternation.Element).GetBytes);
+                ctx.LeftAlign.Add(() => hexadecimalInt16Parser.Parse((HexadecimalInt16)alternation.Element));
                 return;
             }
             var seq = (Concatenation)alternation.Element;
-            ctx.LeftAlign.Add(((HexadecimalInt16)seq.Elements[0]).GetBytes);
-            ctx.LeftAlign.Add(((HexadecimalInt16)seq.Elements[2]).GetBytes);
+            ctx.LeftAlign.Add(() => hexadecimalInt16Parser.Parse((HexadecimalInt16)seq.Elements[0]));
+            ctx.LeftAlign.Add(() => hexadecimalInt16Parser.Parse((HexadecimalInt16)seq.Elements[2]));
         }
 
-        private static void GetBytesh16Alt3(Alternation alternation, BytesFactoryContext ctx)
+        private void GetBytesh16Alt3(Alternation alternation, BytesFactoryContext ctx)
         {
             if (alternation.Ordinal == 2)
             {
@@ -294,13 +303,13 @@ namespace Uri.IPv6address
             {
                 var seq1 = (Concatenation)rep.Elements[i];
                 var h16 = (HexadecimalInt16)seq1.Elements[0];
-                ctx.LeftAlign.Add(h16.GetBytes);
+                ctx.LeftAlign.Add(() => hexadecimalInt16Parser.Parse(h16));
             }
             var trailer = (HexadecimalInt16)concatenation.Elements[1];
-            ctx.LeftAlign.Add(trailer.GetBytes);
+            ctx.LeftAlign.Add(() => hexadecimalInt16Parser.Parse(trailer));
         }
 
-        private static void GetBytesh16Alt4(Alternation alternation, BytesFactoryContext ctx)
+        private void GetBytesh16Alt4(Alternation alternation, BytesFactoryContext ctx)
         {
             if (alternation.Ordinal == 2)
             {
@@ -313,13 +322,13 @@ namespace Uri.IPv6address
             {
                 var seq1 = (Concatenation)rep.Elements[i];
                 var h16 = (HexadecimalInt16)seq1.Elements[0];
-                ctx.LeftAlign.Add(h16.GetBytes);
+                ctx.LeftAlign.Add(() => hexadecimalInt16Parser.Parse(h16));
             }
             var trailer = (HexadecimalInt16)concatenation.Elements[1];
-            ctx.LeftAlign.Add(trailer.GetBytes);
+            ctx.LeftAlign.Add(() => hexadecimalInt16Parser.Parse(trailer));
         }
 
-        private static void GetBytesh16Alt5(Alternation alternation, BytesFactoryContext ctx)
+        private void GetBytesh16Alt5(Alternation alternation, BytesFactoryContext ctx)
         {
             if (alternation.Ordinal == 2)
             {
@@ -332,13 +341,13 @@ namespace Uri.IPv6address
             {
                 var seq1 = (Concatenation)rep.Elements[i];
                 var h16 = (HexadecimalInt16)seq1.Elements[0];
-                ctx.LeftAlign.Add(h16.GetBytes);
+                ctx.LeftAlign.Add(() => hexadecimalInt16Parser.Parse(h16));
             }
             var trailer = (HexadecimalInt16)concatenation.Elements[1];
-            ctx.LeftAlign.Add(trailer.GetBytes);
+            ctx.LeftAlign.Add(() => hexadecimalInt16Parser.Parse(trailer));
         }
 
-        private static void GetBytesh16Alt6(Alternation alternation, BytesFactoryContext ctx)
+        private void GetBytesh16Alt6(Alternation alternation, BytesFactoryContext ctx)
         {
             if (alternation.Ordinal == 2)
             {
@@ -351,13 +360,13 @@ namespace Uri.IPv6address
             {
                 var seq1 = (Concatenation)rep.Elements[i];
                 var h16 = (HexadecimalInt16)seq1.Elements[0];
-                ctx.LeftAlign.Add(h16.GetBytes);
+                ctx.LeftAlign.Add(() => hexadecimalInt16Parser.Parse(h16));
             }
             var trailer = (HexadecimalInt16)concatenation.Elements[1];
-            ctx.LeftAlign.Add(trailer.GetBytes);
+            ctx.LeftAlign.Add(() => hexadecimalInt16Parser.Parse(trailer));
         }
 
-        private static void GetBytesh16Alt7(Alternation alternation, BytesFactoryContext ctx)
+        private void GetBytesh16Alt7(Alternation alternation, BytesFactoryContext ctx)
         {
             if (alternation.Ordinal == 2)
             {
@@ -370,10 +379,10 @@ namespace Uri.IPv6address
             {
                 var seq1 = (Concatenation)rep.Elements[i];
                 var h16 = (HexadecimalInt16)seq1.Elements[0];
-                ctx.LeftAlign.Add(h16.GetBytes);
+                ctx.LeftAlign.Add(() => hexadecimalInt16Parser.Parse(h16));
             }
             var trailer = (HexadecimalInt16)concatenation.Elements[1];
-            ctx.LeftAlign.Add(trailer.GetBytes);
+            ctx.LeftAlign.Add(() => hexadecimalInt16Parser.Parse(trailer));
         }
 
         private class BytesFactoryContext
