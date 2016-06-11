@@ -1,8 +1,8 @@
 ﻿using System;
-using Txt.Core;
 using Txt.ABNF;
+using Txt.Core;
 
-namespace Uri.reg_name
+namespace UriSyntax.reg_name
 {
     public sealed class RegisteredNameLexer : Lexer<RegisteredName>
     {

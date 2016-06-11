@@ -1,13 +1,13 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Txt.Core;
 using Txt.ABNF;
-using Uri.fragment;
-using Uri.hier_part;
-using Uri.query;
-using Uri.scheme;
+using Txt.Core;
+using UriSyntax.fragment;
+using UriSyntax.hier_part;
+using UriSyntax.query;
+using UriSyntax.scheme;
 
-namespace Uri.URI
+namespace UriSyntax.URI
 {
     public class UniformResourceIdentifierLexerFactory : ILexerFactory<UniformResourceIdentifier>
     {

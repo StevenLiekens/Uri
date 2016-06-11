@@ -1,6 +1,6 @@
 ﻿using Txt.ABNF;
 
-namespace Uri.host
+namespace UriSyntax.host
 {
     public class Host : Alternation
     {

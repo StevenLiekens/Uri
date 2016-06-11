@@ -1,8 +1,8 @@
 ﻿using System;
-using Txt.Core;
 using Txt.ABNF;
+using Txt.Core;
 
-namespace Uri.ls32
+namespace UriSyntax.ls32
 {
     public sealed class LeastSignificantInt32Lexer : Lexer<LeastSignificantInt32>
     {

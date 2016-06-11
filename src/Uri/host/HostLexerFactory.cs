@@ -1,12 +1,12 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Txt.Core;
 using Txt.ABNF;
-using Uri.IPv4address;
-using Uri.IP_literal;
-using Uri.reg_name;
+using Txt.Core;
+using UriSyntax.IPv4address;
+using UriSyntax.IP_literal;
+using UriSyntax.reg_name;
 
-namespace Uri.host
+namespace UriSyntax.host
 {
     public class HostLexerFactory : ILexerFactory<Host>
     {

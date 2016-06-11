@@ -1,7 +1,7 @@
 ﻿using Txt.Core;
 using Xunit;
 
-namespace Uri.path_empty
+namespace UriSyntax.path_empty
 {
     public class PathEmptyLexerTest : LexerTestBase
     {

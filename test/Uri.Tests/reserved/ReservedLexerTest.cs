@@ -1,7 +1,7 @@
 ﻿using Txt.Core;
 using Xunit;
 
-namespace Uri.reserved
+namespace UriSyntax.reserved
 {
     public class ReservedLexerTest : LexerTestBase
     {

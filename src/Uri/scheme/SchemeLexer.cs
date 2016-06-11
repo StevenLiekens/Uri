@@ -1,8 +1,8 @@
 ﻿using System;
-using Txt.Core;
 using Txt.ABNF;
+using Txt.Core;
 
-namespace Uri.scheme
+namespace UriSyntax.scheme
 {
     public sealed class SchemeLexer : Lexer<Scheme>
     {

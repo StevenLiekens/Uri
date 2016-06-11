@@ -1,8 +1,8 @@
 ﻿using System;
-using Txt.Core;
 using Txt.ABNF;
+using Txt.Core;
 
-namespace Uri.path_rootless
+namespace UriSyntax.path_rootless
 {
     public sealed class PathRootlessLexer : Lexer<PathRootless>
     {

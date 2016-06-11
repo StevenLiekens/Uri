@@ -1,7 +1,7 @@
 ﻿using Txt.Core;
 using Xunit;
 
-namespace Uri.pct_encoded
+namespace UriSyntax.pct_encoded
 {
     public class PercentEncodingLexerTest : LexerTestBase
     {

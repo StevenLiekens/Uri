@@ -1,12 +1,12 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Txt.Core;
 using Txt.ABNF;
-using Uri.host;
-using Uri.port;
-using Uri.userinfo;
+using Txt.Core;
+using UriSyntax.host;
+using UriSyntax.port;
+using UriSyntax.userinfo;
 
-namespace Uri.authority
+namespace UriSyntax.authority
 {
     public class AuthorityLexerFactory : ILexerFactory<Authority>
     {

@@ -1,10 +1,10 @@
 using System;
 using JetBrains.Annotations;
-using Txt.Core;
 using Txt.ABNF;
-using Uri.segment;
+using Txt.Core;
+using UriSyntax.segment;
 
-namespace Uri.path_abempty
+namespace UriSyntax.path_abempty
 {
     public class PathAbsoluteOrEmptyLexerFactory : ILexerFactory<PathAbsoluteOrEmpty>
     {

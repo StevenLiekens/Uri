@@ -5,10 +5,10 @@ using System.Text;
 using JetBrains.Annotations;
 using Txt.ABNF;
 using Txt.Core;
-using Uri.h16;
-using Uri.ls32;
+using UriSyntax.h16;
+using UriSyntax.ls32;
 
-namespace Uri.IPv6address
+namespace UriSyntax.IPv6address
 {
     public class IPv6AddressParser : Parser<IPv6Address, byte[]>
     {

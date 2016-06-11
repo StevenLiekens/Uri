@@ -1,8 +1,8 @@
 ﻿using System;
-using Txt.Core;
 using Txt.ABNF;
+using Txt.Core;
 
-namespace Uri.IP_literal
+namespace UriSyntax.IP_literal
 {
     public sealed class IPLiteralLexer : Lexer<IPLiteral>
     {

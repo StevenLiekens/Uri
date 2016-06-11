@@ -1,7 +1,7 @@
 ﻿using Txt.Core;
 using Xunit;
 
-namespace Uri.sub_delims
+namespace UriSyntax.sub_delims
 {
     public class SubcomponentsDelimiterLexerTest : LexerTestBase
     {

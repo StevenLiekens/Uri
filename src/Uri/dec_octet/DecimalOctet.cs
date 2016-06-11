@@ -1,6 +1,6 @@
 ﻿using Txt.ABNF;
 
-namespace Uri.dec_octet
+namespace UriSyntax.dec_octet
 {
     public class DecimalOctet : Alternation
     {

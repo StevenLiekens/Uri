@@ -1,11 +1,11 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Txt.Core;
 using Txt.ABNF;
-using Uri.h16;
-using Uri.IPv4address;
+using Txt.Core;
+using UriSyntax.h16;
+using UriSyntax.IPv4address;
 
-namespace Uri.ls32
+namespace UriSyntax.ls32
 {
     public class LeastSignificantInt32LexerFactory : ILexerFactory<LeastSignificantInt32>
     {

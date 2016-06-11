@@ -1,8 +1,8 @@
 ﻿using System;
-using Txt.Core;
 using Txt.ABNF;
+using Txt.Core;
 
-namespace Uri.URI
+namespace UriSyntax.URI
 {
     public sealed class UniformResourceIdentifierLexer : Lexer<UniformResourceIdentifier>
     {

@@ -1,8 +1,8 @@
 ﻿using System;
-using Txt.Core;
 using Txt.ABNF;
+using Txt.Core;
 
-namespace Uri.query
+namespace UriSyntax.query
 {
     public sealed class QueryLexer : Lexer<Query>
     {

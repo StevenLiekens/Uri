@@ -1,6 +1,6 @@
 ﻿using Txt.ABNF;
 
-namespace Uri.IPvFuture
+namespace UriSyntax.IPvFuture
 {
     public class IPvFuture : Concatenation
     {

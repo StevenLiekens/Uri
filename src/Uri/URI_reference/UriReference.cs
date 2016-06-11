@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
 using Txt.ABNF;
-using Uri.relative_ref;
-using Uri.URI;
+using UriSyntax.relative_ref;
+using UriSyntax.URI;
 
-namespace Uri.URI_reference
+namespace UriSyntax.URI_reference
 {
     public class UriReference : Alternation
     {

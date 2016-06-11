@@ -3,7 +3,7 @@ using SimpleInjector;
 using Txt.ABNF;
 using Registration = Txt.Core.Registration;
 
-namespace Uri
+namespace UriSyntax
 {
     public class LexerTestBase
     {

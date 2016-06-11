@@ -1,6 +1,6 @@
 ﻿using Txt.ABNF;
 
-namespace Uri.path_empty
+namespace UriSyntax.path_empty
 {
     public class PathEmpty : Terminal
     {

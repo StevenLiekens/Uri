@@ -1,6 +1,6 @@
 ﻿using Txt.ABNF;
 
-namespace Uri.scheme
+namespace UriSyntax.scheme
 {
     public class Scheme : Concatenation
     {

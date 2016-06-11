@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using Txt.Core;
 
-namespace Uri.dec_octet
+namespace UriSyntax.dec_octet
 {
     public class DecimalOctetParser : Parser<DecimalOctet, byte>
     {

@@ -1,8 +1,8 @@
 ﻿using System;
-using Txt.Core;
 using Txt.ABNF;
+using Txt.Core;
 
-namespace Uri.URI_reference
+namespace UriSyntax.URI_reference
 {
     public sealed class UriReferenceLexer : Lexer<UriReference>
     {

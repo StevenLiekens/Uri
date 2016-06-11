@@ -1,7 +1,7 @@
 ﻿using Txt.Core;
 using Xunit;
 
-namespace Uri.segment
+namespace UriSyntax.segment
 {
     public class SegmentLexerTest : LexerTestBase
     {

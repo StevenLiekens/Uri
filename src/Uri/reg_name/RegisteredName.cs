@@ -1,6 +1,6 @@
 ﻿using Txt.ABNF;
 
-namespace Uri.reg_name
+namespace UriSyntax.reg_name
 {
     public class RegisteredName : Repetition
     {

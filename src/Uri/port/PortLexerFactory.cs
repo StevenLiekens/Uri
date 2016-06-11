@@ -1,10 +1,10 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Txt.Core;
 using Txt.ABNF;
 using Txt.ABNF.Core.DIGIT;
+using Txt.Core;
 
-namespace Uri.port
+namespace UriSyntax.port
 {
     public class PortLexerFactory : ILexerFactory<Port>
     {

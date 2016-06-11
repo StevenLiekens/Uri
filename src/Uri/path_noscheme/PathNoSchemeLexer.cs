@@ -1,8 +1,8 @@
 ﻿using System;
-using Txt.Core;
 using Txt.ABNF;
+using Txt.Core;
 
-namespace Uri.path_noscheme
+namespace UriSyntax.path_noscheme
 {
     public sealed class PathNoSchemeLexer : Lexer<PathNoScheme>
     {

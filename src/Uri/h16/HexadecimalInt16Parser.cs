@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using Txt.Core;
 
-namespace Uri.h16
+namespace UriSyntax.h16
 {
     public class HexadecimalInt16Parser : Parser<HexadecimalInt16, byte[]>
     {

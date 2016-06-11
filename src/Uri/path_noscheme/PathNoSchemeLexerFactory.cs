@@ -1,11 +1,11 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Txt.Core;
 using Txt.ABNF;
-using Uri.segment;
-using Uri.segment_nz_nc;
+using Txt.Core;
+using UriSyntax.segment;
+using UriSyntax.segment_nz_nc;
 
-namespace Uri.path_noscheme
+namespace UriSyntax.path_noscheme
 {
     public class PathNoSchemeLexerFactory : ILexerFactory<PathNoScheme>
     {

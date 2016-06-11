@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using Txt.Core;
 
-namespace Uri.port
+namespace UriSyntax.port
 {
     public class PortParser : Parser<Port, int>
     {

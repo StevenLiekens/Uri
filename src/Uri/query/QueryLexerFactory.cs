@@ -1,10 +1,10 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Txt.Core;
 using Txt.ABNF;
-using Uri.pchar;
+using Txt.Core;
+using UriSyntax.pchar;
 
-namespace Uri.query
+namespace UriSyntax.query
 {
     public class QueryLexerFactory : ILexerFactory<Query>
     {

@@ -1,6 +1,6 @@
 ﻿using Txt.ABNF;
 
-namespace Uri.segment_nz_nc
+namespace UriSyntax.segment_nz_nc
 {
     public class SegmentNonZeroLengthNoColons : Repetition
     {

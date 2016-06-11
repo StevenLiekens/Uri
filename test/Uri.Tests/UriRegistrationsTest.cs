@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace Uri
+namespace UriSyntax
 {
     public class UriRegistrationsTest : LexerTestBase
     {

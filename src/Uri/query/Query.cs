@@ -1,6 +1,6 @@
 ﻿using Txt.ABNF;
 
-namespace Uri.query
+namespace UriSyntax.query
 {
     public class Query : Repetition
     {

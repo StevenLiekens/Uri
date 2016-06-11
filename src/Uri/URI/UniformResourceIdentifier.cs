@@ -1,11 +1,11 @@
 ﻿using System.Diagnostics;
 using Txt.ABNF;
-using Uri.fragment;
-using Uri.hier_part;
-using Uri.query;
-using Uri.scheme;
+using UriSyntax.fragment;
+using UriSyntax.hier_part;
+using UriSyntax.query;
+using UriSyntax.scheme;
 
-namespace Uri.URI
+namespace UriSyntax.URI
 {
     /// <summary>Represents a Uniform Resource Identifier (URI) as described in RFC 3986.</summary>
     /// <remarks>See: <a href="https://www.ietf.org/rfc/rfc3986.txt">RFC 3986</a>.</remarks>

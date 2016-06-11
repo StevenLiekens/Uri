@@ -1,9 +1,9 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Txt.Core;
 using Txt.ABNF;
+using Txt.Core;
 
-namespace Uri.gen_delims
+namespace UriSyntax.gen_delims
 {
     public class GenericDelimiterLexerFactory : ILexerFactory<GenericDelimiter>
     {

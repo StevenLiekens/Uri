@@ -1,6 +1,6 @@
 ﻿using Txt.ABNF;
 
-namespace Uri.gen_delims
+namespace UriSyntax.gen_delims
 {
     public class GenericDelimiter : Alternation
     {

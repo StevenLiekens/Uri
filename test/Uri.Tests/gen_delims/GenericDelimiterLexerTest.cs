@@ -1,7 +1,7 @@
 ﻿using Txt.Core;
 using Xunit;
 
-namespace Uri.gen_delims
+namespace UriSyntax.gen_delims
 {
     public class GenericDelimiterLexerTest : LexerTestBase
     {

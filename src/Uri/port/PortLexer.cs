@@ -1,8 +1,8 @@
 ﻿using System;
-using Txt.Core;
 using Txt.ABNF;
+using Txt.Core;
 
-namespace Uri.port
+namespace UriSyntax.port
 {
     public sealed class PortLexer : Lexer<Port>
     {

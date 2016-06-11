@@ -2,9 +2,9 @@
 using System.Linq;
 using JetBrains.Annotations;
 using Txt.Core;
-using Uri.dec_octet;
+using UriSyntax.dec_octet;
 
-namespace Uri.IPv4address
+namespace UriSyntax.IPv4address
 {
     public class IPv4AddressParser : Parser<IPv4Address, byte[]>
     {

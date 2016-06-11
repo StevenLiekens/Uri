@@ -1,6 +1,6 @@
 ﻿using Txt.ABNF;
 
-namespace Uri.fragment
+namespace UriSyntax.fragment
 {
     public class Fragment : Repetition
     {

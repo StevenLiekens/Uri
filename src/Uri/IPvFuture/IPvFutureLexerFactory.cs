@@ -1,12 +1,12 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Txt.Core;
 using Txt.ABNF;
 using Txt.ABNF.Core.HEXDIG;
-using Uri.sub_delims;
-using Uri.unreserved;
+using Txt.Core;
+using UriSyntax.sub_delims;
+using UriSyntax.unreserved;
 
-namespace Uri.IPvFuture
+namespace UriSyntax.IPvFuture
 {
     public class IPvFutureLexerFactory : ILexerFactory<IPvFuture>
     {

@@ -1,9 +1,9 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Txt.Core;
 using Txt.ABNF;
+using Txt.Core;
 
-namespace Uri.path_empty
+namespace UriSyntax.path_empty
 {
     public class PathEmptyLexerFactory : ILexerFactory<PathEmpty>
     {

@@ -1,6 +1,6 @@
 ﻿using Txt.ABNF;
 
-namespace Uri.port
+namespace UriSyntax.port
 {
     public class Port : Repetition
     {

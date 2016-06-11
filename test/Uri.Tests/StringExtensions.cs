@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Text;
 
-namespace Uri
+namespace UriSyntax
 {
     internal static class StringExtensions
     {

@@ -1,6 +1,6 @@
 ﻿using Txt.ABNF;
 
-namespace Uri.unreserved
+namespace UriSyntax.unreserved
 {
     public class Unreserved : Alternation
     {

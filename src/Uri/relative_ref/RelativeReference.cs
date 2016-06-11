@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics;
 using Txt.ABNF;
-using Uri.fragment;
-using Uri.query;
-using Uri.relative_part;
+using UriSyntax.fragment;
+using UriSyntax.query;
+using UriSyntax.relative_part;
 
-namespace Uri.relative_ref
+namespace UriSyntax.relative_ref
 {
     public class RelativeReference : Concatenation
     {

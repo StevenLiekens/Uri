@@ -1,8 +1,8 @@
 ﻿using System;
-using Txt.Core;
 using Txt.ABNF;
+using Txt.Core;
 
-namespace Uri.relative_part
+namespace UriSyntax.relative_part
 {
     public sealed class RelativePartLexer : Lexer<RelativePart>
     {

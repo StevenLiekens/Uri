@@ -1,8 +1,8 @@
 ﻿using System;
-using Txt.Core;
 using Txt.ABNF;
+using Txt.Core;
 
-namespace Uri.pct_encoded
+namespace UriSyntax.pct_encoded
 {
     public sealed class PercentEncodingLexer : Lexer<PercentEncoding>
     {

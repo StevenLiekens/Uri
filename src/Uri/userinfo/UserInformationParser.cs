@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using Txt.Core;
 
-namespace Uri.userinfo
+namespace UriSyntax.userinfo
 {
     public class UserInformationParser : Parser<UserInformation, NetworkCredential>
     {

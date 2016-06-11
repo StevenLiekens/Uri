@@ -1,11 +1,11 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Txt.Core;
 using Txt.ABNF;
-using Uri.segment;
-using Uri.segment_nz;
+using Txt.Core;
+using UriSyntax.segment;
+using UriSyntax.segment_nz;
 
-namespace Uri.path_absolute
+namespace UriSyntax.path_absolute
 {
     public class PathAbsoluteLexerFactory : ILexerFactory<PathAbsolute>
     {

@@ -1,6 +1,6 @@
 ﻿using Txt.ABNF;
 
-namespace Uri.path_abempty
+namespace UriSyntax.path_abempty
 {
     public class PathAbsoluteOrEmpty : Repetition
     {

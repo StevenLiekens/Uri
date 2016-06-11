@@ -1,8 +1,8 @@
 ﻿using System;
-using Txt.Core;
 using Txt.ABNF;
+using Txt.Core;
 
-namespace Uri.path
+namespace UriSyntax.path
 {
     public sealed class PathLexer : Lexer<Path>
     {

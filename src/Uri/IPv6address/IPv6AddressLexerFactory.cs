@@ -2,12 +2,12 @@
 
 using System;
 using JetBrains.Annotations;
-using Txt.Core;
 using Txt.ABNF;
-using Uri.h16;
-using Uri.ls32;
+using Txt.Core;
+using UriSyntax.h16;
+using UriSyntax.ls32;
 
-namespace Uri.IPv6address
+namespace UriSyntax.IPv6address
 {
     public class IPv6AddressLexerFactory : ILexerFactory<IPv6Address>
     {

@@ -1,10 +1,10 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Txt.Core;
 using Txt.ABNF;
-using Uri.dec_octet;
+using Txt.Core;
+using UriSyntax.dec_octet;
 
-namespace Uri.IPv4address
+namespace UriSyntax.IPv4address
 {
     public class IPv4AddressLexerFactory : ILexerFactory<IPv4Address>
     {

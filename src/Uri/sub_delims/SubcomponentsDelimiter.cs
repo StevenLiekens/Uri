@@ -1,6 +1,6 @@
 ﻿using Txt.ABNF;
 
-namespace Uri.sub_delims
+namespace UriSyntax.sub_delims
 {
     public class SubcomponentsDelimiter : Alternation
     {

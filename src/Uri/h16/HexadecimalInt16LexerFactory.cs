@@ -1,10 +1,10 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Txt.Core;
 using Txt.ABNF;
 using Txt.ABNF.Core.HEXDIG;
+using Txt.Core;
 
-namespace Uri.h16
+namespace UriSyntax.h16
 {
     public class HexadecimalInt16LexerFactory : ILexerFactory<HexadecimalInt16>
     {

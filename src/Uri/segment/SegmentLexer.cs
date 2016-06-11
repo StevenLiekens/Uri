@@ -1,8 +1,8 @@
 ﻿using System;
-using Txt.Core;
 using Txt.ABNF;
+using Txt.Core;
 
-namespace Uri.segment
+namespace UriSyntax.segment
 {
     public sealed class SegmentLexer : Lexer<Segment>
     {

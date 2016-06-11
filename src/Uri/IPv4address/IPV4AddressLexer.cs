@@ -1,8 +1,8 @@
 ﻿using System;
-using Txt.Core;
 using Txt.ABNF;
+using Txt.Core;
 
-namespace Uri.IPv4address
+namespace UriSyntax.IPv4address
 {
     public sealed class IPv4AddressLexer : Lexer<IPv4Address>
     {

@@ -1,6 +1,6 @@
 ﻿using Txt.ABNF;
 
-namespace Uri.path_absolute
+namespace UriSyntax.path_absolute
 {
     public class PathAbsolute : Concatenation
     {

@@ -1,7 +1,7 @@
 ﻿using Txt.Core;
 using Xunit;
 
-namespace Uri.URI
+namespace UriSyntax.URI
 {
     public class UniformResourceIdentifierLexerTest : LexerTestBase
     {

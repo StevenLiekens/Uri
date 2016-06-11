@@ -1,7 +1,7 @@
 ﻿using Txt.Core;
 using Xunit;
 
-namespace Uri.pchar
+namespace UriSyntax.pchar
 {
     public class PathCharacterLexerTest : LexerTestBase
     {

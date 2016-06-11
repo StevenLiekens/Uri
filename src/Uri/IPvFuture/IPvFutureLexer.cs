@@ -1,8 +1,8 @@
 ﻿using System;
-using Txt.Core;
 using Txt.ABNF;
+using Txt.Core;
 
-namespace Uri.IPvFuture
+namespace UriSyntax.IPvFuture
 {
     public sealed class IPvFutureLexer : Lexer<IPvFuture>
     {

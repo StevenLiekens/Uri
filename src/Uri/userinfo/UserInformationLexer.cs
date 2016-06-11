@@ -1,8 +1,8 @@
 ﻿using System;
-using Txt.Core;
 using Txt.ABNF;
+using Txt.Core;
 
-namespace Uri.userinfo
+namespace UriSyntax.userinfo
 {
     public sealed class UserInformationLexer : Lexer<UserInformation>
     {

@@ -1,11 +1,11 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Txt.Core;
 using Txt.ABNF;
-using Uri.gen_delims;
-using Uri.sub_delims;
+using Txt.Core;
+using UriSyntax.gen_delims;
+using UriSyntax.sub_delims;
 
-namespace Uri.reserved
+namespace UriSyntax.reserved
 {
     public class ReservedLexerFactory : ILexerFactory<Reserved>
     {

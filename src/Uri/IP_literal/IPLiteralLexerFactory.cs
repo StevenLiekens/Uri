@@ -1,10 +1,10 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Txt.Core;
 using Txt.ABNF;
-using Uri.IPv6address;
+using Txt.Core;
+using UriSyntax.IPv6address;
 
-namespace Uri.IP_literal
+namespace UriSyntax.IP_literal
 {
     public class IPLiteralLexerFactory : ILexerFactory<IPLiteral>
     {

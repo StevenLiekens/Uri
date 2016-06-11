@@ -1,8 +1,8 @@
 ﻿using System;
-using Txt.Core;
 using Txt.ABNF;
+using Txt.Core;
 
-namespace Uri.path_absolute
+namespace UriSyntax.path_absolute
 {
     public sealed class PathAbsoluteLexer : Lexer<PathAbsolute>
     {

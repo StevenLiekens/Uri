@@ -3,10 +3,10 @@ using System.Linq;
 using JetBrains.Annotations;
 using Txt.ABNF;
 using Txt.Core;
-using Uri.h16;
-using Uri.IPv4address;
+using UriSyntax.h16;
+using UriSyntax.IPv4address;
 
-namespace Uri.ls32
+namespace UriSyntax.ls32
 {
     public class LeastSignificantInt32Parser : Parser<LeastSignificantInt32, byte[]>
     {

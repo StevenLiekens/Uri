@@ -1,11 +1,11 @@
 ﻿using Txt.ABNF;
-using Uri.authority;
-using Uri.path_abempty;
-using Uri.path_absolute;
-using Uri.path_empty;
-using Uri.path_noscheme;
+using UriSyntax.authority;
+using UriSyntax.path_abempty;
+using UriSyntax.path_absolute;
+using UriSyntax.path_empty;
+using UriSyntax.path_noscheme;
 
-namespace Uri.relative_part
+namespace UriSyntax.relative_part
 {
     public class RelativePart : Alternation
     {

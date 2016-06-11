@@ -1,8 +1,8 @@
 ﻿using System;
-using Txt.Core;
 using Txt.ABNF;
+using Txt.Core;
 
-namespace Uri.reserved
+namespace UriSyntax.reserved
 {
     public sealed class ReservedLexer : Lexer<Reserved>
     {

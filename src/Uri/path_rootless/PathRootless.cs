@@ -1,6 +1,6 @@
 ﻿using Txt.ABNF;
 
-namespace Uri.path_rootless
+namespace UriSyntax.path_rootless
 {
     public class PathRootless : Concatenation
     {

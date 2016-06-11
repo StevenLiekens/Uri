@@ -1,6 +1,6 @@
 ﻿using Txt.ABNF;
 
-namespace Uri.h16
+namespace UriSyntax.h16
 {
     public class HexadecimalInt16 : Repetition
     {

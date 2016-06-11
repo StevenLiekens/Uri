@@ -1,8 +1,8 @@
 ﻿using System;
-using Txt.Core;
 using Txt.ABNF;
+using Txt.Core;
 
-namespace Uri.hier_part
+namespace UriSyntax.hier_part
 {
     public sealed class HierarchicalPartLexer : Lexer<HierarchicalPart>
     {

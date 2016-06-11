@@ -1,6 +1,6 @@
 ﻿using Txt.ABNF;
 
-namespace Uri.pchar
+namespace UriSyntax.pchar
 {
     public class PathCharacter : Alternation
     {

@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using Txt.ABNF;
 
-namespace Uri.pct_encoded
+namespace UriSyntax.pct_encoded
 {
     public class PercentEncoding : Concatenation
     {

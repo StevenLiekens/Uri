@@ -1,6 +1,6 @@
 ﻿using Txt.ABNF;
 
-namespace Uri.IPv6address
+namespace UriSyntax.IPv6address
 {
     public class IPv6Address : Alternation
     {

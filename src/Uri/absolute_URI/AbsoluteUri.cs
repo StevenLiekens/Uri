@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics;
 using Txt.ABNF;
-using Uri.hier_part;
-using Uri.query;
-using Uri.scheme;
+using UriSyntax.hier_part;
+using UriSyntax.query;
+using UriSyntax.scheme;
 
-namespace Uri.absolute_URI
+namespace UriSyntax.absolute_URI
 {
     public class AbsoluteUri : Concatenation
     {

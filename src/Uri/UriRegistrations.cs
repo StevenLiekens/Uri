@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Txt.Core;
 
-namespace Uri
+namespace UriSyntax
 {
     public class UriRegistrations : Registrations
     {

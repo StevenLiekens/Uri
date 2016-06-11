@@ -1,8 +1,8 @@
 ﻿using System;
-using Txt.Core;
 using Txt.ABNF;
+using Txt.Core;
 
-namespace Uri.h16
+namespace UriSyntax.h16
 {
     public sealed class HexadecimalInt16Lexer : Lexer<HexadecimalInt16>
     {

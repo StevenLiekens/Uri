@@ -1,10 +1,10 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Txt.Core;
 using Txt.ABNF;
-using Uri.pchar;
+using Txt.Core;
+using UriSyntax.pchar;
 
-namespace Uri.segment_nz
+namespace UriSyntax.segment_nz
 {
     public class SegmentNonZeroLengthLexerFactory : ILexerFactory<SegmentNonZeroLength>
     {

@@ -1,8 +1,8 @@
 ﻿using System;
-using Txt.Core;
 using Txt.ABNF;
+using Txt.Core;
 
-namespace Uri.fragment
+namespace UriSyntax.fragment
 {
     public sealed class FragmentLexer : Lexer<Fragment>
     {

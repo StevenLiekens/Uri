@@ -1,7 +1,7 @@
 ﻿using Txt.Core;
 using Xunit;
 
-namespace Uri.IPv4address
+namespace UriSyntax.IPv4address
 {
     public class IPV4AddressLexerTest : LexerTestBase
     {

@@ -1,8 +1,8 @@
 ﻿using System;
-using Txt.Core;
 using Txt.ABNF;
+using Txt.Core;
 
-namespace Uri.authority
+namespace UriSyntax.authority
 {
     public sealed class AuthorityLexer : Lexer<Authority>
     {

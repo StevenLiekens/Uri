@@ -1,6 +1,6 @@
 ﻿using Txt.ABNF;
 
-namespace Uri.IPv4address
+namespace UriSyntax.IPv4address
 {
     public class IPv4Address : Concatenation
     {

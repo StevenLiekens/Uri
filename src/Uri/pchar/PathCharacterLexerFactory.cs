@@ -1,12 +1,12 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Txt.Core;
 using Txt.ABNF;
-using Uri.pct_encoded;
-using Uri.sub_delims;
-using Uri.unreserved;
+using Txt.Core;
+using UriSyntax.pct_encoded;
+using UriSyntax.sub_delims;
+using UriSyntax.unreserved;
 
-namespace Uri.pchar
+namespace UriSyntax.pchar
 {
     public class PathCharacterLexerFactory : ILexerFactory<PathCharacter>
     {

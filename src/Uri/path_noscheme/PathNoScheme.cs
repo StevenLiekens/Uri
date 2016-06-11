@@ -1,6 +1,6 @@
 ﻿using Txt.ABNF;
 
-namespace Uri.path_noscheme
+namespace UriSyntax.path_noscheme
 {
     public class PathNoScheme : Concatenation
     {

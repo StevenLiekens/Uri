@@ -1,7 +1,7 @@
 ﻿using Txt.Core;
 using Xunit;
 
-namespace Uri.query
+namespace UriSyntax.query
 {
     public class QueryLexerTest : LexerTestBase
     {

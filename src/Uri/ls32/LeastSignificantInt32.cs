@@ -1,6 +1,6 @@
 ﻿using Txt.ABNF;
 
-namespace Uri.ls32
+namespace UriSyntax.ls32
 {
     public class LeastSignificantInt32 : Alternation
     {

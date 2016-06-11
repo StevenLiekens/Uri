@@ -1,8 +1,8 @@
 ﻿using System;
-using Txt.Core;
 using Txt.ABNF;
+using Txt.Core;
 
-namespace Uri.host
+namespace UriSyntax.host
 {
     public sealed class HostLexer : Lexer<Host>
     {

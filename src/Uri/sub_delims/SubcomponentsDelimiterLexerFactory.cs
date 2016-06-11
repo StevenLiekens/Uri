@@ -1,9 +1,9 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Txt.Core;
 using Txt.ABNF;
+using Txt.Core;
 
-namespace Uri.sub_delims
+namespace UriSyntax.sub_delims
 {
     public class SubcomponentsDelimiterLexerFactory : ILexerFactory<SubcomponentsDelimiter>
     {

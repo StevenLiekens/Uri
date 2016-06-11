@@ -1,9 +1,9 @@
 ﻿using Txt.ABNF;
-using Uri.host;
-using Uri.port;
-using Uri.userinfo;
+using UriSyntax.host;
+using UriSyntax.port;
+using UriSyntax.userinfo;
 
-namespace Uri.authority
+namespace UriSyntax.authority
 {
     public class Authority : Concatenation
     {

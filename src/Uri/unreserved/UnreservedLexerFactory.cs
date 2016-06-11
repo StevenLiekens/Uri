@@ -1,11 +1,11 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Txt.Core;
 using Txt.ABNF;
 using Txt.ABNF.Core.ALPHA;
 using Txt.ABNF.Core.DIGIT;
+using Txt.Core;
 
-namespace Uri.unreserved
+namespace UriSyntax.unreserved
 {
     public class UnreservedLexerFactory : ILexerFactory<Unreserved>
     {

@@ -1,8 +1,8 @@
 ﻿using System;
-using Txt.Core;
 using Txt.ABNF;
+using Txt.Core;
 
-namespace Uri.dec_octet
+namespace UriSyntax.dec_octet
 {
     public sealed class DecimalOctetLexer : Lexer<DecimalOctet>
     {

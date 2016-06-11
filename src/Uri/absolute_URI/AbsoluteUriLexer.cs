@@ -1,8 +1,8 @@
 ﻿using System;
-using Txt.Core;
 using Txt.ABNF;
+using Txt.Core;
 
-namespace Uri.absolute_URI
+namespace UriSyntax.absolute_URI
 {
     public sealed class AbsoluteUriLexer : Lexer<AbsoluteUri>
     {

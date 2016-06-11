@@ -1,6 +1,6 @@
 ﻿using Txt.ABNF;
 
-namespace Uri.userinfo
+namespace UriSyntax.userinfo
 {
     public class UserInformation : Repetition
     {

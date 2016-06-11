@@ -1,6 +1,6 @@
 ﻿using Txt.ABNF;
 
-namespace Uri.path
+namespace UriSyntax.path
 {
     public class Path : Alternation
     {

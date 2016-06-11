@@ -1,8 +1,8 @@
 ﻿using System;
-using Txt.Core;
 using Txt.ABNF;
+using Txt.Core;
 
-namespace Uri.IPv6address
+namespace UriSyntax.IPv6address
 {
     public sealed class IPv6AddressLexer : Lexer<IPv6Address>
     {

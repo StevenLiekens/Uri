@@ -1,14 +1,14 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Txt.Core;
 using Txt.ABNF;
-using Uri.authority;
-using Uri.path_abempty;
-using Uri.path_absolute;
-using Uri.path_empty;
-using Uri.path_rootless;
+using Txt.Core;
+using UriSyntax.authority;
+using UriSyntax.path_abempty;
+using UriSyntax.path_absolute;
+using UriSyntax.path_empty;
+using UriSyntax.path_rootless;
 
-namespace Uri.hier_part
+namespace UriSyntax.hier_part
 {
     public class HierarchicalPartLexerFactory : ILexerFactory<HierarchicalPart>
     {

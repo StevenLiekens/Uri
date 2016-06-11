@@ -1,10 +1,10 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Txt.Core;
 using Txt.ABNF;
 using Txt.ABNF.Core.HEXDIG;
+using Txt.Core;
 
-namespace Uri.pct_encoded
+namespace UriSyntax.pct_encoded
 {
     public class PercentEncodingLexerFactory : ILexerFactory<PercentEncoding>
     {

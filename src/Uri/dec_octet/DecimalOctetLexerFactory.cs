@@ -1,10 +1,10 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Txt.Core;
 using Txt.ABNF;
 using Txt.ABNF.Core.DIGIT;
+using Txt.Core;
 
-namespace Uri.dec_octet
+namespace UriSyntax.dec_octet
 {
     public class DecimalOctetLexerFactory : ILexerFactory<DecimalOctet>
     {
