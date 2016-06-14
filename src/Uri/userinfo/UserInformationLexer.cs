@@ -1,34 +1,14 @@
-﻿using System;
+﻿using JetBrains.Annotations;
 using Txt.ABNF;
 using Txt.Core;
 
 namespace UriSyntax.userinfo
 {
-    public sealed class UserInformationLexer : Lexer<UserInformation>
+    public sealed class UserInformationLexer : CompositeLexer<Repetition, UserInformation>
     {
-        private readonly ILexer<Repetition> innerLexer;
-
-        public UserInformationLexer(ILexer<Repetition> innerLexer)
+        public UserInformationLexer([NotNull] ILexer<Repetition> innerLexer)
+            : base(innerLexer)
         {
-            if (innerLexer == null)
-            {
-                throw new ArgumentNullException(nameof(innerLexer));
-            }
-
-            this.innerLexer = innerLexer;
         }
-
-        public override ReadResult<UserInformation> ReadImpl(ITextScanner scanner)
-        {
-            if (scanner == null)
-            {
-                throw new ArgumentNullException(nameof(scanner));
-            }
-            var result = innerLexer.Read(scanner);
-            if (result.Success)
-            {
-                return ReadResult<UserInformation>.FromResult(new UserInformation(result.Element));
-            }
-            return ReadResult<UserInformation>.FromSyntaxError(SyntaxError.FromReadResult(result, scanner.GetContext()));
-        }
-    }}
+    }
+}

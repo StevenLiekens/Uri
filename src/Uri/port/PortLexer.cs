@@ -1,34 +1,14 @@
-﻿using System;
+﻿using JetBrains.Annotations;
 using Txt.ABNF;
 using Txt.Core;
 
 namespace UriSyntax.port
 {
-    public sealed class PortLexer : Lexer<Port>
+    public sealed class PortLexer : CompositeLexer<Repetition, Port>
     {
-        private readonly ILexer<Repetition> innerLexer;
-
-        public PortLexer(ILexer<Repetition> innerLexer)
+        public PortLexer([NotNull] ILexer<Repetition> innerLexer)
+            : base(innerLexer)
         {
-            if (innerLexer == null)
-            {
-                throw new ArgumentNullException(nameof(innerLexer));
-            }
-            this.innerLexer = innerLexer;
-        }
-
-        public override ReadResult<Port> ReadImpl(ITextScanner scanner)
-        {
-            if (scanner == null)
-            {
-                throw new ArgumentNullException(nameof(scanner));
-            }
-            var result = innerLexer.Read(scanner);
-            if (result.Success)
-            {
-                return ReadResult<Port>.FromResult(new Port(result.Element));
-            }
-            return ReadResult<Port>.FromSyntaxError(SyntaxError.FromReadResult(result, scanner.GetContext()));
         }
     }
 }

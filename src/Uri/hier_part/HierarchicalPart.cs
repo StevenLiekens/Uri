@@ -22,23 +22,8 @@ namespace UriSyntax.hier_part
                 {
                     return null;
                 }
-
                 var concatenation = (Concatenation)Element;
                 return (Authority)concatenation.Elements[1];
-            }
-        }
-
-        public PathAbsoluteOrEmpty PathAbsoluteOrEmpty
-        {
-            get
-            {
-                if (Ordinal != 1)
-                {
-                    return null;
-                }
-
-                var concatenation = (Concatenation)Element;
-                return (PathAbsoluteOrEmpty)concatenation.Elements[2];
             }
         }
 
@@ -50,21 +35,20 @@ namespace UriSyntax.hier_part
                 {
                     return null;
                 }
-
                 return (PathAbsolute)Element;
             }
         }
 
-        public PathRootless PathRootless
+        public PathAbsoluteOrEmpty PathAbsoluteOrEmpty
         {
             get
             {
-                if (Ordinal != 3)
+                if (Ordinal != 1)
                 {
                     return null;
                 }
-
-                return (PathRootless)Element;
+                var concatenation = (Concatenation)Element;
+                return (PathAbsoluteOrEmpty)concatenation.Elements[2];
             }
         }
 
@@ -76,8 +60,19 @@ namespace UriSyntax.hier_part
                 {
                     return null;
                 }
-
                 return (PathEmpty)Element;
+            }
+        }
+
+        public PathRootless PathRootless
+        {
+            get
+            {
+                if (Ordinal != 3)
+                {
+                    return null;
+                }
+                return (PathRootless)Element;
             }
         }
     }

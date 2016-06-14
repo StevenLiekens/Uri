@@ -1,34 +1,14 @@
-﻿using System;
+﻿using JetBrains.Annotations;
 using Txt.ABNF;
 using Txt.Core;
 
 namespace UriSyntax.segment
 {
-    public sealed class SegmentLexer : Lexer<Segment>
+    public sealed class SegmentLexer : CompositeLexer<Repetition, Segment>
     {
-        private readonly ILexer<Repetition> innerLexer;
-
-        public SegmentLexer(ILexer<Repetition> innerLexer)
+        public SegmentLexer([NotNull] ILexer<Repetition> innerLexer)
+            : base(innerLexer)
         {
-            if (innerLexer == null)
-            {
-                throw new ArgumentNullException(nameof(innerLexer));
-            }
-            this.innerLexer = innerLexer;
-        }
-
-        public override ReadResult<Segment> ReadImpl(ITextScanner scanner)
-        {
-            if (scanner == null)
-            {
-                throw new ArgumentNullException(nameof(scanner));
-            }
-            var result = innerLexer.Read(scanner);
-            if (result.Success)
-            {
-                return ReadResult<Segment>.FromResult(new Segment(result.Element));
-            }
-            return ReadResult<Segment>.FromSyntaxError(SyntaxError.FromReadResult(result, scanner.GetContext()));
         }
     }
 }

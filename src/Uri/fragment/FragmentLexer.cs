@@ -1,35 +1,14 @@
-﻿using System;
+﻿using JetBrains.Annotations;
 using Txt.ABNF;
 using Txt.Core;
 
 namespace UriSyntax.fragment
 {
-    public sealed class FragmentLexer : Lexer<Fragment>
+    public sealed class FragmentLexer : CompositeLexer<Repetition, Fragment>
     {
-        private readonly ILexer<Repetition> innerLexer;
-
-        public FragmentLexer(ILexer<Repetition> innerLexer)
+        public FragmentLexer([NotNull] ILexer<Repetition> innerLexer)
+            : base(innerLexer)
         {
-            if (innerLexer == null)
-            {
-                throw new ArgumentNullException(nameof(innerLexer));
-            }
-
-            this.innerLexer = innerLexer;
-        }
-
-        public override ReadResult<Fragment> ReadImpl(ITextScanner scanner)
-        {
-            if (scanner == null)
-            {
-                throw new ArgumentNullException(nameof(scanner));
-            }
-            var result = innerLexer.Read(scanner);
-            if (result.Success)
-            {
-                return ReadResult<Fragment>.FromResult(new Fragment(result.Element));
-            }
-            return ReadResult<Fragment>.FromSyntaxError(SyntaxError.FromReadResult(result, scanner.GetContext()));
         }
     }
 }

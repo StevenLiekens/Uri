@@ -1,34 +1,14 @@
-﻿using System;
+﻿using JetBrains.Annotations;
 using Txt.ABNF;
 using Txt.Core;
 
 namespace UriSyntax.URI_reference
 {
-    public sealed class UriReferenceLexer : Lexer<UriReference>
+    public sealed class UriReferenceLexer : CompositeLexer<Alternation, UriReference>
     {
-        private readonly ILexer<Alternation> innerLexer;
-
-        public UriReferenceLexer(ILexer<Alternation> innerLexer)
+        public UriReferenceLexer([NotNull] ILexer<Alternation> innerLexer)
+            : base(innerLexer)
         {
-            if (innerLexer == null)
-            {
-                throw new ArgumentNullException(nameof(innerLexer));
-            }
-
-            this.innerLexer = innerLexer;
         }
-
-        public override ReadResult<UriReference> ReadImpl(ITextScanner scanner)
-        {
-            if (scanner == null)
-            {
-                throw new ArgumentNullException(nameof(scanner));
-            }
-            var result = innerLexer.Read(scanner);
-            if (result.Success)
-            {
-                return ReadResult<UriReference>.FromResult(new UriReference(result.Element));
-            }
-            return ReadResult<UriReference>.FromSyntaxError(SyntaxError.FromReadResult(result, scanner.GetContext()));
-        }
-    }}
+    }
+}

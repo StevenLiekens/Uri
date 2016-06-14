@@ -16,13 +16,6 @@ namespace UriSyntax.pct_encoded
             return instance.ToChar();
         }
 
-        public char ToChar()
-        {
-            Debug.Assert(Text != null, "this.Value != null");
-            Debug.Assert(Text.Length == 3, "this.Value.Length == 3");
-            return (char)Convert.ToInt32(Text.Substring(1), 16);
-        }
-
         public override string GetWellFormedText()
         {
             /* 6.2.2.1.  Case Normalization
@@ -32,6 +25,13 @@ namespace UriSyntax.pct_encoded
              * should be normalized to use uppercase letters for the digits A-F.
              */
             return base.GetWellFormedText().ToUpperInvariant();
+        }
+
+        public char ToChar()
+        {
+            Debug.Assert(Text != null, "this.Value != null");
+            Debug.Assert(Text.Length == 3, "this.Value.Length == 3");
+            return (char)Convert.ToInt32(Text.Substring(1), 16);
         }
     }
 }

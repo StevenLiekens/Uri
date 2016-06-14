@@ -23,7 +23,6 @@ namespace UriSyntax.authority
                 {
                     return null;
                 }
-
                 var portConcatenation = (Concatenation)optionalPort.Elements[0];
                 return (Port)portConcatenation.Elements[1];
             }
@@ -38,7 +37,6 @@ namespace UriSyntax.authority
                 {
                     return null;
                 }
-
                 var userInfoConcatenation = (Concatenation)optionalUserInfo.Elements[0];
                 return (UserInformation)userInfoConcatenation.Elements[0];
             }

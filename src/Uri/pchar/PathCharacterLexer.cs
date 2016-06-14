@@ -1,34 +1,14 @@
-﻿using System;
+﻿using JetBrains.Annotations;
 using Txt.ABNF;
 using Txt.Core;
 
 namespace UriSyntax.pchar
 {
-    public sealed class PathCharacterLexer : Lexer<PathCharacter>
+    public sealed class PathCharacterLexer : CompositeLexer<Alternation, PathCharacter>
     {
-        private readonly ILexer<Alternation> innerLexer;
-
-        public PathCharacterLexer(ILexer<Alternation> innerLexer)
+        public PathCharacterLexer([NotNull] ILexer<Alternation> innerLexer)
+            : base(innerLexer)
         {
-            if (innerLexer == null)
-            {
-                throw new ArgumentNullException(nameof(innerLexer));
-            }
-
-            this.innerLexer = innerLexer;
         }
-
-        public override ReadResult<PathCharacter> ReadImpl(ITextScanner scanner)
-        {
-            if (scanner == null)
-            {
-                throw new ArgumentNullException(nameof(scanner));
-            }
-            var result = innerLexer.Read(scanner);
-            if (result.Success)
-            {
-                return ReadResult<PathCharacter>.FromResult(new PathCharacter(result.Element));
-            }
-            return ReadResult<PathCharacter>.FromSyntaxError(SyntaxError.FromReadResult(result, scanner.GetContext()));
-        }
-    }}
+    }
+}

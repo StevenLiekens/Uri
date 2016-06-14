@@ -25,7 +25,6 @@ namespace UriSyntax.URI
                 {
                     return null;
                 }
-
                 var fragmentPart = (Concatenation)optionalFragmentPart.Elements[0];
                 return (Fragment)fragmentPart.Elements[1];
             }
@@ -49,7 +48,6 @@ namespace UriSyntax.URI
                 {
                     return null;
                 }
-
                 var queryPart = (Concatenation)optionalQueryPart.Elements[0];
                 return (Query)queryPart.Elements[1];
             }

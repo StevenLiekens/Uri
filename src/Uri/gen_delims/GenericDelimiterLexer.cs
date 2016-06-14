@@ -1,34 +1,14 @@
-﻿using System;
+﻿using JetBrains.Annotations;
 using Txt.ABNF;
 using Txt.Core;
 
 namespace UriSyntax.gen_delims
 {
-    public sealed class GenericDelimiterLexer : Lexer<GenericDelimiter>
+    public sealed class GenericDelimiterLexer : CompositeLexer<Alternation, GenericDelimiter>
     {
-        private readonly ILexer<Alternation> innerLexer;
-
-        public GenericDelimiterLexer(ILexer<Alternation> innerLexer)
+        public GenericDelimiterLexer([NotNull] ILexer<Alternation> innerLexer)
+            : base(innerLexer)
         {
-            if (innerLexer == null)
-            {
-                throw new ArgumentNullException(nameof(innerLexer));
-            }
-
-            this.innerLexer = innerLexer;
         }
-
-        public override ReadResult<GenericDelimiter> ReadImpl(ITextScanner scanner)
-        {
-            if (scanner == null)
-            {
-                throw new ArgumentNullException(nameof(scanner));
-            }
-            var result = innerLexer.Read(scanner);
-            if (result.Success)
-            {
-                return ReadResult<GenericDelimiter>.FromResult(new GenericDelimiter(result.Element));
-            }
-            return ReadResult<GenericDelimiter>.FromSyntaxError(SyntaxError.FromReadResult(result, scanner.GetContext()));
-        }
-    }}
+    }
+}

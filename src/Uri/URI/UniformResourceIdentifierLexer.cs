@@ -1,34 +1,14 @@
-﻿using System;
+﻿using JetBrains.Annotations;
 using Txt.ABNF;
 using Txt.Core;
 
 namespace UriSyntax.URI
 {
-    public sealed class UniformResourceIdentifierLexer : Lexer<UniformResourceIdentifier>
+    public sealed class UniformResourceIdentifierLexer : CompositeLexer<Concatenation, UniformResourceIdentifier>
     {
-        private readonly ILexer<Concatenation> innerLexer;
-
-        public UniformResourceIdentifierLexer(ILexer<Concatenation> innerLexer)
+        public UniformResourceIdentifierLexer([NotNull] ILexer<Concatenation> innerLexer)
+            : base(innerLexer)
         {
-            if (innerLexer == null)
-            {
-                throw new ArgumentNullException(nameof(innerLexer));
-            }
-
-            this.innerLexer = innerLexer;
         }
-
-        public override ReadResult<UniformResourceIdentifier> ReadImpl(ITextScanner scanner)
-        {
-            if (scanner == null)
-            {
-                throw new ArgumentNullException(nameof(scanner));
-            }
-            var result = innerLexer.Read(scanner);
-            if (result.Success)
-            {
-                return ReadResult<UniformResourceIdentifier>.FromResult(new UniformResourceIdentifier(result.Element));
-            }
-            return ReadResult<UniformResourceIdentifier>.FromSyntaxError(SyntaxError.FromReadResult(result, scanner.GetContext()));
-        }
-    }}
+    }
+}

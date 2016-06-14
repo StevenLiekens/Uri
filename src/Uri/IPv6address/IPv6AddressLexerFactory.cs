@@ -119,7 +119,9 @@ namespace UriSyntax.IPv6address
                     h16c6);
 
             // 6( h16 ":" ) ls32
-            var alternation1 = concatenationLexerFactory.Create(repetitionLexerFactory.Create(h16c, 6, 6), leastSignificantInt32Lexer);
+            var alternation1 = concatenationLexerFactory.Create(
+                repetitionLexerFactory.Create(h16c, 6, 6),
+                leastSignificantInt32Lexer);
 
             // "::" 5( h16 ":" ) ls32
             var alternation2 = concatenationLexerFactory.Create(
@@ -157,7 +159,10 @@ namespace UriSyntax.IPv6address
                 leastSignificantInt32Lexer);
 
             // [ h16-5 ] "::" ls32
-            var alternation7 = concatenationLexerFactory.Create(optionLexerFactory.Create(h16c5), collapse, leastSignificantInt32Lexer);
+            var alternation7 = concatenationLexerFactory.Create(
+                optionLexerFactory.Create(h16c5),
+                collapse,
+                leastSignificantInt32Lexer);
 
             // [ h16-6 ] "::" h16
             var alternation8 = concatenationLexerFactory.Create(

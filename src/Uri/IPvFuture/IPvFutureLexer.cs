@@ -1,34 +1,14 @@
-﻿using System;
+﻿using JetBrains.Annotations;
 using Txt.ABNF;
 using Txt.Core;
 
 namespace UriSyntax.IPvFuture
 {
-    public sealed class IPvFutureLexer : Lexer<IPvFuture>
+    public sealed class IPvFutureLexer : CompositeLexer<Concatenation, IPvFuture>
     {
-        private readonly ILexer<Concatenation> innerLexer;
-
-        public IPvFutureLexer(ILexer<Concatenation> innerLexer)
+        public IPvFutureLexer([NotNull] ILexer<Concatenation> innerLexer)
+            : base(innerLexer)
         {
-            if (innerLexer == null)
-            {
-                throw new ArgumentNullException(nameof(innerLexer));
-            }
-
-            this.innerLexer = innerLexer;
         }
-
-        public override ReadResult<IPvFuture> ReadImpl(ITextScanner scanner)
-        {
-            if (scanner == null)
-            {
-                throw new ArgumentNullException(nameof(scanner));
-            }
-            var result = innerLexer.Read(scanner);
-            if (result.Success)
-            {
-                return ReadResult<IPvFuture>.FromResult(new IPvFuture(result.Element));
-            }
-            return ReadResult<IPvFuture>.FromSyntaxError(SyntaxError.FromReadResult(result, scanner.GetContext()));
-        }
-    }}
+    }
+}

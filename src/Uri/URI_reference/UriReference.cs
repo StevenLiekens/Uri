@@ -21,7 +21,6 @@ namespace UriSyntax.URI_reference
                 {
                     return true;
                 }
-
                 return false;
             }
         }
@@ -34,7 +33,6 @@ namespace UriSyntax.URI_reference
                 {
                     return null;
                 }
-
                 return (RelativeReference)Element;
             }
         }
@@ -47,7 +45,6 @@ namespace UriSyntax.URI_reference
                 {
                     return null;
                 }
-
                 return (UniformResourceIdentifier)Element;
             }
         }

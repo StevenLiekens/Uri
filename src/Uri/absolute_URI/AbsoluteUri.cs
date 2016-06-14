@@ -8,7 +8,7 @@ namespace UriSyntax.absolute_URI
 {
     public class AbsoluteUri : Concatenation
     {
-        public AbsoluteUri(Concatenation concatenation) 
+        public AbsoluteUri(Concatenation concatenation)
             : base(concatenation)
         {
         }
@@ -31,7 +31,6 @@ namespace UriSyntax.absolute_URI
                 {
                     return null;
                 }
-
                 var queryPart = (Concatenation)optionalQueryPart.Elements[0];
                 return (Query)queryPart.Elements[1];
             }

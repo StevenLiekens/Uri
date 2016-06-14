@@ -1,34 +1,14 @@
-﻿using System;
+﻿using JetBrains.Annotations;
 using Txt.ABNF;
 using Txt.Core;
 
 namespace UriSyntax.query
 {
-    public sealed class QueryLexer : Lexer<Query>
+    public sealed class QueryLexer : CompositeLexer<Repetition, Query>
     {
-        private readonly ILexer<Repetition> innerLexer;
-
-        public QueryLexer(ILexer<Repetition> innerLexer)
+        public QueryLexer([NotNull] ILexer<Repetition> innerLexer)
+            : base(innerLexer)
         {
-            if (innerLexer == null)
-            {
-                throw new ArgumentNullException(nameof(innerLexer));
-            }
-
-            this.innerLexer = innerLexer;
         }
-
-        public override ReadResult<Query> ReadImpl(ITextScanner scanner)
-        {
-            if (scanner == null)
-            {
-                throw new ArgumentNullException(nameof(scanner));
-            }
-            var result = innerLexer.Read(scanner);
-            if (result.Success)
-            {
-                return ReadResult<Query>.FromResult(new Query(result.Element));
-            }
-            return ReadResult<Query>.FromSyntaxError(SyntaxError.FromReadResult(result, scanner.GetContext()));
-        }
-    }}
+    }
+}

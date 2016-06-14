@@ -22,7 +22,6 @@ namespace UriSyntax.relative_part
                 {
                     return null;
                 }
-
                 var concatenation = (Concatenation)Element;
                 return (Authority)concatenation.Elements[1];
             }
@@ -36,7 +35,6 @@ namespace UriSyntax.relative_part
                 {
                     return null;
                 }
-
                 return (PathAbsolute)Element;
             }
         }
@@ -49,7 +47,6 @@ namespace UriSyntax.relative_part
                 {
                     return null;
                 }
-
                 var concatenation = (Concatenation)Element;
                 return (PathAbsoluteOrEmpty)concatenation.Elements[2];
             }
@@ -63,7 +60,6 @@ namespace UriSyntax.relative_part
                 {
                     return null;
                 }
-
                 return (PathEmpty)Element;
             }
         }
@@ -76,7 +72,6 @@ namespace UriSyntax.relative_part
                 {
                     return null;
                 }
-
                 return (PathNoScheme)Element;
             }
         }

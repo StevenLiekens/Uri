@@ -1,34 +1,14 @@
-﻿using System;
+﻿using JetBrains.Annotations;
 using Txt.ABNF;
 using Txt.Core;
 
 namespace UriSyntax.reserved
 {
-    public sealed class ReservedLexer : Lexer<Reserved>
+    public sealed class ReservedLexer : CompositeLexer<Alternation, Reserved>
     {
-        private readonly ILexer<Alternation> innerLexer;
-
-        public ReservedLexer(ILexer<Alternation> innerLexer)
+        public ReservedLexer([NotNull] ILexer<Alternation> innerLexer)
+            : base(innerLexer)
         {
-            if (innerLexer == null)
-            {
-                throw new ArgumentNullException(nameof(innerLexer));
-            }
-
-            this.innerLexer = innerLexer;
         }
-
-        public override ReadResult<Reserved> ReadImpl(ITextScanner scanner)
-        {
-            if (scanner == null)
-            {
-                throw new ArgumentNullException(nameof(scanner));
-            }
-            var result = innerLexer.Read(scanner);
-            if (result.Success)
-            {
-                return ReadResult<Reserved>.FromResult(new Reserved(result.Element));
-            }
-            return ReadResult<Reserved>.FromSyntaxError(SyntaxError.FromReadResult(result, scanner.GetContext()));
-        }
-    }}
+    }
+}
