@@ -23,7 +23,7 @@ namespace UriSyntax.relative_part
                     return null;
                 }
                 var concatenation = (Concatenation)Element;
-                return (Authority)concatenation.Elements[1];
+                return (Authority)concatenation[1];
             }
         }
 
@@ -48,7 +48,7 @@ namespace UriSyntax.relative_part
                     return null;
                 }
                 var concatenation = (Concatenation)Element;
-                return (PathAbsoluteOrEmpty)concatenation.Elements[2];
+                return (PathAbsoluteOrEmpty)concatenation[2];
             }
         }
 

@@ -39,7 +39,7 @@ namespace UriSyntax.ls32
             }
             var seq = (Concatenation)value.Element;
             return
-                seq.Elements.OfType<HexadecimalInt16>()
+                seq.OfType<HexadecimalInt16>()
                    .SelectMany(int16 => hexadecimalInt16Parser.Parse(int16))
                    .ToArray();
         }

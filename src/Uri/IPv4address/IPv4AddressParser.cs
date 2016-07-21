@@ -21,7 +21,7 @@ namespace UriSyntax.IPv4address
 
         protected override byte[] ParseImpl(IPv4Address value)
         {
-            return value.Elements.OfType<DecimalOctet>().Select(decimalOctetParser.Parse).ToArray();
+            return value.OfType<DecimalOctet>().Select(decimalOctetParser.Parse).ToArray();
         }
     }
 }

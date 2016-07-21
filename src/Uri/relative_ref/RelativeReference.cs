@@ -17,13 +17,13 @@ namespace UriSyntax.relative_ref
         {
             get
             {
-                var optionalFragmentPart = (Repetition)Elements[4];
-                if (optionalFragmentPart.Elements.Count == 0)
+                var optionalFragmentPart = (Repetition)this[4];
+                if (optionalFragmentPart.Count == 0)
                 {
                     return null;
                 }
-                var fragmentPart = (Concatenation)optionalFragmentPart.Elements[0];
-                return (Fragment)fragmentPart.Elements[1];
+                var fragmentPart = (Concatenation)optionalFragmentPart[0];
+                return (Fragment)fragmentPart[1];
             }
         }
 
@@ -31,13 +31,13 @@ namespace UriSyntax.relative_ref
         {
             get
             {
-                var optionalQueryPart = (Repetition)Elements[3];
-                if (optionalQueryPart.Elements.Count == 0)
+                var optionalQueryPart = (Repetition)this[3];
+                if (optionalQueryPart.Count == 0)
                 {
                     return null;
                 }
-                var queryPart = (Concatenation)optionalQueryPart.Elements[0];
-                return (Query)queryPart.Elements[1];
+                var queryPart = (Concatenation)optionalQueryPart[0];
+                return (Query)queryPart[1];
             }
         }
 
@@ -45,8 +45,8 @@ namespace UriSyntax.relative_ref
         {
             get
             {
-                Debug.Assert(Elements[0] is RelativePart, "this.Elements[0] is RelativePart");
-                return (RelativePart)Elements[0];
+                Debug.Assert(this[0] is RelativePart, "this[0] is RelativePart");
+                return (RelativePart)this[0];
             }
         }
     }
