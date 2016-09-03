@@ -2,25 +2,35 @@
 using JetBrains.Annotations;
 using Txt.ABNF;
 using Txt.Core;
+using UriSyntax.pchar;
 
 namespace UriSyntax.path_empty
 {
     public class PathEmptyLexerFactory : ILexerFactory<PathEmpty>
     {
-        private readonly ITerminalLexerFactory terminalLexerFactory;
+        private readonly ILexer<PathCharacter> pathCharacterLexer;
 
-        public PathEmptyLexerFactory([NotNull] ITerminalLexerFactory terminalLexerFactory)
+        private readonly IRepetitionLexerFactory repetitionLexerFactory;
+
+        public PathEmptyLexerFactory(
+            [NotNull] IRepetitionLexerFactory repetitionLexerFactory,
+            [NotNull] ILexer<PathCharacter> pathCharacterLexer)
         {
-            if (terminalLexerFactory == null)
+            if (repetitionLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(terminalLexerFactory));
+                throw new ArgumentNullException(nameof(repetitionLexerFactory));
             }
-            this.terminalLexerFactory = terminalLexerFactory;
+            if (pathCharacterLexer == null)
+            {
+                throw new ArgumentNullException(nameof(pathCharacterLexer));
+            }
+            this.repetitionLexerFactory = repetitionLexerFactory;
+            this.pathCharacterLexer = pathCharacterLexer;
         }
 
         public ILexer<PathEmpty> Create()
         {
-            var innerLexer = terminalLexerFactory.Create(string.Empty, StringComparer.Ordinal);
+            var innerLexer = repetitionLexerFactory.Create(pathCharacterLexer, 0, 0);
             return new PathEmptyLexer(innerLexer);
         }
     }

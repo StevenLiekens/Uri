@@ -2,9 +2,9 @@
 
 namespace UriSyntax.path_empty
 {
-    public class PathEmpty : Terminal
+    public class PathEmpty : Repetition
     {
-        public PathEmpty(Terminal pathEmpty)
+        public PathEmpty(Repetition pathEmpty)
             : base(pathEmpty)
         {
         }
