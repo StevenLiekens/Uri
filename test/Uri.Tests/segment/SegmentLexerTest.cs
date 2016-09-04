@@ -18,7 +18,7 @@ namespace UriSyntax.segment
             {
                 var result = lexer.Read(scanner);
                 Assert.NotNull(result);
-                Assert.True(result.Success);
+                Assert.True(result.IsSuccess);
                 Assert.NotNull(result.Element);
                 Assert.Equal(input, result.Element.Text);
             }
