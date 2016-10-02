@@ -3,7 +3,7 @@ using Xunit;
 
 namespace UriSyntax.unreserved
 {
-    public class UnreservedLexerTest : LexerTestBase
+    public class UnreservedLexerTest
     {
         [Theory]
         [InlineData(@"a")]
@@ -18,7 +18,7 @@ namespace UriSyntax.unreserved
         [InlineData(@"~")]
         public void Read_ShouldSucceed(string input)
         {
-            var lexer = Container.GetInstance<ILexer<Unreserved>>();
+            var lexer = UnreservedLexerFactory.Default.Create();
             using (var scanner = new TextScanner(new StringTextSource(input)))
             {
                 var result = lexer.Read(scanner);

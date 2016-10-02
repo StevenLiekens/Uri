@@ -9,21 +9,19 @@ using UriSyntax.ls32;
 
 namespace UriSyntax.IPv6address
 {
-    public class IPv6AddressLexerFactory : ILexerFactory<IPv6Address>
+    public class IPv6AddressLexerFactory : LexerFactory<IPv6Address>
     {
-        private readonly IAlternationLexerFactory alternationLexerFactory;
-
-        private readonly IConcatenationLexerFactory concatenationLexerFactory;
-
-        private readonly ILexer<HexadecimalInt16> hexadecimalInt16Lexer;
-
-        private readonly ILexer<LeastSignificantInt32> leastSignificantInt32Lexer;
-
-        private readonly IOptionLexerFactory optionLexerFactory;
-
-        private readonly IRepetitionLexerFactory repetitionLexerFactory;
-
-        private readonly ITerminalLexerFactory terminalLexerFactory;
+        static IPv6AddressLexerFactory()
+        {
+            Default = new IPv6AddressLexerFactory(
+                Txt.ABNF.TerminalLexerFactory.Default,
+                Txt.ABNF.AlternationLexerFactory.Default,
+                Txt.ABNF.ConcatenationLexerFactory.Default,
+                Txt.ABNF.RepetitionLexerFactory.Default,
+                Txt.ABNF.OptionLexerFactory.Default,
+                h16.HexadecimalInt16LexerFactory.Default,
+                ls32.LeastSignificantInt32LexerFactory.Default);
+        }
 
         public IPv6AddressLexerFactory(
             [NotNull] ITerminalLexerFactory terminalLexerFactory,
@@ -31,8 +29,8 @@ namespace UriSyntax.IPv6address
             [NotNull] IConcatenationLexerFactory concatenationLexerFactory,
             [NotNull] IRepetitionLexerFactory repetitionLexerFactory,
             [NotNull] IOptionLexerFactory optionLexerFactory,
-            [NotNull] ILexer<HexadecimalInt16> hexadecimalInt16Lexer,
-            [NotNull] ILexer<LeastSignificantInt32> leastSignificantInt32Lexer)
+            [NotNull] ILexerFactory<HexadecimalInt16> hexadecimalInt16LexerFactory,
+            [NotNull] ILexerFactory<LeastSignificantInt32> leastSignificantInt32LexerFactory)
         {
             if (terminalLexerFactory == null)
             {
@@ -54,125 +52,143 @@ namespace UriSyntax.IPv6address
             {
                 throw new ArgumentNullException(nameof(optionLexerFactory));
             }
-            if (hexadecimalInt16Lexer == null)
+            if (hexadecimalInt16LexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(hexadecimalInt16Lexer));
+                throw new ArgumentNullException(nameof(hexadecimalInt16LexerFactory));
             }
-            if (leastSignificantInt32Lexer == null)
+            if (leastSignificantInt32LexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(leastSignificantInt32Lexer));
+                throw new ArgumentNullException(nameof(leastSignificantInt32LexerFactory));
             }
-            this.terminalLexerFactory = terminalLexerFactory;
-            this.alternationLexerFactory = alternationLexerFactory;
-            this.concatenationLexerFactory = concatenationLexerFactory;
-            this.repetitionLexerFactory = repetitionLexerFactory;
-            this.optionLexerFactory = optionLexerFactory;
-            this.hexadecimalInt16Lexer = hexadecimalInt16Lexer;
-            this.leastSignificantInt32Lexer = leastSignificantInt32Lexer;
+            TerminalLexerFactory = terminalLexerFactory;
+            AlternationLexerFactory = alternationLexerFactory;
+            ConcatenationLexerFactory = concatenationLexerFactory;
+            RepetitionLexerFactory = repetitionLexerFactory;
+            OptionLexerFactory = optionLexerFactory;
+            HexadecimalInt16LexerFactory = hexadecimalInt16LexerFactory.Singleton();
+            LeastSignificantInt32LexerFactory = leastSignificantInt32LexerFactory.Singleton();
         }
 
-        public ILexer<IPv6Address> Create()
+        public static IPv6AddressLexerFactory Default { get; }
+
+        public IAlternationLexerFactory AlternationLexerFactory { get; }
+
+        public IConcatenationLexerFactory ConcatenationLexerFactory { get; }
+
+        public ILexerFactory<HexadecimalInt16> HexadecimalInt16LexerFactory { get; }
+
+        public ILexerFactory<LeastSignificantInt32> LeastSignificantInt32LexerFactory { get; }
+
+        public IOptionLexerFactory OptionLexerFactory { get; }
+
+        public IRepetitionLexerFactory RepetitionLexerFactory { get; }
+
+        public ITerminalLexerFactory TerminalLexerFactory { get; }
+
+        public override ILexer<IPv6Address> Create()
         {
             // ":"
-            var colon = terminalLexerFactory.Create(@":", StringComparer.Ordinal);
+            var colon = TerminalLexerFactory.Create(@":", StringComparer.Ordinal);
 
             // "::"
-            var collapse = terminalLexerFactory.Create(@"::", StringComparer.Ordinal);
+            var collapse = TerminalLexerFactory.Create(@"::", StringComparer.Ordinal);
 
             // h16 ":"
-            var h16c = concatenationLexerFactory.Create(hexadecimalInt16Lexer, colon);
+            var int16Lexer = HexadecimalInt16LexerFactory.Create();
+            var h16c = ConcatenationLexerFactory.Create(int16Lexer, colon);
 
             // h16-2
             var h16c2 =
-                alternationLexerFactory.Create(
-                    concatenationLexerFactory.Create(hexadecimalInt16Lexer, colon, hexadecimalInt16Lexer),
-                    hexadecimalInt16Lexer);
+                AlternationLexerFactory.Create(
+                    ConcatenationLexerFactory.Create(int16Lexer, colon, int16Lexer),
+                    int16Lexer);
 
             // h16-3
             var h16c3 =
-                alternationLexerFactory.Create(
-                    concatenationLexerFactory.Create(repetitionLexerFactory.Create(h16c, 0, 2), hexadecimalInt16Lexer),
+                AlternationLexerFactory.Create(
+                    ConcatenationLexerFactory.Create(RepetitionLexerFactory.Create(h16c, 0, 2), int16Lexer),
                     h16c2);
 
             // h16-4
             var h16c4 =
-                alternationLexerFactory.Create(
-                    concatenationLexerFactory.Create(repetitionLexerFactory.Create(h16c, 0, 3), hexadecimalInt16Lexer),
+                AlternationLexerFactory.Create(
+                    ConcatenationLexerFactory.Create(RepetitionLexerFactory.Create(h16c, 0, 3), int16Lexer),
                     h16c3);
 
             // h16-5
             var h16c5 =
-                alternationLexerFactory.Create(
-                    concatenationLexerFactory.Create(repetitionLexerFactory.Create(h16c, 0, 4), hexadecimalInt16Lexer),
+                AlternationLexerFactory.Create(
+                    ConcatenationLexerFactory.Create(RepetitionLexerFactory.Create(h16c, 0, 4), int16Lexer),
                     h16c4);
 
             // h16-6
             var h16c6 =
-                alternationLexerFactory.Create(
-                    concatenationLexerFactory.Create(repetitionLexerFactory.Create(h16c, 0, 5), hexadecimalInt16Lexer),
+                AlternationLexerFactory.Create(
+                    ConcatenationLexerFactory.Create(RepetitionLexerFactory.Create(h16c, 0, 5), int16Lexer),
                     h16c5);
 
             // h16-7
             var h16c7 =
-                alternationLexerFactory.Create(
-                    concatenationLexerFactory.Create(repetitionLexerFactory.Create(h16c, 0, 6), hexadecimalInt16Lexer),
+                AlternationLexerFactory.Create(
+                    ConcatenationLexerFactory.Create(RepetitionLexerFactory.Create(h16c, 0, 6), int16Lexer),
                     h16c6);
 
             // 6( h16 ":" ) ls32
-            var alternation1 = concatenationLexerFactory.Create(
-                repetitionLexerFactory.Create(h16c, 6, 6),
-                leastSignificantInt32Lexer);
+            var significantInt32Lexer = LeastSignificantInt32LexerFactory.Create();
+            var alternation1 = ConcatenationLexerFactory.Create(
+                RepetitionLexerFactory.Create(h16c, 6, 6),
+                significantInt32Lexer);
 
             // "::" 5( h16 ":" ) ls32
-            var alternation2 = concatenationLexerFactory.Create(
+            var alternation2 = ConcatenationLexerFactory.Create(
                 collapse,
-                repetitionLexerFactory.Create(h16c, 5, 5),
-                leastSignificantInt32Lexer);
+                RepetitionLexerFactory.Create(h16c, 5, 5),
+                significantInt32Lexer);
 
             // [ h16 ] "::" 4( h16 ":" ) ls32
-            var alternation3 = concatenationLexerFactory.Create(
-                optionLexerFactory.Create(hexadecimalInt16Lexer),
+            var alternation3 = ConcatenationLexerFactory.Create(
+                OptionLexerFactory.Create(int16Lexer),
                 collapse,
-                repetitionLexerFactory.Create(h16c, 4, 4),
-                leastSignificantInt32Lexer);
+                RepetitionLexerFactory.Create(h16c, 4, 4),
+                significantInt32Lexer);
 
             // [ h16-2 ] "::" 3( h16 ":" ) ls32
-            var alternation4 = concatenationLexerFactory.Create(
-                optionLexerFactory.Create(h16c2),
+            var alternation4 = ConcatenationLexerFactory.Create(
+                OptionLexerFactory.Create(h16c2),
                 collapse,
-                repetitionLexerFactory.Create(h16c, 3, 3),
-                leastSignificantInt32Lexer);
+                RepetitionLexerFactory.Create(h16c, 3, 3),
+                significantInt32Lexer);
 
             // [ h16-3 ] "::" 2( h16 ":" ) ls32
-            var alternation5 = concatenationLexerFactory.Create(
-                optionLexerFactory.Create(h16c3),
+            var alternation5 = ConcatenationLexerFactory.Create(
+                OptionLexerFactory.Create(h16c3),
                 collapse,
-                repetitionLexerFactory.Create(h16c, 2, 2),
-                leastSignificantInt32Lexer);
+                RepetitionLexerFactory.Create(h16c, 2, 2),
+                significantInt32Lexer);
 
             // [ h16-4 ] "::" h16 ":" ls32
-            var alternation6 = concatenationLexerFactory.Create(
-                optionLexerFactory.Create(h16c4),
+            var alternation6 = ConcatenationLexerFactory.Create(
+                OptionLexerFactory.Create(h16c4),
                 collapse,
-                hexadecimalInt16Lexer,
+                int16Lexer,
                 colon,
-                leastSignificantInt32Lexer);
+                significantInt32Lexer);
 
             // [ h16-5 ] "::" ls32
-            var alternation7 = concatenationLexerFactory.Create(
-                optionLexerFactory.Create(h16c5),
+            var alternation7 = ConcatenationLexerFactory.Create(
+                OptionLexerFactory.Create(h16c5),
                 collapse,
-                leastSignificantInt32Lexer);
+                significantInt32Lexer);
 
             // [ h16-6 ] "::" h16
-            var alternation8 = concatenationLexerFactory.Create(
-                optionLexerFactory.Create(h16c6),
+            var alternation8 = ConcatenationLexerFactory.Create(
+                OptionLexerFactory.Create(h16c6),
                 collapse,
-                hexadecimalInt16Lexer);
+                int16Lexer);
 
             // [ h16-7 ] "::"
-            var alternation9 = concatenationLexerFactory.Create(optionLexerFactory.Create(h16c7), collapse);
-            var innerLexer = alternationLexerFactory.Create(
+            var alternation9 = ConcatenationLexerFactory.Create(OptionLexerFactory.Create(h16c7), collapse);
+            var innerLexer = AlternationLexerFactory.Create(
                 alternation1,
                 alternation2,
                 alternation3,

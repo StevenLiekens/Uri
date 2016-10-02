@@ -8,30 +8,28 @@ using UriSyntax.unreserved;
 
 namespace UriSyntax.IPvFuture
 {
-    public class IPvFutureLexerFactory : ILexerFactory<IPvFuture>
+    public class IPvFutureLexerFactory : LexerFactory<IPvFuture>
     {
-        private readonly IAlternationLexerFactory alternationLexerFactory;
-
-        private readonly IConcatenationLexerFactory concatenationLexerFactory;
-
-        private readonly ILexer<HexadecimalDigit> hexadecimalDigitLexer;
-
-        private readonly IRepetitionLexerFactory repetitionLexerFactory;
-
-        private readonly ILexer<SubcomponentsDelimiter> subcomponentsDelimiterLexer;
-
-        private readonly ITerminalLexerFactory terminalLexerFactory;
-
-        private readonly ILexer<Unreserved> unreservedLexer;
+        static IPvFutureLexerFactory()
+        {
+            Default = new IPvFutureLexerFactory(
+                Txt.ABNF.TerminalLexerFactory.Default,
+                Txt.ABNF.AlternationLexerFactory.Default,
+                Txt.ABNF.ConcatenationLexerFactory.Default,
+                Txt.ABNF.RepetitionLexerFactory.Default,
+                Txt.ABNF.Core.HEXDIG.HexadecimalDigitLexerFactory.Default,
+                unreserved.UnreservedLexerFactory.Default,
+                sub_delims.SubcomponentsDelimiterLexerFactory.Default);
+        }
 
         public IPvFutureLexerFactory(
             [NotNull] ITerminalLexerFactory terminalLexerFactory,
             [NotNull] IAlternationLexerFactory alternationLexerFactory,
             [NotNull] IConcatenationLexerFactory concatenationLexerFactory,
             [NotNull] IRepetitionLexerFactory repetitionLexerFactory,
-            [NotNull] ILexer<HexadecimalDigit> hexadecimalDigitLexer,
-            [NotNull] ILexer<Unreserved> unreservedLexer,
-            [NotNull] ILexer<SubcomponentsDelimiter> subcomponentsDelimiterLexer)
+            [NotNull] ILexerFactory<HexadecimalDigit> hexadecimalDigitLexerFactory,
+            [NotNull] ILexerFactory<Unreserved> unreservedLexerFactory,
+            [NotNull] ILexerFactory<SubcomponentsDelimiter> subcomponentsDelimiterLexerFactory)
         {
             if (terminalLexerFactory == null)
             {
@@ -49,49 +47,68 @@ namespace UriSyntax.IPvFuture
             {
                 throw new ArgumentNullException(nameof(repetitionLexerFactory));
             }
-            if (hexadecimalDigitLexer == null)
+            if (hexadecimalDigitLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(hexadecimalDigitLexer));
+                throw new ArgumentNullException(nameof(hexadecimalDigitLexerFactory));
             }
-            if (unreservedLexer == null)
+            if (unreservedLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(unreservedLexer));
+                throw new ArgumentNullException(nameof(unreservedLexerFactory));
             }
-            if (subcomponentsDelimiterLexer == null)
+            if (subcomponentsDelimiterLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(subcomponentsDelimiterLexer));
+                throw new ArgumentNullException(nameof(subcomponentsDelimiterLexerFactory));
             }
-            this.terminalLexerFactory = terminalLexerFactory;
-            this.alternationLexerFactory = alternationLexerFactory;
-            this.concatenationLexerFactory = concatenationLexerFactory;
-            this.repetitionLexerFactory = repetitionLexerFactory;
-            this.hexadecimalDigitLexer = hexadecimalDigitLexer;
-            this.unreservedLexer = unreservedLexer;
-            this.subcomponentsDelimiterLexer = subcomponentsDelimiterLexer;
+            TerminalLexerFactory = terminalLexerFactory;
+            AlternationLexerFactory = alternationLexerFactory;
+            ConcatenationLexerFactory = concatenationLexerFactory;
+            RepetitionLexerFactory = repetitionLexerFactory;
+            HexadecimalDigitLexerFactory = hexadecimalDigitLexerFactory.Singleton();
+            UnreservedLexerFactory = unreservedLexerFactory.Singleton();
+            SubcomponentsDelimiterLexerFactory = subcomponentsDelimiterLexerFactory.Singleton();
         }
 
-        public ILexer<IPvFuture> Create()
+        public static IPvFutureLexerFactory Default { get; }
+
+        public IAlternationLexerFactory AlternationLexerFactory { get; }
+
+        public IConcatenationLexerFactory ConcatenationLexerFactory { get; }
+
+        public ILexerFactory<HexadecimalDigit> HexadecimalDigitLexerFactory { get; }
+
+        public IRepetitionLexerFactory RepetitionLexerFactory { get; }
+
+        public ILexerFactory<SubcomponentsDelimiter> SubcomponentsDelimiterLexerFactory { get; }
+
+        public ITerminalLexerFactory TerminalLexerFactory { get; }
+
+        public ILexerFactory<Unreserved> UnreservedLexerFactory { get; }
+
+        public override ILexer<IPvFuture> Create()
         {
             // "v"
-            var v = terminalLexerFactory.Create(@"v", StringComparer.OrdinalIgnoreCase);
+            var v = TerminalLexerFactory.Create(@"v", StringComparer.OrdinalIgnoreCase);
 
             // "."
-            var dot = terminalLexerFactory.Create(@".", StringComparer.Ordinal);
+            var dot = TerminalLexerFactory.Create(@".", StringComparer.Ordinal);
 
             // ":"
-            var colon = terminalLexerFactory.Create(@":", StringComparer.Ordinal);
+            var colon = TerminalLexerFactory.Create(@":", StringComparer.Ordinal);
 
             // 1*HEXDIG
-            var r = repetitionLexerFactory.Create(hexadecimalDigitLexer, 1, int.MaxValue);
+            var hexadecimalDigitLexer = HexadecimalDigitLexerFactory.Create();
+            var r = RepetitionLexerFactory.Create(hexadecimalDigitLexer, 1, int.MaxValue);
 
             // unreserved / sub-delims / ":"
-            var a = alternationLexerFactory.Create(unreservedLexer, subcomponentsDelimiterLexer, colon);
+            var unreservedLexer = UnreservedLexerFactory.Create();
+            var subcomponentsDelimiterLexer = SubcomponentsDelimiterLexerFactory.Create();
+            var a = AlternationLexerFactory.Create(unreservedLexer, subcomponentsDelimiterLexer, colon);
 
             // 1*( unreserved / sub-delims / ":" )
-            var s = repetitionLexerFactory.Create(a, 1, int.MaxValue);
+            var s = RepetitionLexerFactory.Create(a, 1, int.MaxValue);
 
             // "v" 1*HEXDIG "." 1*( unreserved / sub-delims / ":" )
-            var innerLexer = concatenationLexerFactory.Create(v, r, dot, s);
+            var innerLexer = ConcatenationLexerFactory.Create(v, r, dot, s);
 
             // IPvFuture
             return new IPvFutureLexer(innerLexer);

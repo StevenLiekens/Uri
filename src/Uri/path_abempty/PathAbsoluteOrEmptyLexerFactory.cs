@@ -6,21 +6,22 @@ using UriSyntax.segment;
 
 namespace UriSyntax.path_abempty
 {
-    public class PathAbsoluteOrEmptyLexerFactory : ILexerFactory<PathAbsoluteOrEmpty>
+    public class PathAbsoluteOrEmptyLexerFactory : LexerFactory<PathAbsoluteOrEmpty>
     {
-        private readonly IConcatenationLexerFactory concatenationLexerFactory;
-
-        private readonly IRepetitionLexerFactory repetitionLexerFactory;
-
-        private readonly ILexer<Segment> segmentLexer;
-
-        private readonly ITerminalLexerFactory terminalLexerFactory;
+        static PathAbsoluteOrEmptyLexerFactory()
+        {
+            Default = new PathAbsoluteOrEmptyLexerFactory(
+                Txt.ABNF.TerminalLexerFactory.Default,
+                Txt.ABNF.ConcatenationLexerFactory.Default,
+                Txt.ABNF.RepetitionLexerFactory.Default,
+                segment.SegmentLexerFactory.Default);
+        }
 
         public PathAbsoluteOrEmptyLexerFactory(
             [NotNull] ITerminalLexerFactory terminalLexerFactory,
             [NotNull] IConcatenationLexerFactory concatenationLexerFactory,
             [NotNull] IRepetitionLexerFactory repetitionLexerFactory,
-            [NotNull] ILexer<Segment> segmentLexer)
+            [NotNull] ILexerFactory<Segment> segmentLexerFactory)
         {
             if (terminalLexerFactory == null)
             {
@@ -34,26 +35,36 @@ namespace UriSyntax.path_abempty
             {
                 throw new ArgumentNullException(nameof(repetitionLexerFactory));
             }
-            if (segmentLexer == null)
+            if (segmentLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(segmentLexer));
+                throw new ArgumentNullException(nameof(segmentLexerFactory));
             }
-            this.terminalLexerFactory = terminalLexerFactory;
-            this.concatenationLexerFactory = concatenationLexerFactory;
-            this.repetitionLexerFactory = repetitionLexerFactory;
-            this.segmentLexer = segmentLexer;
+            TerminalLexerFactory = terminalLexerFactory;
+            ConcatenationLexerFactory = concatenationLexerFactory;
+            RepetitionLexerFactory = repetitionLexerFactory;
+            SegmentLexerFactory = segmentLexerFactory.Singleton();
         }
 
-        public ILexer<PathAbsoluteOrEmpty> Create()
+        public static PathAbsoluteOrEmptyLexerFactory Default { get; }
+
+        public IConcatenationLexerFactory ConcatenationLexerFactory { get; }
+
+        public IRepetitionLexerFactory RepetitionLexerFactory { get; }
+
+        public ILexerFactory<Segment> SegmentLexerFactory { get; }
+
+        public ITerminalLexerFactory TerminalLexerFactory { get; }
+
+        public override ILexer<PathAbsoluteOrEmpty> Create()
         {
             // "/"
-            var a = terminalLexerFactory.Create(@"/", StringComparer.Ordinal);
+            var a = TerminalLexerFactory.Create(@"/", StringComparer.Ordinal);
 
             // "/" segment
-            var c = concatenationLexerFactory.Create(a, segmentLexer);
+            var c = ConcatenationLexerFactory.Create(a, SegmentLexerFactory.Create());
 
             // *( "/" segment )
-            var innerLexer = repetitionLexerFactory.Create(c, 0, int.MaxValue);
+            var innerLexer = RepetitionLexerFactory.Create(c, 0, int.MaxValue);
 
             // path-abempty
             return new PathAbsoluteOrEmptyLexer(innerLexer);

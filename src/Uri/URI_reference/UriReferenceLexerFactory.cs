@@ -7,39 +7,51 @@ using UriSyntax.URI;
 
 namespace UriSyntax.URI_reference
 {
-    public class UriReferenceLexerFactory : ILexerFactory<UriReference>
+    public class UriReferenceLexerFactory : LexerFactory<UriReference>
     {
-        private readonly IAlternationLexerFactory alternationLexerFactory;
-
-        private readonly ILexer<RelativeReference> relativeReferenceLexer;
-
-        private readonly ILexer<UniformResourceIdentifier> uriLexer;
+        static UriReferenceLexerFactory()
+        {
+            Default = new UriReferenceLexerFactory(
+                Txt.ABNF.AlternationLexerFactory.Default,
+                UniformResourceIdentifierLexerFactory.Default,
+                relative_ref.RelativeReferenceLexerFactory.Default);
+        }
 
         public UriReferenceLexerFactory(
             [NotNull] IAlternationLexerFactory alternationLexerFactory,
-            [NotNull] ILexer<UniformResourceIdentifier> uriLexer,
-            [NotNull] ILexer<RelativeReference> relativeReferenceLexer)
+            [NotNull] ILexerFactory<UniformResourceIdentifier> uriLexerFactory,
+            [NotNull] ILexerFactory<RelativeReference> relativeReferenceLexerFactory)
         {
             if (alternationLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(alternationLexerFactory));
             }
-            if (uriLexer == null)
+            if (uriLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(uriLexer));
+                throw new ArgumentNullException(nameof(uriLexerFactory));
             }
-            if (relativeReferenceLexer == null)
+            if (relativeReferenceLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(relativeReferenceLexer));
+                throw new ArgumentNullException(nameof(relativeReferenceLexerFactory));
             }
-            this.alternationLexerFactory = alternationLexerFactory;
-            this.uriLexer = uriLexer;
-            this.relativeReferenceLexer = relativeReferenceLexer;
+            AlternationLexerFactory = alternationLexerFactory;
+            UriLexerFactory = uriLexerFactory.Singleton();
+            RelativeReferenceLexerFactory = relativeReferenceLexerFactory.Singleton();
         }
 
-        public ILexer<UriReference> Create()
+        public static UriReferenceLexerFactory Default { get; }
+
+        public IAlternationLexerFactory AlternationLexerFactory { get; }
+
+        public ILexerFactory<RelativeReference> RelativeReferenceLexerFactory { get; }
+
+        public ILexerFactory<UniformResourceIdentifier> UriLexerFactory { get; }
+
+        public override ILexer<UriReference> Create()
         {
-            var innerLexer = alternationLexerFactory.Create(uriLexer, relativeReferenceLexer);
+            var innerLexer = AlternationLexerFactory.Create(
+                UriLexerFactory.Create(),
+                RelativeReferenceLexerFactory.Create());
             return new UriReferenceLexer(innerLexer);
         }
     }

@@ -5,11 +5,14 @@ using Txt.Core;
 
 namespace UriSyntax.sub_delims
 {
-    public class SubcomponentsDelimiterLexerFactory : ILexerFactory<SubcomponentsDelimiter>
+    public class SubcomponentsDelimiterLexerFactory : LexerFactory<SubcomponentsDelimiter>
     {
-        private readonly IAlternationLexerFactory alternationLexerFactory;
-
-        private readonly ITerminalLexerFactory terminalLexerFactory;
+        static SubcomponentsDelimiterLexerFactory()
+        {
+            Default = new SubcomponentsDelimiterLexerFactory(
+                Txt.ABNF.TerminalLexerFactory.Default,
+                Txt.ABNF.AlternationLexerFactory.Default);
+        }
 
         public SubcomponentsDelimiterLexerFactory(
             [NotNull] ITerminalLexerFactory terminalLexerFactory,
@@ -23,25 +26,31 @@ namespace UriSyntax.sub_delims
             {
                 throw new ArgumentNullException(nameof(alternationLexerFactory));
             }
-            this.terminalLexerFactory = terminalLexerFactory;
-            this.alternationLexerFactory = alternationLexerFactory;
+            TerminalLexerFactory = terminalLexerFactory;
+            AlternationLexerFactory = alternationLexerFactory;
         }
 
-        public ILexer<SubcomponentsDelimiter> Create()
+        public static SubcomponentsDelimiterLexerFactory Default { get; }
+
+        public IAlternationLexerFactory AlternationLexerFactory { get; }
+
+        public ITerminalLexerFactory TerminalLexerFactory { get; }
+
+        public override ILexer<SubcomponentsDelimiter> Create()
         {
             // "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
-            var innerLexer = alternationLexerFactory.Create(
-                terminalLexerFactory.Create(@"!", StringComparer.Ordinal),
-                terminalLexerFactory.Create(@"$", StringComparer.Ordinal),
-                terminalLexerFactory.Create(@"&", StringComparer.Ordinal),
-                terminalLexerFactory.Create(@"'", StringComparer.Ordinal),
-                terminalLexerFactory.Create(@"(", StringComparer.Ordinal),
-                terminalLexerFactory.Create(@")", StringComparer.Ordinal),
-                terminalLexerFactory.Create(@"*", StringComparer.Ordinal),
-                terminalLexerFactory.Create(@"+", StringComparer.Ordinal),
-                terminalLexerFactory.Create(@",", StringComparer.Ordinal),
-                terminalLexerFactory.Create(@";", StringComparer.Ordinal),
-                terminalLexerFactory.Create(@"=", StringComparer.Ordinal));
+            var innerLexer = AlternationLexerFactory.Create(
+                TerminalLexerFactory.Create(@"!", StringComparer.Ordinal),
+                TerminalLexerFactory.Create(@"$", StringComparer.Ordinal),
+                TerminalLexerFactory.Create(@"&", StringComparer.Ordinal),
+                TerminalLexerFactory.Create(@"'", StringComparer.Ordinal),
+                TerminalLexerFactory.Create(@"(", StringComparer.Ordinal),
+                TerminalLexerFactory.Create(@")", StringComparer.Ordinal),
+                TerminalLexerFactory.Create(@"*", StringComparer.Ordinal),
+                TerminalLexerFactory.Create(@"+", StringComparer.Ordinal),
+                TerminalLexerFactory.Create(@",", StringComparer.Ordinal),
+                TerminalLexerFactory.Create(@";", StringComparer.Ordinal),
+                TerminalLexerFactory.Create(@"=", StringComparer.Ordinal));
 
             // sub-delims
             return new SubcomponentsDelimiterLexer(innerLexer);

@@ -6,31 +6,40 @@ using Txt.Core;
 
 namespace UriSyntax.h16
 {
-    public class HexadecimalInt16LexerFactory : ILexerFactory<HexadecimalInt16>
+    public class HexadecimalInt16LexerFactory : LexerFactory<HexadecimalInt16>
     {
-        private readonly ILexer<HexadecimalDigit> hexadecimalLexer;
-
-        private readonly IRepetitionLexerFactory repetitionLexerFactory;
+        static HexadecimalInt16LexerFactory()
+        {
+            Default = new HexadecimalInt16LexerFactory(
+                Txt.ABNF.RepetitionLexerFactory.Default,
+                HexadecimalDigitLexerFactory.Default);
+        }
 
         public HexadecimalInt16LexerFactory(
             [NotNull] IRepetitionLexerFactory repetitionLexerFactory,
-            [NotNull] ILexer<HexadecimalDigit> hexadecimalLexer)
+            [NotNull] ILexerFactory<HexadecimalDigit> hexadecimalLexerFactory)
         {
             if (repetitionLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(repetitionLexerFactory));
             }
-            if (hexadecimalLexer == null)
+            if (hexadecimalLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(hexadecimalLexer));
+                throw new ArgumentNullException(nameof(hexadecimalLexerFactory));
             }
-            this.repetitionLexerFactory = repetitionLexerFactory;
-            this.hexadecimalLexer = hexadecimalLexer;
+            RepetitionLexerFactory = repetitionLexerFactory;
+            HexadecimalLexerFactory = hexadecimalLexerFactory.Singleton();
         }
 
-        public ILexer<HexadecimalInt16> Create()
+        public static HexadecimalInt16LexerFactory Default { get; }
+
+        public ILexerFactory<HexadecimalDigit> HexadecimalLexerFactory { get; }
+
+        public IRepetitionLexerFactory RepetitionLexerFactory { get; }
+
+        public override ILexer<HexadecimalInt16> Create()
         {
-            var innerLexer = repetitionLexerFactory.Create(hexadecimalLexer, 1, 4);
+            var innerLexer = RepetitionLexerFactory.Create(HexadecimalLexerFactory.Create(), 1, 4);
             return new HexadecimalInt16Lexer(innerLexer);
         }
     }

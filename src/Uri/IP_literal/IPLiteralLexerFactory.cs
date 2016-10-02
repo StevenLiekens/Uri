@@ -3,27 +3,28 @@ using JetBrains.Annotations;
 using Txt.ABNF;
 using Txt.Core;
 using UriSyntax.IPv6address;
+using UriSyntax.IPvFuture;
 
 namespace UriSyntax.IP_literal
 {
-    public class IPLiteralLexerFactory : ILexerFactory<IPLiteral>
+    public class IPLiteralLexerFactory : LexerFactory<IPLiteral>
     {
-        private readonly IAlternationLexerFactory alternationLexerFactory;
-
-        private readonly IConcatenationLexerFactory concatenationLexerFactory;
-
-        private readonly ILexer<IPv6Address> ipv6AddressLexer;
-
-        private readonly ILexer<IPvFuture.IPvFuture> ipvFutureLexer;
-
-        private readonly ITerminalLexerFactory terminalLexerFactory;
+        static IPLiteralLexerFactory()
+        {
+            Default = new IPLiteralLexerFactory(
+                Txt.ABNF.TerminalLexerFactory.Default,
+                Txt.ABNF.AlternationLexerFactory.Default,
+                Txt.ABNF.ConcatenationLexerFactory.Default,
+                IPv6AddressLexerFactory.Default,
+                IPvFutureLexerFactory.Default);
+        }
 
         public IPLiteralLexerFactory(
             [NotNull] ITerminalLexerFactory terminalLexerFactory,
             [NotNull] IAlternationLexerFactory alternationLexerFactory,
             [NotNull] IConcatenationLexerFactory concatenationLexerFactory,
-            [NotNull] ILexer<IPv6Address> ipv6AddressLexer,
-            [NotNull] ILexer<IPvFuture.IPvFuture> ipvFutureLexer)
+            [NotNull] ILexerFactory<IPv6Address> ipv6AddressLexerFactory,
+            [NotNull] ILexerFactory<IPvFuture.IPvFuture> ipvFutureLexerFactory)
         {
             if (terminalLexerFactory == null)
             {
@@ -37,27 +38,39 @@ namespace UriSyntax.IP_literal
             {
                 throw new ArgumentNullException(nameof(concatenationLexerFactory));
             }
-            if (ipv6AddressLexer == null)
+            if (ipv6AddressLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(ipv6AddressLexer));
+                throw new ArgumentNullException(nameof(ipv6AddressLexerFactory));
             }
-            if (ipvFutureLexer == null)
+            if (ipvFutureLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(ipvFutureLexer));
+                throw new ArgumentNullException(nameof(ipvFutureLexerFactory));
             }
-            this.terminalLexerFactory = terminalLexerFactory;
-            this.alternationLexerFactory = alternationLexerFactory;
-            this.concatenationLexerFactory = concatenationLexerFactory;
-            this.ipv6AddressLexer = ipv6AddressLexer;
-            this.ipvFutureLexer = ipvFutureLexer;
+            TerminalLexerFactory = terminalLexerFactory;
+            AlternationLexerFactory = alternationLexerFactory;
+            ConcatenationLexerFactory = concatenationLexerFactory;
+            Ipv6AddressLexerFactory = ipv6AddressLexerFactory.Singleton();
+            IpvFutureLexerFactory = ipvFutureLexerFactory.Singleton();
         }
 
-        public ILexer<IPLiteral> Create()
+        public static IPLiteralLexerFactory Default { get; }
+
+        public IAlternationLexerFactory AlternationLexerFactory { get; }
+
+        public IConcatenationLexerFactory ConcatenationLexerFactory { get; }
+
+        public ILexerFactory<IPv6Address> Ipv6AddressLexerFactory { get; }
+
+        public ILexerFactory<IPvFuture.IPvFuture> IpvFutureLexerFactory { get; }
+
+        public ITerminalLexerFactory TerminalLexerFactory { get; }
+
+        public override ILexer<IPLiteral> Create()
         {
-            var a = terminalLexerFactory.Create(@"[", StringComparer.Ordinal);
-            var b = terminalLexerFactory.Create(@"]", StringComparer.Ordinal);
-            var alt = alternationLexerFactory.Create(ipv6AddressLexer, ipvFutureLexer);
-            var innerLexer = concatenationLexerFactory.Create(a, alt, b);
+            var a = TerminalLexerFactory.Create(@"[", StringComparer.Ordinal);
+            var b = TerminalLexerFactory.Create(@"]", StringComparer.Ordinal);
+            var alt = AlternationLexerFactory.Create(Ipv6AddressLexerFactory.Create(), IpvFutureLexerFactory.Create());
+            var innerLexer = ConcatenationLexerFactory.Create(a, alt, b);
             return new IPLiteralLexer(innerLexer);
         }
     }

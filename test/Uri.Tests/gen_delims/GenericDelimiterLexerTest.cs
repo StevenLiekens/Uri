@@ -3,7 +3,7 @@ using Xunit;
 
 namespace UriSyntax.gen_delims
 {
-    public class GenericDelimiterLexerTest : LexerTestBase
+    public class GenericDelimiterLexerTest
     {
         [Theory]
         [InlineData(@":")]
@@ -15,7 +15,7 @@ namespace UriSyntax.gen_delims
         [InlineData(@"@")]
         public void Read_ShouldSucceed(string input)
         {
-            var lexer = Container.GetInstance<ILexer<GenericDelimiter>>();
+            var lexer = GenericDelimiterLexerFactory.Default.Create();
             using (var scanner = new TextScanner(new StringTextSource(input)))
             {
                 var result = lexer.Read(scanner);

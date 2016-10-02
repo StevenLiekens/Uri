@@ -3,7 +3,7 @@ using Xunit;
 
 namespace UriSyntax.URI
 {
-    public class UniformResourceIdentifierLexerTest : LexerTestBase
+    public class UniformResourceIdentifierLexerTest
     {
         [Theory]
         [InlineData(@"ftp://ftp.is.co.za/rfc/rfc1808.txt")]
@@ -16,7 +16,7 @@ namespace UriSyntax.URI
         [InlineData(@"urn:oasis:names:specification:docbook:dtd:xml:4.1.2")]
         public void Read_ShouldSucceed(string input)
         {
-            var lexer = Container.GetInstance<ILexer<UniformResourceIdentifier>>();
+            var lexer = UniformResourceIdentifierLexerFactory.Default.Create();
             using (var scanner = new TextScanner(new StringTextSource(input)))
             {
                 var result = lexer.Read(scanner);

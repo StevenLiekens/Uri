@@ -6,19 +6,18 @@ using Txt.Core;
 
 namespace UriSyntax.dec_octet
 {
-    public class DecimalOctetLexerFactory : ILexerFactory<DecimalOctet>
+    public class DecimalOctetLexerFactory : LexerFactory<DecimalOctet>
     {
-        private readonly IAlternationLexerFactory alternationLexerFactory;
-
-        private readonly IConcatenationLexerFactory concatenationLexerFactory;
-
-        private readonly ILexer<Digit> digitLexer;
-
-        private readonly IRepetitionLexerFactory repetitionLexerFactory;
-
-        private readonly ITerminalLexerFactory terminalLexerFactory;
-
-        private readonly IValueRangeLexerFactory valueRangeLexerFactory;
+        static DecimalOctetLexerFactory()
+        {
+            Default = new DecimalOctetLexerFactory(
+                Txt.ABNF.TerminalLexerFactory.Default,
+                Txt.ABNF.ValueRangeLexerFactory.Default,
+                Txt.ABNF.AlternationLexerFactory.Default,
+                Txt.ABNF.ConcatenationLexerFactory.Default,
+                Txt.ABNF.RepetitionLexerFactory.Default,
+                Txt.ABNF.Core.DIGIT.DigitLexerFactory.Default);
+        }
 
         public DecimalOctetLexerFactory(
             [NotNull] ITerminalLexerFactory terminalLexerFactory,
@@ -26,7 +25,7 @@ namespace UriSyntax.dec_octet
             [NotNull] IAlternationLexerFactory alternationLexerFactory,
             [NotNull] IConcatenationLexerFactory concatenationLexerFactory,
             [NotNull] IRepetitionLexerFactory repetitionLexerFactory,
-            [NotNull] ILexer<Digit> digitLexer)
+            [NotNull] ILexerFactory<Digit> digitLexerFactory)
         {
             if (terminalLexerFactory == null)
             {
@@ -48,57 +47,72 @@ namespace UriSyntax.dec_octet
             {
                 throw new ArgumentNullException(nameof(repetitionLexerFactory));
             }
-            if (digitLexer == null)
+            if (digitLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(digitLexer));
+                throw new ArgumentNullException(nameof(digitLexerFactory));
             }
-            this.terminalLexerFactory = terminalLexerFactory;
-            this.valueRangeLexerFactory = valueRangeLexerFactory;
-            this.alternationLexerFactory = alternationLexerFactory;
-            this.concatenationLexerFactory = concatenationLexerFactory;
-            this.repetitionLexerFactory = repetitionLexerFactory;
-            this.digitLexer = digitLexer;
+            TerminalLexerFactory = terminalLexerFactory;
+            ValueRangeLexerFactory = valueRangeLexerFactory;
+            AlternationLexerFactory = alternationLexerFactory;
+            ConcatenationLexerFactory = concatenationLexerFactory;
+            RepetitionLexerFactory = repetitionLexerFactory;
+            DigitLexerFactory = digitLexerFactory.Singleton();
         }
 
-        public ILexer<DecimalOctet> Create()
+        public static DecimalOctetLexerFactory Default { get; }
+
+        public IAlternationLexerFactory AlternationLexerFactory { get; }
+
+        public IConcatenationLexerFactory ConcatenationLexerFactory { get; }
+
+        public ILexerFactory<Digit> DigitLexerFactory { get; }
+
+        public IRepetitionLexerFactory RepetitionLexerFactory { get; }
+
+        public ITerminalLexerFactory TerminalLexerFactory { get; }
+
+        public IValueRangeLexerFactory ValueRangeLexerFactory { get; }
+
+        public override ILexer<DecimalOctet> Create()
         {
             // %x30-35
-            var a = valueRangeLexerFactory.Create('\x30', '\x35');
+            var a = ValueRangeLexerFactory.Create('\x30', '\x35');
 
             // "25"
-            var b = terminalLexerFactory.Create("25", StringComparer.Ordinal);
+            var b = TerminalLexerFactory.Create("25", StringComparer.Ordinal);
 
             // "25" %x30-35 
-            var c = concatenationLexerFactory.Create(b, a);
+            var c = ConcatenationLexerFactory.Create(b, a);
 
             // DIGIT
 
             // %x30-34
-            var e = valueRangeLexerFactory.Create('\x30', '\x34');
+            var e = ValueRangeLexerFactory.Create('\x30', '\x34');
 
             // "2"
-            var f = terminalLexerFactory.Create("2", StringComparer.Ordinal);
+            var f = TerminalLexerFactory.Create("2", StringComparer.Ordinal);
 
             // "2" %x30-34 DIGIT 
-            var g = concatenationLexerFactory.Create(f, e, digitLexer);
+            var digitLexer = DigitLexerFactory.Create();
+            var g = ConcatenationLexerFactory.Create(f, e, digitLexer);
 
             // 2DIGIT
-            var h = repetitionLexerFactory.Create(digitLexer, 2, 2);
+            var h = RepetitionLexerFactory.Create(digitLexer, 2, 2);
 
             // "1"
-            var i = terminalLexerFactory.Create("1", StringComparer.Ordinal);
+            var i = TerminalLexerFactory.Create("1", StringComparer.Ordinal);
 
             // "1" 2DIGIT  
-            var j = concatenationLexerFactory.Create(i, h);
+            var j = ConcatenationLexerFactory.Create(i, h);
 
             // %x31-39
-            var k = valueRangeLexerFactory.Create('\x31', '\x39');
+            var k = ValueRangeLexerFactory.Create('\x31', '\x39');
 
             // %x31-39 DIGIT 
-            var l = concatenationLexerFactory.Create(k, digitLexer);
+            var l = ConcatenationLexerFactory.Create(k, digitLexer);
 
             // "25" %x30-35 / "2" %x30-34 DIGIT / "1" 2DIGIT / %x31-39 DIGIT / DIGIT
-            var m = alternationLexerFactory.Create(c, g, j, l, digitLexer);
+            var m = AlternationLexerFactory.Create(c, g, j, l, digitLexer);
 
             // dec-octet
             return new DecimalOctetLexer(m);

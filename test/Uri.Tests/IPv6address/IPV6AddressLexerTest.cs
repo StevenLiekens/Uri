@@ -3,7 +3,7 @@ using Xunit;
 
 namespace UriSyntax.IPv6address
 {
-    public class IPV6AddressLexerTest : LexerTestBase
+    public class IPV6AddressLexerTest
     {
         [Theory]
 
@@ -63,7 +63,7 @@ namespace UriSyntax.IPv6address
         [InlineData(@"1:2:3:4:5:6:7::")]
         public void Read_ShouldSucceed(string input)
         {
-            var lexer = Container.GetInstance<ILexer<IPv6Address>>();
+            var lexer = IPv6AddressLexerFactory.Default.Create();
             using (var scanner = new TextScanner(new StringTextSource(input)))
             {
                 var result = lexer.Read(scanner);

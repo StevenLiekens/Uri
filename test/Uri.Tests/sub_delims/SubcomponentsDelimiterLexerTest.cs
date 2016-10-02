@@ -3,7 +3,7 @@ using Xunit;
 
 namespace UriSyntax.sub_delims
 {
-    public class SubcomponentsDelimiterLexerTest : LexerTestBase
+    public class SubcomponentsDelimiterLexerTest
     {
         [Theory]
         [InlineData(@"!")]
@@ -19,7 +19,7 @@ namespace UriSyntax.sub_delims
         [InlineData(@"=")]
         public void Read_ShouldSucceed(string input)
         {
-            var lexer = Container.GetInstance<ILexer<SubcomponentsDelimiter>>();
+            var lexer = SubcomponentsDelimiterLexerFactory.Default.Create();
             using (var scanner = new TextScanner(new StringTextSource(input)))
             {
                 var result = lexer.Read(scanner);

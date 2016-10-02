@@ -6,21 +6,22 @@ using UriSyntax.pchar;
 
 namespace UriSyntax.fragment
 {
-    public class FragmentLexerFactory : ILexerFactory<Fragment>
+    public class FragmentLexerFactory : LexerFactory<Fragment>
     {
-        private readonly IAlternationLexerFactory alternationLexerFactory;
-
-        private readonly ILexer<PathCharacter> pathCharacterLexer;
-
-        private readonly IRepetitionLexerFactory repetitionLexerFactory;
-
-        private readonly ITerminalLexerFactory terminalLexerFactory;
+        static FragmentLexerFactory()
+        {
+            Default = new FragmentLexerFactory(
+                Txt.ABNF.TerminalLexerFactory.Default,
+                Txt.ABNF.AlternationLexerFactory.Default,
+                Txt.ABNF.RepetitionLexerFactory.Default,
+                pchar.PathCharacterLexerFactory.Default);
+        }
 
         public FragmentLexerFactory(
             [NotNull] ITerminalLexerFactory terminalLexerFactory,
             [NotNull] IAlternationLexerFactory alternationLexerFactory,
             [NotNull] IRepetitionLexerFactory repetitionLexerFactory,
-            [NotNull] ILexer<PathCharacter> pathCharacterLexer)
+            [NotNull] ILexerFactory<PathCharacter> pathCharacterLexerFactory)
         {
             if (terminalLexerFactory == null)
             {
@@ -34,23 +35,34 @@ namespace UriSyntax.fragment
             {
                 throw new ArgumentNullException(nameof(repetitionLexerFactory));
             }
-            if (pathCharacterLexer == null)
+            if (pathCharacterLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(pathCharacterLexer));
+                throw new ArgumentNullException(nameof(pathCharacterLexerFactory));
             }
-            this.terminalLexerFactory = terminalLexerFactory;
-            this.alternationLexerFactory = alternationLexerFactory;
-            this.repetitionLexerFactory = repetitionLexerFactory;
-            this.pathCharacterLexer = pathCharacterLexer;
+            TerminalLexerFactory = terminalLexerFactory;
+            AlternationLexerFactory = alternationLexerFactory;
+            RepetitionLexerFactory = repetitionLexerFactory;
+            PathCharacterLexerFactory = pathCharacterLexerFactory.Singleton();
         }
 
-        public ILexer<Fragment> Create()
+        public static FragmentLexerFactory Default { get; }
+
+        public IAlternationLexerFactory AlternationLexerFactory { get; }
+
+        public ILexerFactory<PathCharacter> PathCharacterLexerFactory { get; }
+
+        public IRepetitionLexerFactory RepetitionLexerFactory { get; }
+
+        public ITerminalLexerFactory TerminalLexerFactory { get; }
+
+        public override ILexer<Fragment> Create()
         {
-            var alternationLexer = alternationLexerFactory.Create(
+            var pathCharacterLexer = PathCharacterLexerFactory.Create();
+            var alternationLexer = AlternationLexerFactory.Create(
                 pathCharacterLexer,
-                terminalLexerFactory.Create(@"/", StringComparer.Ordinal),
-                terminalLexerFactory.Create(@"?", StringComparer.Ordinal));
-            var fragmentRepetitionLexer = repetitionLexerFactory.Create(alternationLexer, 0, int.MaxValue);
+                TerminalLexerFactory.Create(@"/", StringComparer.Ordinal),
+                TerminalLexerFactory.Create(@"?", StringComparer.Ordinal));
+            var fragmentRepetitionLexer = RepetitionLexerFactory.Create(alternationLexer, 0, int.MaxValue);
             return new FragmentLexer(fragmentRepetitionLexer);
         }
     }

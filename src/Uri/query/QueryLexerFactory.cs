@@ -6,21 +6,22 @@ using UriSyntax.pchar;
 
 namespace UriSyntax.query
 {
-    public class QueryLexerFactory : ILexerFactory<Query>
+    public class QueryLexerFactory : LexerFactory<Query>
     {
-        private readonly IAlternationLexerFactory alternationLexerFactory;
-
-        private readonly ILexer<PathCharacter> pathCharacterLexer;
-
-        private readonly IRepetitionLexerFactory repetitionLexerFactory;
-
-        private readonly ITerminalLexerFactory terminalLexerFactory;
+        static QueryLexerFactory()
+        {
+            Default = new QueryLexerFactory(
+                Txt.ABNF.TerminalLexerFactory.Default,
+                Txt.ABNF.AlternationLexerFactory.Default,
+                Txt.ABNF.RepetitionLexerFactory.Default,
+                pchar.PathCharacterLexerFactory.Default);
+        }
 
         public QueryLexerFactory(
             [NotNull] ITerminalLexerFactory terminalLexerFactory,
             [NotNull] IAlternationLexerFactory alternationLexerFactory,
             [NotNull] IRepetitionLexerFactory repetitionLexerFactory,
-            [NotNull] ILexer<PathCharacter> pathCharacterLexer)
+            [NotNull] ILexerFactory<PathCharacter> pathCharacterLexerFactory)
         {
             if (terminalLexerFactory == null)
             {
@@ -34,23 +35,33 @@ namespace UriSyntax.query
             {
                 throw new ArgumentNullException(nameof(repetitionLexerFactory));
             }
-            if (pathCharacterLexer == null)
+            if (pathCharacterLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(pathCharacterLexer));
+                throw new ArgumentNullException(nameof(pathCharacterLexerFactory));
             }
-            this.terminalLexerFactory = terminalLexerFactory;
-            this.alternationLexerFactory = alternationLexerFactory;
-            this.repetitionLexerFactory = repetitionLexerFactory;
-            this.pathCharacterLexer = pathCharacterLexer;
+            TerminalLexerFactory = terminalLexerFactory;
+            AlternationLexerFactory = alternationLexerFactory;
+            RepetitionLexerFactory = repetitionLexerFactory;
+            PathCharacterLexerFactory = pathCharacterLexerFactory.Singleton();
         }
 
-        public ILexer<Query> Create()
+        public static QueryLexerFactory Default { get; }
+
+        public IAlternationLexerFactory AlternationLexerFactory { get; }
+
+        public ILexerFactory<PathCharacter> PathCharacterLexerFactory { get; }
+
+        public IRepetitionLexerFactory RepetitionLexerFactory { get; }
+
+        public ITerminalLexerFactory TerminalLexerFactory { get; }
+
+        public override ILexer<Query> Create()
         {
-            var alternationLexer = alternationLexerFactory.Create(
-                pathCharacterLexer,
-                terminalLexerFactory.Create(@"/", StringComparer.Ordinal),
-                terminalLexerFactory.Create(@"?", StringComparer.Ordinal));
-            var fragmentRepetitionLexer = repetitionLexerFactory.Create(alternationLexer, 0, int.MaxValue);
+            var alternationLexer = AlternationLexerFactory.Create(
+                PathCharacterLexerFactory.Create(),
+                TerminalLexerFactory.Create(@"/", StringComparer.Ordinal),
+                TerminalLexerFactory.Create(@"?", StringComparer.Ordinal));
+            var fragmentRepetitionLexer = RepetitionLexerFactory.Create(alternationLexer, 0, int.MaxValue);
             return new QueryLexer(fragmentRepetitionLexer);
         }
     }

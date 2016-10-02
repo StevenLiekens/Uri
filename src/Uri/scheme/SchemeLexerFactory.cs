@@ -7,27 +7,26 @@ using Txt.Core;
 
 namespace UriSyntax.scheme
 {
-    public class SchemeLexerFactory : ILexerFactory<Scheme>
+    public class SchemeLexerFactory : LexerFactory<Scheme>
     {
-        private readonly ILexer<Alpha> alphaLexer;
-
-        private readonly IAlternationLexerFactory alternationLexerFactory;
-
-        private readonly IConcatenationLexerFactory concatenationLexerFactory;
-
-        private readonly ILexer<Digit> digitLexer;
-
-        private readonly IRepetitionLexerFactory repetitionLexerFactory;
-
-        private readonly ITerminalLexerFactory terminalLexerFactory;
+        static SchemeLexerFactory()
+        {
+            Default = new SchemeLexerFactory(
+                Txt.ABNF.TerminalLexerFactory.Default,
+                Txt.ABNF.AlternationLexerFactory.Default,
+                Txt.ABNF.ConcatenationLexerFactory.Default,
+                Txt.ABNF.RepetitionLexerFactory.Default,
+                Txt.ABNF.Core.ALPHA.AlphaLexerFactory.Default,
+                Txt.ABNF.Core.DIGIT.DigitLexerFactory.Default);
+        }
 
         public SchemeLexerFactory(
             [NotNull] ITerminalLexerFactory terminalLexerFactory,
             [NotNull] IAlternationLexerFactory alternationLexerFactory,
             [NotNull] IConcatenationLexerFactory concatenationLexerFactory,
             [NotNull] IRepetitionLexerFactory repetitionLexerFactory,
-            [NotNull] ILexer<Alpha> alphaLexer,
-            [NotNull] ILexer<Digit> digitLexer)
+            [NotNull] ILexerFactory<Alpha> alphaLexerFactory,
+            [NotNull] ILexerFactory<Digit> digitLexerFactory)
         {
             if (terminalLexerFactory == null)
             {
@@ -45,33 +44,49 @@ namespace UriSyntax.scheme
             {
                 throw new ArgumentNullException(nameof(repetitionLexerFactory));
             }
-            if (alphaLexer == null)
+            if (alphaLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(alphaLexer));
+                throw new ArgumentNullException(nameof(alphaLexerFactory));
             }
-            if (digitLexer == null)
+            if (digitLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(digitLexer));
+                throw new ArgumentNullException(nameof(digitLexerFactory));
             }
-            this.terminalLexerFactory = terminalLexerFactory;
-            this.alternationLexerFactory = alternationLexerFactory;
-            this.concatenationLexerFactory = concatenationLexerFactory;
-            this.repetitionLexerFactory = repetitionLexerFactory;
-            this.alphaLexer = alphaLexer;
-            this.digitLexer = digitLexer;
+            TerminalLexerFactory = terminalLexerFactory;
+            AlternationLexerFactory = alternationLexerFactory;
+            ConcatenationLexerFactory = concatenationLexerFactory;
+            RepetitionLexerFactory = repetitionLexerFactory;
+            AlphaLexerFactory = alphaLexerFactory.Singleton();
+            DigitLexerFactory = digitLexerFactory.Singleton();
         }
 
-        public ILexer<Scheme> Create()
+        public static SchemeLexerFactory Default { get; }
+
+        public ILexerFactory<Alpha> AlphaLexerFactory { get; }
+
+        public IAlternationLexerFactory AlternationLexerFactory { get; }
+
+        public IConcatenationLexerFactory ConcatenationLexerFactory { get; }
+
+        public ILexerFactory<Digit> DigitLexerFactory { get; }
+
+        public IRepetitionLexerFactory RepetitionLexerFactory { get; }
+
+        public ITerminalLexerFactory TerminalLexerFactory { get; }
+
+        public override ILexer<Scheme> Create()
         {
-            var innerLexer = concatenationLexerFactory.Create(
-                alphaLexer,
-                repetitionLexerFactory.Create(
-                    alternationLexerFactory.Create(
-                        alphaLexer,
-                        digitLexer,
-                        terminalLexerFactory.Create(@"+", StringComparer.Ordinal),
-                        terminalLexerFactory.Create(@"-", StringComparer.Ordinal),
-                        terminalLexerFactory.Create(@".", StringComparer.Ordinal)),
+            var alpha = AlphaLexerFactory.Create();
+            var digit = DigitLexerFactory.Create();
+            var innerLexer = ConcatenationLexerFactory.Create(
+                alpha,
+                RepetitionLexerFactory.Create(
+                    AlternationLexerFactory.Create(
+                        alpha,
+                        digit,
+                        TerminalLexerFactory.Create(@"+", StringComparer.Ordinal),
+                        TerminalLexerFactory.Create(@"-", StringComparer.Ordinal),
+                        TerminalLexerFactory.Create(@".", StringComparer.Ordinal)),
                     0,
                     int.MaxValue));
             return new SchemeLexer(innerLexer);

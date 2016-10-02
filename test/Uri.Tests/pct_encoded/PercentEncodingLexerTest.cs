@@ -3,7 +3,7 @@ using Xunit;
 
 namespace UriSyntax.pct_encoded
 {
-    public class PercentEncodingLexerTest : LexerTestBase
+    public class PercentEncodingLexerTest
     {
         [Theory]
         [InlineData(@"%00")]
@@ -15,7 +15,7 @@ namespace UriSyntax.pct_encoded
         [InlineData(@"%10")]
         public void Read_ShouldSucceed(string input)
         {
-            var lexer = Container.GetInstance<ILexer<PercentEncoding>>();
+            var lexer = PercentEncodingLexerFactory.Default.Create();
             using (var scanner = new TextScanner(new StringTextSource(input)))
             {
                 var result = lexer.Read(scanner);

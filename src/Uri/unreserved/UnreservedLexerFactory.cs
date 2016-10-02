@@ -7,21 +7,13 @@ using Txt.Core;
 
 namespace UriSyntax.unreserved
 {
-    public class UnreservedLexerFactory : ILexerFactory<Unreserved>
+    public class UnreservedLexerFactory : LexerFactory<Unreserved>
     {
-        private readonly ILexer<Alpha> alphaLexer;
-
-        private readonly IAlternationLexerFactory alternationLexerFactory;
-
-        private readonly ILexer<Digit> digitLexer;
-
-        private readonly ITerminalLexerFactory terminalLexerFactory;
-
         public UnreservedLexerFactory(
             [NotNull] ITerminalLexerFactory terminalLexerFactory,
             [NotNull] IAlternationLexerFactory alternationLexerFactory,
-            [NotNull] ILexer<Alpha> alphaLexer,
-            [NotNull] ILexer<Digit> digitLexer)
+            [NotNull] ILexerFactory<Alpha> alphaLexerFactory,
+            [NotNull] ILexerFactory<Digit> digitLexerFactory)
         {
             if (terminalLexerFactory == null)
             {
@@ -31,29 +23,44 @@ namespace UriSyntax.unreserved
             {
                 throw new ArgumentNullException(nameof(alternationLexerFactory));
             }
-            if (alphaLexer == null)
+            if (alphaLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(alphaLexer));
+                throw new ArgumentNullException(nameof(alphaLexerFactory));
             }
-            if (digitLexer == null)
+            if (digitLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(digitLexer));
+                throw new ArgumentNullException(nameof(digitLexerFactory));
             }
-            this.terminalLexerFactory = terminalLexerFactory;
-            this.alternationLexerFactory = alternationLexerFactory;
-            this.alphaLexer = alphaLexer;
-            this.digitLexer = digitLexer;
+            TerminalLexerFactory = terminalLexerFactory;
+            AlternationLexerFactory = alternationLexerFactory;
+            AlphaLexerFactory = alphaLexerFactory.Singleton();
+            DigitLexerFactory = digitLexerFactory.Singleton();
         }
 
-        public ILexer<Unreserved> Create()
+        public static UnreservedLexerFactory Default { get; } =
+            new UnreservedLexerFactory(
+                Txt.ABNF.TerminalLexerFactory.Default,
+                Txt.ABNF.AlternationLexerFactory.Default,
+                Txt.ABNF.Core.ALPHA.AlphaLexerFactory.Default,
+                Txt.ABNF.Core.DIGIT.DigitLexerFactory.Default);
+
+        public ILexerFactory<Alpha> AlphaLexerFactory { get; }
+
+        public IAlternationLexerFactory AlternationLexerFactory { get; }
+
+        public ILexerFactory<Digit> DigitLexerFactory { get; }
+
+        public ITerminalLexerFactory TerminalLexerFactory { get; }
+
+        public override ILexer<Unreserved> Create()
         {
-            var innerLexer = alternationLexerFactory.Create(
-                alphaLexer,
-                digitLexer,
-                terminalLexerFactory.Create(@"-", StringComparer.Ordinal),
-                terminalLexerFactory.Create(@".", StringComparer.Ordinal),
-                terminalLexerFactory.Create(@"_", StringComparer.Ordinal),
-                terminalLexerFactory.Create(@"~", StringComparer.Ordinal));
+            var innerLexer = AlternationLexerFactory.Create(
+                AlphaLexerFactory.Create(),
+                DigitLexerFactory.Create(),
+                TerminalLexerFactory.Create(@"-", StringComparer.Ordinal),
+                TerminalLexerFactory.Create(@".", StringComparer.Ordinal),
+                TerminalLexerFactory.Create(@"_", StringComparer.Ordinal),
+                TerminalLexerFactory.Create(@"~", StringComparer.Ordinal));
             return new UnreservedLexer(innerLexer);
         }
     }

@@ -3,7 +3,7 @@ using Xunit;
 
 namespace UriSyntax.reserved
 {
-    public class ReservedLexerTest : LexerTestBase
+    public class ReservedLexerTest
     {
         [Theory]
         [InlineData(@"!")]
@@ -30,7 +30,7 @@ namespace UriSyntax.reserved
         [InlineData(@"=")]
         public void Read_ShouldSucceed(string input)
         {
-            var lexer = Container.GetInstance<ILexer<Reserved>>();
+            var lexer = ReservedLexerFactory.Default.Create();
             using (var scanner = new TextScanner(new StringTextSource(input)))
             {
                 var result = lexer.Read(scanner);

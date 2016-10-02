@@ -7,24 +7,24 @@ using UriSyntax.segment_nz;
 
 namespace UriSyntax.path_rootless
 {
-    public class PathRootlessLexerFactory : ILexerFactory<PathRootless>
+    public class PathRootlessLexerFactory : LexerFactory<PathRootless>
     {
-        private readonly IConcatenationLexerFactory concatenationLexerFactory;
-
-        private readonly IRepetitionLexerFactory repetitionLexerFactory;
-
-        private readonly ILexer<Segment> segmentLexer;
-
-        private readonly ILexer<SegmentNonZeroLength> segmentNonZeroLengthLexer;
-
-        private readonly ITerminalLexerFactory terminalLexerFactory;
+        static PathRootlessLexerFactory()
+        {
+            Default = new PathRootlessLexerFactory(
+                Txt.ABNF.TerminalLexerFactory.Default,
+                Txt.ABNF.ConcatenationLexerFactory.Default,
+                Txt.ABNF.RepetitionLexerFactory.Default,
+                segment.SegmentLexerFactory.Default,
+                segment_nz.SegmentNonZeroLengthLexerFactory.Default);
+        }
 
         public PathRootlessLexerFactory(
             [NotNull] ITerminalLexerFactory terminalLexerFactory,
             [NotNull] IConcatenationLexerFactory concatenationLexerFactory,
             [NotNull] IRepetitionLexerFactory repetitionLexerFactory,
-            [NotNull] ILexer<Segment> segmentLexer,
-            [NotNull] ILexer<SegmentNonZeroLength> segmentNonZeroLengthLexer)
+            [NotNull] ILexerFactory<Segment> segmentLexerFactory,
+            [NotNull] ILexerFactory<SegmentNonZeroLength> segmentNonZeroLengthLexerFactory)
         {
             if (terminalLexerFactory == null)
             {
@@ -38,29 +38,41 @@ namespace UriSyntax.path_rootless
             {
                 throw new ArgumentNullException(nameof(repetitionLexerFactory));
             }
-            if (segmentLexer == null)
+            if (segmentLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(segmentLexer));
+                throw new ArgumentNullException(nameof(segmentLexerFactory));
             }
-            if (segmentNonZeroLengthLexer == null)
+            if (segmentNonZeroLengthLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(segmentNonZeroLengthLexer));
+                throw new ArgumentNullException(nameof(segmentNonZeroLengthLexerFactory));
             }
-            this.terminalLexerFactory = terminalLexerFactory;
-            this.concatenationLexerFactory = concatenationLexerFactory;
-            this.repetitionLexerFactory = repetitionLexerFactory;
-            this.segmentLexer = segmentLexer;
-            this.segmentNonZeroLengthLexer = segmentNonZeroLengthLexer;
+            TerminalLexerFactory = terminalLexerFactory;
+            ConcatenationLexerFactory = concatenationLexerFactory;
+            RepetitionLexerFactory = repetitionLexerFactory;
+            SegmentLexerFactory = segmentLexerFactory.Singleton();
+            SegmentNonZeroLengthLexerFactory = segmentNonZeroLengthLexerFactory.Singleton();
         }
 
-        public ILexer<PathRootless> Create()
+        public static PathRootlessLexerFactory Default { get; }
+
+        public IConcatenationLexerFactory ConcatenationLexerFactory { get; }
+
+        public IRepetitionLexerFactory RepetitionLexerFactory { get; }
+
+        public ILexerFactory<Segment> SegmentLexerFactory { get; }
+
+        public ILexerFactory<SegmentNonZeroLength> SegmentNonZeroLengthLexerFactory { get; }
+
+        public ITerminalLexerFactory TerminalLexerFactory { get; }
+
+        public override ILexer<PathRootless> Create()
         {
-            var innerLexer = concatenationLexerFactory.Create(
-                segmentNonZeroLengthLexer,
-                repetitionLexerFactory.Create(
-                    concatenationLexerFactory.Create(
-                        terminalLexerFactory.Create(@"/", StringComparer.Ordinal),
-                        segmentLexer),
+            var innerLexer = ConcatenationLexerFactory.Create(
+                SegmentNonZeroLengthLexerFactory.Create(),
+                RepetitionLexerFactory.Create(
+                    ConcatenationLexerFactory.Create(
+                        TerminalLexerFactory.Create(@"/", StringComparer.Ordinal),
+                        SegmentLexerFactory.Create()),
                     0,
                     int.MaxValue));
             return new PathRootlessLexer(innerLexer);

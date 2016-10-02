@@ -3,7 +3,7 @@ using Xunit;
 
 namespace UriSyntax.IPv4address
 {
-    public class IPV4AddressLexerTest : LexerTestBase
+    public class IPV4AddressLexerTest
     {
         [Theory]
         [InlineData(@"0.0.0.0")]
@@ -23,7 +23,7 @@ namespace UriSyntax.IPv4address
         [InlineData(@"255.255.255.255")]
         public void Read_ShouldSucceed(string input)
         {
-            var lexer = Container.GetInstance<ILexer<IPv4Address>>();
+            var lexer = IPv4AddressLexerFactory.Default.Create();
             using (var scanner = new TextScanner(new StringTextSource(input)))
             {
                 var result = lexer.Read(scanner);

@@ -8,27 +8,26 @@ using UriSyntax.scheme;
 
 namespace UriSyntax.absolute_URI
 {
-    public class AbsoluteUriLexerFactory : ILexerFactory<AbsoluteUri>
+    public class AbsoluteUriLexerFactory : LexerFactory<AbsoluteUri>
     {
-        private readonly IConcatenationLexerFactory concatenationLexerFactory;
-
-        private readonly ILexer<HierarchicalPart> hierarchicalPartLexer;
-
-        private readonly IOptionLexerFactory optionLexerFactory;
-
-        private readonly ILexer<Query> queryLexer;
-
-        private readonly ILexer<Scheme> schemeLexer;
-
-        private readonly ITerminalLexerFactory terminalLexerFactory;
+        static AbsoluteUriLexerFactory()
+        {
+            Default = new AbsoluteUriLexerFactory(
+                Txt.ABNF.TerminalLexerFactory.Default,
+                Txt.ABNF.ConcatenationLexerFactory.Default,
+                Txt.ABNF.OptionLexerFactory.Default,
+                scheme.SchemeLexerFactory.Default,
+                hier_part.HierarchicalPartLexerFactory.Default,
+                query.QueryLexerFactory.Default);
+        }
 
         public AbsoluteUriLexerFactory(
             [NotNull] ITerminalLexerFactory terminalLexerFactory,
             [NotNull] IConcatenationLexerFactory concatenationLexerFactory,
             [NotNull] IOptionLexerFactory optionLexerFactory,
-            [NotNull] ILexer<Scheme> schemeLexer,
-            [NotNull] ILexer<HierarchicalPart> hierarchicalPartLexer,
-            [NotNull] ILexer<Query> queryLexer)
+            [NotNull] ILexerFactory<Scheme> schemeLexerFactory,
+            [NotNull] ILexerFactory<HierarchicalPart> hierarchicalPartLexerFactory,
+            [NotNull] ILexerFactory<Query> queryLexerFactory)
         {
             if (terminalLexerFactory == null)
             {
@@ -42,33 +41,51 @@ namespace UriSyntax.absolute_URI
             {
                 throw new ArgumentNullException(nameof(optionLexerFactory));
             }
-            if (schemeLexer == null)
+            if (schemeLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(schemeLexer));
+                throw new ArgumentNullException(nameof(schemeLexerFactory));
             }
-            if (hierarchicalPartLexer == null)
+            if (hierarchicalPartLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(hierarchicalPartLexer));
+                throw new ArgumentNullException(nameof(hierarchicalPartLexerFactory));
             }
-            if (queryLexer == null)
+            if (queryLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(queryLexer));
+                throw new ArgumentNullException(nameof(queryLexerFactory));
             }
-            this.terminalLexerFactory = terminalLexerFactory;
-            this.concatenationLexerFactory = concatenationLexerFactory;
-            this.optionLexerFactory = optionLexerFactory;
-            this.schemeLexer = schemeLexer;
-            this.hierarchicalPartLexer = hierarchicalPartLexer;
-            this.queryLexer = queryLexer;
+            TerminalLexerFactory = terminalLexerFactory;
+            ConcatenationLexerFactory = concatenationLexerFactory;
+            OptionLexerFactory = optionLexerFactory;
+            SchemeLexerFactory = schemeLexerFactory.Singleton();
+            HierarchicalPartLexerFactory = hierarchicalPartLexerFactory.Singleton();
+            QueryLexerFactory = queryLexerFactory.Singleton();
         }
 
-        public ILexer<AbsoluteUri> Create()
+        public static AbsoluteUriLexerFactory Default { get; }
+
+        public IConcatenationLexerFactory ConcatenationLexerFactory { get; }
+
+        public ILexerFactory<HierarchicalPart> HierarchicalPartLexerFactory { get; }
+
+        public IOptionLexerFactory OptionLexerFactory { get; }
+
+        public ILexerFactory<Query> QueryLexerFactory { get; }
+
+        public ILexerFactory<Scheme> SchemeLexerFactory { get; }
+
+        public ITerminalLexerFactory TerminalLexerFactory { get; }
+
+        public override ILexer<AbsoluteUri> Create()
         {
-            var colon = terminalLexerFactory.Create(@":", StringComparer.Ordinal);
-            var qm = terminalLexerFactory.Create(@"?", StringComparer.Ordinal);
-            var queryPart = concatenationLexerFactory.Create(qm, queryLexer);
-            var optQuery = optionLexerFactory.Create(queryPart);
-            var innerLexer = concatenationLexerFactory.Create(schemeLexer, colon, hierarchicalPartLexer, optQuery);
+            var colon = TerminalLexerFactory.Create(@":", StringComparer.Ordinal);
+            var qm = TerminalLexerFactory.Create(@"?", StringComparer.Ordinal);
+            var queryPart = ConcatenationLexerFactory.Create(qm, QueryLexerFactory.Create());
+            var optQuery = OptionLexerFactory.Create(queryPart);
+            var innerLexer = ConcatenationLexerFactory.Create(
+                SchemeLexerFactory.Create(),
+                colon,
+                HierarchicalPartLexerFactory.Create(),
+                optQuery);
             return new AbsoluteUriLexer(innerLexer);
         }
     }

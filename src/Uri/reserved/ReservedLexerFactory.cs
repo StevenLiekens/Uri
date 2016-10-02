@@ -7,41 +7,51 @@ using UriSyntax.sub_delims;
 
 namespace UriSyntax.reserved
 {
-    public class ReservedLexerFactory : ILexerFactory<Reserved>
+    public class ReservedLexerFactory : LexerFactory<Reserved>
     {
-        private readonly IAlternationLexerFactory alternationLexerFactory;
-
-        private readonly ILexer<GenericDelimiter> genericDelimiterLexer;
-
-        private readonly ILexer<SubcomponentsDelimiter> subcomponentsDelimiterLexer;
+        static ReservedLexerFactory()
+        {
+            Default = new ReservedLexerFactory(
+                Txt.ABNF.AlternationLexerFactory.Default,
+                gen_delims.GenericDelimiterLexerFactory.Default,
+                sub_delims.SubcomponentsDelimiterLexerFactory.Default);
+        }
 
         public ReservedLexerFactory(
             [NotNull] IAlternationLexerFactory alternationLexerFactory,
-            [NotNull] ILexer<GenericDelimiter> genericDelimiterLexer,
-            [NotNull] ILexer<SubcomponentsDelimiter> subcomponentsDelimiterLexer)
+            [NotNull] ILexerFactory<GenericDelimiter> genericDelimiterLexerFactory,
+            [NotNull] ILexerFactory<SubcomponentsDelimiter> subcomponentsDelimiterLexerFactory)
         {
             if (alternationLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(alternationLexerFactory));
             }
-            if (genericDelimiterLexer == null)
+            if (genericDelimiterLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(genericDelimiterLexer));
+                throw new ArgumentNullException(nameof(genericDelimiterLexerFactory));
             }
-            if (subcomponentsDelimiterLexer == null)
+            if (subcomponentsDelimiterLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(subcomponentsDelimiterLexer));
+                throw new ArgumentNullException(nameof(subcomponentsDelimiterLexerFactory));
             }
-            this.alternationLexerFactory = alternationLexerFactory;
-            this.genericDelimiterLexer = genericDelimiterLexer;
-            this.subcomponentsDelimiterLexer = subcomponentsDelimiterLexer;
+            AlternationLexerFactory = alternationLexerFactory;
+            GenericDelimiterLexerFactory = genericDelimiterLexerFactory.Singleton();
+            SubcomponentsDelimiterLexerFactory = subcomponentsDelimiterLexerFactory.Singleton();
         }
 
-        public ILexer<Reserved> Create()
+        public static ReservedLexerFactory Default { get; }
+
+        public IAlternationLexerFactory AlternationLexerFactory { get; }
+
+        public ILexerFactory<GenericDelimiter> GenericDelimiterLexerFactory { get; }
+
+        public ILexerFactory<SubcomponentsDelimiter> SubcomponentsDelimiterLexerFactory { get; }
+
+        public override ILexer<Reserved> Create()
         {
-            var innerLexer = alternationLexerFactory.Create(
-                genericDelimiterLexer,
-                subcomponentsDelimiterLexer);
+            var innerLexer = AlternationLexerFactory.Create(
+                GenericDelimiterLexerFactory.Create(),
+                SubcomponentsDelimiterLexerFactory.Create());
             return new ReservedLexer(innerLexer);
         }
     }

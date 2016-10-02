@@ -5,11 +5,14 @@ using Txt.Core;
 
 namespace UriSyntax.gen_delims
 {
-    public class GenericDelimiterLexerFactory : ILexerFactory<GenericDelimiter>
+    public class GenericDelimiterLexerFactory : LexerFactory<GenericDelimiter>
     {
-        private readonly IAlternationLexerFactory alternationLexerFactory;
-
-        private readonly ITerminalLexerFactory terminalLexerFactory;
+        static GenericDelimiterLexerFactory()
+        {
+            Default = new GenericDelimiterLexerFactory(
+                Txt.ABNF.TerminalLexerFactory.Default,
+                Txt.ABNF.AlternationLexerFactory.Default);
+        }
 
         public GenericDelimiterLexerFactory(
             [NotNull] ITerminalLexerFactory terminalLexerFactory,
@@ -23,21 +26,27 @@ namespace UriSyntax.gen_delims
             {
                 throw new ArgumentNullException(nameof(alternationLexerFactory));
             }
-            this.terminalLexerFactory = terminalLexerFactory;
-            this.alternationLexerFactory = alternationLexerFactory;
+            TerminalLexerFactory = terminalLexerFactory;
+            AlternationLexerFactory = alternationLexerFactory;
         }
 
-        public ILexer<GenericDelimiter> Create()
+        public static GenericDelimiterLexerFactory Default { get; }
+
+        public IAlternationLexerFactory AlternationLexerFactory { get; }
+
+        public ITerminalLexerFactory TerminalLexerFactory { get; }
+
+        public override ILexer<GenericDelimiter> Create()
         {
             // ":" / "/" / "?" / "#" / "[" / "]" / "@"
-            var innerLexer = alternationLexerFactory.Create(
-                terminalLexerFactory.Create(@":", StringComparer.Ordinal),
-                terminalLexerFactory.Create(@"/", StringComparer.Ordinal),
-                terminalLexerFactory.Create(@"?", StringComparer.Ordinal),
-                terminalLexerFactory.Create(@"#", StringComparer.Ordinal),
-                terminalLexerFactory.Create(@"[", StringComparer.Ordinal),
-                terminalLexerFactory.Create(@"]", StringComparer.Ordinal),
-                terminalLexerFactory.Create(@"@", StringComparer.Ordinal));
+            var innerLexer = AlternationLexerFactory.Create(
+                TerminalLexerFactory.Create(@":", StringComparer.Ordinal),
+                TerminalLexerFactory.Create(@"/", StringComparer.Ordinal),
+                TerminalLexerFactory.Create(@"?", StringComparer.Ordinal),
+                TerminalLexerFactory.Create(@"#", StringComparer.Ordinal),
+                TerminalLexerFactory.Create(@"[", StringComparer.Ordinal),
+                TerminalLexerFactory.Create(@"]", StringComparer.Ordinal),
+                TerminalLexerFactory.Create(@"@", StringComparer.Ordinal));
 
             // gen-delims
             return new GenericDelimiterLexer(innerLexer);

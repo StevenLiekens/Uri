@@ -3,13 +3,13 @@ using Xunit;
 
 namespace UriSyntax.segment_nz_nc
 {
-    public class SegmentNonZeroLengthNoColonsLexerTest : LexerTestBase
+    public class SegmentNonZeroLengthNoColonsLexerTest
     {
         [Theory]
         [InlineData(@"@")]
         public void Read_ShouldSucceed(string input)
         {
-            var lexer = Container.GetInstance<ILexer<SegmentNonZeroLengthNoColons>>();
+            var lexer = SegmentNonZeroLengthNoColonsLexerFactory.Default.Create();
             using (var scanner = new TextScanner(new StringTextSource(input)))
             {
                 var result = lexer.Read(scanner);

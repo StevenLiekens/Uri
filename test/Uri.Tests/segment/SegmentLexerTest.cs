@@ -3,7 +3,7 @@ using Xunit;
 
 namespace UriSyntax.segment
 {
-    public class SegmentLexerTest : LexerTestBase
+    public class SegmentLexerTest
     {
         [Theory]
         [InlineData(@"")]
@@ -13,7 +13,7 @@ namespace UriSyntax.segment
         [InlineData(@"@:")]
         public void Read_ShouldSucceed(string input)
         {
-            var lexer = Container.GetInstance<ILexer<Segment>>();
+            var lexer = SegmentLexerFactory.Default.Create();
             using (var scanner = new TextScanner(new StringTextSource(input)))
             {
                 var result = lexer.Read(scanner);

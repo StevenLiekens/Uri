@@ -6,31 +6,40 @@ using Txt.Core;
 
 namespace UriSyntax.port
 {
-    public class PortLexerFactory : ILexerFactory<Port>
+    public class PortLexerFactory : LexerFactory<Port>
     {
-        private readonly ILexer<Digit> digitLexer;
-
-        private readonly IRepetitionLexerFactory repetitionLexerFactory;
+        static PortLexerFactory()
+        {
+            Default = new PortLexerFactory(
+                Txt.ABNF.RepetitionLexerFactory.Default,
+                Txt.ABNF.Core.DIGIT.DigitLexerFactory.Default);
+        }
 
         public PortLexerFactory(
             [NotNull] IRepetitionLexerFactory repetitionLexerFactory,
-            [NotNull] ILexer<Digit> digitLexer)
+            [NotNull] ILexerFactory<Digit> digitLexerFactory)
         {
             if (repetitionLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(repetitionLexerFactory));
             }
-            if (digitLexer == null)
+            if (digitLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(digitLexer));
+                throw new ArgumentNullException(nameof(digitLexerFactory));
             }
-            this.repetitionLexerFactory = repetitionLexerFactory;
-            this.digitLexer = digitLexer;
+            RepetitionLexerFactory = repetitionLexerFactory;
+            DigitLexerFactory = digitLexerFactory.Singleton();
         }
 
-        public ILexer<Port> Create()
+        public static PortLexerFactory Default { get; }
+
+        public ILexerFactory<Digit> DigitLexerFactory { get; }
+
+        public IRepetitionLexerFactory RepetitionLexerFactory { get; }
+
+        public override ILexer<Port> Create()
         {
-            var innerLexer = repetitionLexerFactory.Create(digitLexer, 0, int.MaxValue);
+            var innerLexer = RepetitionLexerFactory.Create(DigitLexerFactory.Create(), 0, int.MaxValue);
             return new PortLexer(innerLexer);
         }
     }

@@ -8,27 +8,26 @@ using UriSyntax.unreserved;
 
 namespace UriSyntax.userinfo
 {
-    public class UserInformationLexerFactory : ILexerFactory<UserInformation>
+    public class UserInformationLexerFactory : LexerFactory<UserInformation>
     {
-        private readonly IAlternationLexerFactory alternationLexerFactory;
-
-        private readonly ILexer<PercentEncoding> percentEncodingLexer;
-
-        private readonly IRepetitionLexerFactory repetitionLexerFactory;
-
-        private readonly ILexer<SubcomponentsDelimiter> subcomponentsDelimiterLexer;
-
-        private readonly ITerminalLexerFactory terminalLexerFactory;
-
-        private readonly ILexer<Unreserved> unreservedLexer;
+        static UserInformationLexerFactory()
+        {
+            Default = new UserInformationLexerFactory(
+                Txt.ABNF.TerminalLexerFactory.Default,
+                Txt.ABNF.AlternationLexerFactory.Default,
+                Txt.ABNF.RepetitionLexerFactory.Default,
+                unreserved.UnreservedLexerFactory.Default,
+                pct_encoded.PercentEncodingLexerFactory.Default,
+                sub_delims.SubcomponentsDelimiterLexerFactory.Default);
+        }
 
         public UserInformationLexerFactory(
             [NotNull] ITerminalLexerFactory terminalLexerFactory,
             [NotNull] IAlternationLexerFactory alternationLexerFactory,
             [NotNull] IRepetitionLexerFactory repetitionLexerFactory,
-            [NotNull] ILexer<Unreserved> unreservedLexer,
-            [NotNull] ILexer<PercentEncoding> percentEncodingLexer,
-            [NotNull] ILexer<SubcomponentsDelimiter> subcomponentsDelimiterLexer)
+            [NotNull] ILexerFactory<Unreserved> unreservedLexerFactory,
+            [NotNull] ILexerFactory<PercentEncoding> percentEncodingLexerFactory,
+            [NotNull] ILexerFactory<SubcomponentsDelimiter> subcomponentsDelimiterLexerFactory)
         {
             if (terminalLexerFactory == null)
             {
@@ -42,34 +41,48 @@ namespace UriSyntax.userinfo
             {
                 throw new ArgumentNullException(nameof(repetitionLexerFactory));
             }
-            if (unreservedLexer == null)
+            if (unreservedLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(unreservedLexer));
+                throw new ArgumentNullException(nameof(unreservedLexerFactory));
             }
-            if (percentEncodingLexer == null)
+            if (percentEncodingLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(percentEncodingLexer));
+                throw new ArgumentNullException(nameof(percentEncodingLexerFactory));
             }
-            if (subcomponentsDelimiterLexer == null)
+            if (subcomponentsDelimiterLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(subcomponentsDelimiterLexer));
+                throw new ArgumentNullException(nameof(subcomponentsDelimiterLexerFactory));
             }
-            this.terminalLexerFactory = terminalLexerFactory;
-            this.alternationLexerFactory = alternationLexerFactory;
-            this.repetitionLexerFactory = repetitionLexerFactory;
-            this.unreservedLexer = unreservedLexer;
-            this.percentEncodingLexer = percentEncodingLexer;
-            this.subcomponentsDelimiterLexer = subcomponentsDelimiterLexer;
+            TerminalLexerFactory = terminalLexerFactory;
+            AlternationLexerFactory = alternationLexerFactory;
+            RepetitionLexerFactory = repetitionLexerFactory;
+            UnreservedLexerFactory = unreservedLexerFactory.Singleton();
+            PercentEncodingLexerFactory = percentEncodingLexerFactory.Singleton();
+            SubcomponentsDelimiterLexerFactory = subcomponentsDelimiterLexerFactory.Singleton();
         }
 
-        public ILexer<UserInformation> Create()
+        public static UserInformationLexerFactory Default { get; }
+
+        public IAlternationLexerFactory AlternationLexerFactory { get; }
+
+        public ILexerFactory<PercentEncoding> PercentEncodingLexerFactory { get; }
+
+        public IRepetitionLexerFactory RepetitionLexerFactory { get; }
+
+        public ILexerFactory<SubcomponentsDelimiter> SubcomponentsDelimiterLexerFactory { get; }
+
+        public ITerminalLexerFactory TerminalLexerFactory { get; }
+
+        public ILexerFactory<Unreserved> UnreservedLexerFactory { get; }
+
+        public override ILexer<UserInformation> Create()
         {
-            var innerLexer = repetitionLexerFactory.Create(
-                alternationLexerFactory.Create(
-                    unreservedLexer,
-                    percentEncodingLexer,
-                    subcomponentsDelimiterLexer,
-                    terminalLexerFactory.Create(@":", StringComparer.Ordinal)),
+            var innerLexer = RepetitionLexerFactory.Create(
+                AlternationLexerFactory.Create(
+                    UnreservedLexerFactory.Create(),
+                    PercentEncodingLexerFactory.Create(),
+                    SubcomponentsDelimiterLexerFactory.Create(),
+                    TerminalLexerFactory.Create(@":", StringComparer.Ordinal)),
                 0,
                 int.MaxValue);
             return new UserInformationLexer(innerLexer);

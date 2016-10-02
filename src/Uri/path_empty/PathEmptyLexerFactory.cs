@@ -6,31 +6,40 @@ using UriSyntax.pchar;
 
 namespace UriSyntax.path_empty
 {
-    public class PathEmptyLexerFactory : ILexerFactory<PathEmpty>
+    public class PathEmptyLexerFactory : LexerFactory<PathEmpty>
     {
-        private readonly ILexer<PathCharacter> pathCharacterLexer;
-
-        private readonly IRepetitionLexerFactory repetitionLexerFactory;
+        static PathEmptyLexerFactory()
+        {
+            Default = new PathEmptyLexerFactory(
+                Txt.ABNF.RepetitionLexerFactory.Default,
+                pchar.PathCharacterLexerFactory.Default);
+        }
 
         public PathEmptyLexerFactory(
             [NotNull] IRepetitionLexerFactory repetitionLexerFactory,
-            [NotNull] ILexer<PathCharacter> pathCharacterLexer)
+            [NotNull] ILexerFactory<PathCharacter> pathCharacterLexerFactory)
         {
             if (repetitionLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(repetitionLexerFactory));
             }
-            if (pathCharacterLexer == null)
+            if (pathCharacterLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(pathCharacterLexer));
+                throw new ArgumentNullException(nameof(pathCharacterLexerFactory));
             }
-            this.repetitionLexerFactory = repetitionLexerFactory;
-            this.pathCharacterLexer = pathCharacterLexer;
+            RepetitionLexerFactory = repetitionLexerFactory;
+            PathCharacterLexerFactory = pathCharacterLexerFactory.Singleton();
         }
 
-        public ILexer<PathEmpty> Create()
+        public static PathEmptyLexerFactory Default { get; }
+
+        public ILexerFactory<PathCharacter> PathCharacterLexerFactory { get; }
+
+        public IRepetitionLexerFactory RepetitionLexerFactory { get; }
+
+        public override ILexer<PathEmpty> Create()
         {
-            var innerLexer = repetitionLexerFactory.Create(pathCharacterLexer, 0, 0);
+            var innerLexer = RepetitionLexerFactory.Create(PathCharacterLexerFactory.Create(), 0, 0);
             return new PathEmptyLexer(innerLexer);
         }
     }

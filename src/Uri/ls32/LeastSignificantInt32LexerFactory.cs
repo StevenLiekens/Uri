@@ -7,24 +7,24 @@ using UriSyntax.IPv4address;
 
 namespace UriSyntax.ls32
 {
-    public class LeastSignificantInt32LexerFactory : ILexerFactory<LeastSignificantInt32>
+    public class LeastSignificantInt32LexerFactory : LexerFactory<LeastSignificantInt32>
     {
-        private readonly IAlternationLexerFactory alternationLexerFactory;
-
-        private readonly IConcatenationLexerFactory concatenationLexerFactory;
-
-        private readonly ILexer<HexadecimalInt16> hexadecimalInt16Lexer;
-
-        private readonly ILexer<IPv4Address> ipv4AddressLexer;
-
-        private readonly ITerminalLexerFactory terminalLexerFactory;
+        static LeastSignificantInt32LexerFactory()
+        {
+            Default = new LeastSignificantInt32LexerFactory(
+                Txt.ABNF.TerminalLexerFactory.Default,
+                Txt.ABNF.AlternationLexerFactory.Default,
+                Txt.ABNF.ConcatenationLexerFactory.Default,
+                h16.HexadecimalInt16LexerFactory.Default,
+                IPv4AddressLexerFactory.Default);
+        }
 
         public LeastSignificantInt32LexerFactory(
             [NotNull] ITerminalLexerFactory terminalLexerFactory,
             [NotNull] IAlternationLexerFactory alternationLexerFactory,
             [NotNull] IConcatenationLexerFactory concatenationLexerFactory,
-            [NotNull] ILexer<HexadecimalInt16> hexadecimalInt16Lexer,
-            [NotNull] ILexer<IPv4Address> ipv4AddressLexer)
+            [NotNull] ILexerFactory<HexadecimalInt16> hexadecimalInt16LexerFactory,
+            [NotNull] ILexerFactory<IPv4Address> ipv4AddressLexerFactory)
         {
             if (terminalLexerFactory == null)
             {
@@ -38,31 +38,45 @@ namespace UriSyntax.ls32
             {
                 throw new ArgumentNullException(nameof(concatenationLexerFactory));
             }
-            if (hexadecimalInt16Lexer == null)
+            if (hexadecimalInt16LexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(hexadecimalInt16Lexer));
+                throw new ArgumentNullException(nameof(hexadecimalInt16LexerFactory));
             }
-            if (ipv4AddressLexer == null)
+            if (ipv4AddressLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(ipv4AddressLexer));
+                throw new ArgumentNullException(nameof(ipv4AddressLexerFactory));
             }
-            this.terminalLexerFactory = terminalLexerFactory;
-            this.alternationLexerFactory = alternationLexerFactory;
-            this.concatenationLexerFactory = concatenationLexerFactory;
-            this.hexadecimalInt16Lexer = hexadecimalInt16Lexer;
-            this.ipv4AddressLexer = ipv4AddressLexer;
+            TerminalLexerFactory = terminalLexerFactory;
+            AlternationLexerFactory = alternationLexerFactory;
+            ConcatenationLexerFactory = concatenationLexerFactory;
+            HexadecimalInt16LexerFactory = hexadecimalInt16LexerFactory.Singleton();
+            Ipv4AddressLexerFactory = ipv4AddressLexerFactory.Singleton();
         }
 
-        public ILexer<LeastSignificantInt32> Create()
+        public static LeastSignificantInt32LexerFactory Default { get; }
+
+        public IAlternationLexerFactory AlternationLexerFactory { get; }
+
+        public IConcatenationLexerFactory ConcatenationLexerFactory { get; }
+
+        public ILexerFactory<HexadecimalInt16> HexadecimalInt16LexerFactory { get; }
+
+        public ILexerFactory<IPv4Address> Ipv4AddressLexerFactory { get; }
+
+        public ITerminalLexerFactory TerminalLexerFactory { get; }
+
+        public override ILexer<LeastSignificantInt32> Create()
         {
             // ":"
-            var b = terminalLexerFactory.Create(@":", StringComparer.Ordinal);
+            var b = TerminalLexerFactory.Create(@":", StringComparer.Ordinal);
 
             // h16 ":" h16
-            var c = concatenationLexerFactory.Create(hexadecimalInt16Lexer, b, hexadecimalInt16Lexer);
+            var int16Lexer = HexadecimalInt16LexerFactory.Create();
+            var c = ConcatenationLexerFactory.Create(int16Lexer, b, int16Lexer);
 
             // ( h16 ":" h16 ) / IPv4address
-            var e = alternationLexerFactory.Create(c, ipv4AddressLexer);
+            var ipv4Lexer = Ipv4AddressLexerFactory.Create();
+            var e = AlternationLexerFactory.Create(c, ipv4Lexer);
 
             // ls32
             return new LeastSignificantInt32Lexer(e);

@@ -6,31 +6,41 @@ using UriSyntax.pchar;
 
 namespace UriSyntax.segment_nz
 {
-    public class SegmentNonZeroLengthLexerFactory : ILexerFactory<SegmentNonZeroLength>
+    public class SegmentNonZeroLengthLexerFactory : LexerFactory<SegmentNonZeroLength>
     {
-        private readonly ILexer<PathCharacter> pathCharacterLexer;
-
-        private readonly IRepetitionLexerFactory repetitionLexerFactory;
+        static SegmentNonZeroLengthLexerFactory()
+        {
+            Default = new SegmentNonZeroLengthLexerFactory(
+                Txt.ABNF.RepetitionLexerFactory.Default,
+                pchar.PathCharacterLexerFactory.Default);
+        }
 
         public SegmentNonZeroLengthLexerFactory(
             [NotNull] IRepetitionLexerFactory repetitionLexerFactory,
-            [NotNull] ILexer<PathCharacter> pathCharacterLexer)
+            [NotNull] ILexerFactory<PathCharacter> pathCharacterLexerFactory)
         {
             if (repetitionLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(repetitionLexerFactory));
             }
-            if (pathCharacterLexer == null)
+            if (pathCharacterLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(pathCharacterLexer));
+                throw new ArgumentNullException(nameof(pathCharacterLexerFactory));
             }
-            this.repetitionLexerFactory = repetitionLexerFactory;
-            this.pathCharacterLexer = pathCharacterLexer;
+            RepetitionLexerFactory = repetitionLexerFactory;
+            PathCharacterLexerFactory = pathCharacterLexerFactory.Singleton();
         }
 
-        public ILexer<SegmentNonZeroLength> Create()
+        public static SegmentNonZeroLengthLexerFactory Default { get; }
+
+        public ILexerFactory<PathCharacter> PathCharacterLexerFactory { get; }
+
+        public IRepetitionLexerFactory RepetitionLexerFactory { get; }
+
+        public override ILexer<SegmentNonZeroLength> Create()
         {
-            var innerLexer = repetitionLexerFactory.Create(pathCharacterLexer, 1, int.MaxValue);
+            var pathCharacterLexer = PathCharacterLexerFactory.Create();
+            var innerLexer = RepetitionLexerFactory.Create(pathCharacterLexer, 1, int.MaxValue);
             return new SegmentNonZeroLengthLexer(innerLexer);
         }
     }

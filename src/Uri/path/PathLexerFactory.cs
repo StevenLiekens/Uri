@@ -10,68 +10,81 @@ using UriSyntax.path_rootless;
 
 namespace UriSyntax.path
 {
-    public class PathLexerFactory : ILexerFactory<Path>
+    public class PathLexerFactory : LexerFactory<Path>
     {
-        private readonly IAlternationLexerFactory alternationLexerFactory;
-
-        private readonly ILexer<PathAbsolute> pathAbsoluteLexer;
-
-        private readonly ILexer<PathAbsoluteOrEmpty> pathAbsoluteOrEmptyLexer;
-
-        private readonly ILexer<PathEmpty> pathEmptyLexer;
-
-        private readonly ILexer<PathNoScheme> pathNoSchemeLexer;
-
-        private readonly ILexer<PathRootless> pathRootlessLexer;
+        static PathLexerFactory()
+        {
+            Default = new PathLexerFactory(
+                Txt.ABNF.AlternationLexerFactory.Default,
+                path_abempty.PathAbsoluteOrEmptyLexerFactory.Default,
+                path_absolute.PathAbsoluteLexerFactory.Default,
+                path_noscheme.PathNoSchemeLexerFactory.Default,
+                path_rootless.PathRootlessLexerFactory.Default,
+                path_empty.PathEmptyLexerFactory.Default);
+        }
 
         public PathLexerFactory(
             [NotNull] IAlternationLexerFactory alternationLexerFactory,
-            [NotNull] ILexer<PathAbsoluteOrEmpty> pathAbsoluteOrEmptyLexer,
-            [NotNull] ILexer<PathAbsolute> pathAbsoluteLexer,
-            [NotNull] ILexer<PathNoScheme> pathNoSchemeLexer,
-            [NotNull] ILexer<PathRootless> pathRootlessLexer,
-            [NotNull] ILexer<PathEmpty> pathEmptyLexer)
+            [NotNull] ILexerFactory<PathAbsoluteOrEmpty> pathAbsoluteOrEmptyLexerFactory,
+            [NotNull] ILexerFactory<PathAbsolute> pathAbsoluteLexerFactory,
+            [NotNull] ILexerFactory<PathNoScheme> pathNoSchemeLexerFactory,
+            [NotNull] ILexerFactory<PathRootless> pathRootlessLexerFactory,
+            [NotNull] ILexerFactory<PathEmpty> pathEmptyLexerFactory)
         {
             if (alternationLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(alternationLexerFactory));
             }
-            if (pathAbsoluteOrEmptyLexer == null)
+            if (pathAbsoluteOrEmptyLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(pathAbsoluteOrEmptyLexer));
+                throw new ArgumentNullException(nameof(pathAbsoluteOrEmptyLexerFactory));
             }
-            if (pathAbsoluteLexer == null)
+            if (pathAbsoluteLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(pathAbsoluteLexer));
+                throw new ArgumentNullException(nameof(pathAbsoluteLexerFactory));
             }
-            if (pathNoSchemeLexer == null)
+            if (pathNoSchemeLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(pathNoSchemeLexer));
+                throw new ArgumentNullException(nameof(pathNoSchemeLexerFactory));
             }
-            if (pathRootlessLexer == null)
+            if (pathRootlessLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(pathRootlessLexer));
+                throw new ArgumentNullException(nameof(pathRootlessLexerFactory));
             }
-            if (pathEmptyLexer == null)
+            if (pathEmptyLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(pathEmptyLexer));
+                throw new ArgumentNullException(nameof(pathEmptyLexerFactory));
             }
-            this.alternationLexerFactory = alternationLexerFactory;
-            this.pathAbsoluteOrEmptyLexer = pathAbsoluteOrEmptyLexer;
-            this.pathAbsoluteLexer = pathAbsoluteLexer;
-            this.pathNoSchemeLexer = pathNoSchemeLexer;
-            this.pathRootlessLexer = pathRootlessLexer;
-            this.pathEmptyLexer = pathEmptyLexer;
+            AlternationLexerFactory = alternationLexerFactory;
+            PathAbsoluteOrEmptyLexerFactory = pathAbsoluteOrEmptyLexerFactory.Singleton();
+            PathAbsoluteLexerFactory = pathAbsoluteLexerFactory.Singleton();
+            PathNoSchemeLexerFactory = pathNoSchemeLexerFactory.Singleton();
+            PathRootlessLexerFactory = pathRootlessLexerFactory.Singleton();
+            PathEmptyLexerFactory = pathEmptyLexerFactory.Singleton();
         }
 
-        public ILexer<Path> Create()
+        public static PathLexerFactory Default { get; }
+
+        public IAlternationLexerFactory AlternationLexerFactory { get; }
+
+        public ILexerFactory<PathAbsolute> PathAbsoluteLexerFactory { get; }
+
+        public ILexerFactory<PathAbsoluteOrEmpty> PathAbsoluteOrEmptyLexerFactory { get; }
+
+        public ILexerFactory<PathEmpty> PathEmptyLexerFactory { get; }
+
+        public ILexerFactory<PathNoScheme> PathNoSchemeLexerFactory { get; }
+
+        public ILexerFactory<PathRootless> PathRootlessLexerFactory { get; }
+
+        public override ILexer<Path> Create()
         {
-            var innerLexer = alternationLexerFactory.Create(
-                pathAbsoluteOrEmptyLexer,
-                pathAbsoluteLexer,
-                pathNoSchemeLexer,
-                pathRootlessLexer,
-                pathEmptyLexer);
+            var innerLexer = AlternationLexerFactory.Create(
+                PathAbsoluteOrEmptyLexerFactory.Create(),
+                PathAbsoluteLexerFactory.Create(),
+                PathNoSchemeLexerFactory.Create(),
+                PathRootlessLexerFactory.Create(),
+                PathEmptyLexerFactory.Create());
             return new PathLexer(innerLexer);
         }
     }

@@ -9,55 +9,70 @@ using UriSyntax.path_noscheme;
 
 namespace UriSyntax.relative_part
 {
-    public class RelativePartLexerFactory : ILexerFactory<RelativePart>
+    public class RelativePartLexerFactory : LexerFactory<RelativePart>
     {
-        private readonly IAlternationLexerFactory alternationLexerFactory;
-
-        private readonly ILexer<Authority> authorityLexer;
-
-        private readonly IConcatenationLexerFactory concatenationLexerFactory;
-
-        private readonly ILexer<PathAbsolute> pathAbsoluteLexer;
-
-        private readonly ILexer<PathAbsoluteOrEmpty> pathAbsoluteOrEmptyLexer;
-
-        private readonly ILexer<PathEmpty> pathEmptyLexer;
-
-        private readonly ILexer<PathNoScheme> pathNoSchemeLexer;
-
-        private readonly ITerminalLexerFactory terminalLexerFactory;
+        static RelativePartLexerFactory()
+        {
+            Default = new RelativePartLexerFactory(
+                Txt.ABNF.TerminalLexerFactory.Default,
+                Txt.ABNF.AlternationLexerFactory.Default,
+                Txt.ABNF.ConcatenationLexerFactory.Default,
+                authority.AuthorityLexerFactory.Default,
+                path_abempty.PathAbsoluteOrEmptyLexerFactory.Default,
+                path_absolute.PathAbsoluteLexerFactory.Default,
+                path_noscheme.PathNoSchemeLexerFactory.Default,
+                path_empty.PathEmptyLexerFactory.Default);
+        }
 
         public RelativePartLexerFactory(
             ITerminalLexerFactory terminalLexerFactory,
             IAlternationLexerFactory alternationLexerFactory,
             IConcatenationLexerFactory concatenationLexerFactory,
-            ILexer<Authority> authorityLexer,
-            ILexer<PathAbsoluteOrEmpty> pathAbsoluteOrEmptyLexer,
-            ILexer<PathAbsolute> pathAbsoluteLexer,
-            ILexer<PathNoScheme> pathNoSchemeLexer,
-            ILexer<PathEmpty> pathEmptyLexer)
+            ILexerFactory<Authority> authorityLexerFactory,
+            ILexerFactory<PathAbsoluteOrEmpty> pathAbsoluteOrEmptyLexerFactory,
+            ILexerFactory<PathAbsolute> pathAbsoluteLexerFactory,
+            ILexerFactory<PathNoScheme> pathNoSchemeLexerFactory,
+            ILexerFactory<PathEmpty> pathEmptyLexerFactory)
         {
-            this.terminalLexerFactory = terminalLexerFactory;
-            this.alternationLexerFactory = alternationLexerFactory;
-            this.concatenationLexerFactory = concatenationLexerFactory;
-            this.authorityLexer = authorityLexer;
-            this.pathAbsoluteOrEmptyLexer = pathAbsoluteOrEmptyLexer;
-            this.pathAbsoluteLexer = pathAbsoluteLexer;
-            this.pathNoSchemeLexer = pathNoSchemeLexer;
-            this.pathEmptyLexer = pathEmptyLexer;
+            TerminalLexerFactory = terminalLexerFactory;
+            AlternationLexerFactory = alternationLexerFactory;
+            ConcatenationLexerFactory = concatenationLexerFactory;
+            AuthorityLexerFactory = authorityLexerFactory.Singleton();
+            PathAbsoluteOrEmptyLexerFactory = pathAbsoluteOrEmptyLexerFactory.Singleton();
+            PathAbsoluteLexerFactory = pathAbsoluteLexerFactory.Singleton();
+            PathNoSchemeLexerFactory = pathNoSchemeLexerFactory.Singleton();
+            PathEmptyLexerFactory = pathEmptyLexerFactory.Singleton();
         }
 
-        public ILexer<RelativePart> Create()
+        public static RelativePartLexerFactory Default { get; }
+
+        public IAlternationLexerFactory AlternationLexerFactory { get; }
+
+        public ILexerFactory<Authority> AuthorityLexerFactory { get; }
+
+        public IConcatenationLexerFactory ConcatenationLexerFactory { get; }
+
+        public ILexerFactory<PathAbsolute> PathAbsoluteLexerFactory { get; }
+
+        public ILexerFactory<PathAbsoluteOrEmpty> PathAbsoluteOrEmptyLexerFactory { get; }
+
+        public ILexerFactory<PathEmpty> PathEmptyLexerFactory { get; }
+
+        public ILexerFactory<PathNoScheme> PathNoSchemeLexerFactory { get; }
+
+        public ITerminalLexerFactory TerminalLexerFactory { get; }
+
+        public override ILexer<RelativePart> Create()
         {
             var innerLexer =
-                alternationLexerFactory.Create(
-                    concatenationLexerFactory.Create(
-                        terminalLexerFactory.Create(@"//", StringComparer.Ordinal),
-                        authorityLexer,
-                        pathAbsoluteOrEmptyLexer),
-                    pathAbsoluteLexer,
-                    pathNoSchemeLexer,
-                    pathEmptyLexer);
+                AlternationLexerFactory.Create(
+                    ConcatenationLexerFactory.Create(
+                        TerminalLexerFactory.Create(@"//", StringComparer.Ordinal),
+                        AuthorityLexerFactory.Create(),
+                        PathAbsoluteOrEmptyLexerFactory.Create()),
+                    PathAbsoluteLexerFactory.Create(),
+                    PathNoSchemeLexerFactory.Create(),
+                    PathEmptyLexerFactory.Create());
             return new RelativePartLexer(innerLexer);
         }
     }

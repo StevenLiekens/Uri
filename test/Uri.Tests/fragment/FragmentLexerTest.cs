@@ -1,9 +1,10 @@
-﻿using Txt.Core;
+﻿using Txt.ABNF;
+using Txt.Core;
 using Xunit;
 
 namespace UriSyntax.fragment
 {
-    public class FragmentLexerTest : LexerTestBase
+    public class FragmentLexerTest
     {
         [Theory]
         [InlineData(@":")]
@@ -12,10 +13,10 @@ namespace UriSyntax.fragment
         [InlineData(@"?")]
         public void Read_ShouldSucceed(string input)
         {
-            var lexer = Container.GetInstance<ILexer<Fragment>>();
+            var sut = FragmentLexerFactory.Default.Create();
             using (var scanner = new TextScanner(new StringTextSource(input)))
             {
-                var result = lexer.Read(scanner);
+                var result = sut.Read(scanner);
                 Assert.Equal(input, result.Text);
             }
         }

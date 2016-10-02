@@ -3,7 +3,7 @@ using Xunit;
 
 namespace UriSyntax.query
 {
-    public class QueryLexerTest : LexerTestBase
+    public class QueryLexerTest
     {
         [Theory]
         [InlineData(@":")]
@@ -12,7 +12,7 @@ namespace UriSyntax.query
         [InlineData(@"?")]
         public void Read_ShouldSucceed(string input)
         {
-            var lexer = Container.GetInstance<ILexer<Query>>();
+            var lexer = QueryLexerFactory.Default.Create();
             using (var scanner = new TextScanner(new StringTextSource(input)))
             {
                 var result = lexer.Read(scanner);

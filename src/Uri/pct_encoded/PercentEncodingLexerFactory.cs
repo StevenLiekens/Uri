@@ -6,18 +6,20 @@ using Txt.Core;
 
 namespace UriSyntax.pct_encoded
 {
-    public class PercentEncodingLexerFactory : ILexerFactory<PercentEncoding>
+    public class PercentEncodingLexerFactory : LexerFactory<PercentEncoding>
     {
-        private readonly IConcatenationLexerFactory concatenationLexerFactory;
-
-        private readonly ILexer<HexadecimalDigit> hexadecimalDigitLexer;
-
-        private readonly ITerminalLexerFactory terminalLexerFactory;
+        static PercentEncodingLexerFactory()
+        {
+            Default = new PercentEncodingLexerFactory(
+                Txt.ABNF.TerminalLexerFactory.Default,
+                Txt.ABNF.ConcatenationLexerFactory.Default,
+                Txt.ABNF.Core.HEXDIG.HexadecimalDigitLexerFactory.Default);
+        }
 
         public PercentEncodingLexerFactory(
             [NotNull] ITerminalLexerFactory terminalLexerFactory,
             [NotNull] IConcatenationLexerFactory concatenationLexerFactory,
-            [NotNull] ILexer<HexadecimalDigit> hexadecimalDigitLexer)
+            [NotNull] ILexerFactory<HexadecimalDigit> hexadecimalDigitLexerFactory)
         {
             if (terminalLexerFactory == null)
             {
@@ -27,21 +29,30 @@ namespace UriSyntax.pct_encoded
             {
                 throw new ArgumentNullException(nameof(concatenationLexerFactory));
             }
-            if (hexadecimalDigitLexer == null)
+            if (hexadecimalDigitLexerFactory == null)
             {
-                throw new ArgumentNullException(nameof(hexadecimalDigitLexer));
+                throw new ArgumentNullException(nameof(hexadecimalDigitLexerFactory));
             }
-            this.terminalLexerFactory = terminalLexerFactory;
-            this.concatenationLexerFactory = concatenationLexerFactory;
-            this.hexadecimalDigitLexer = hexadecimalDigitLexer;
+            TerminalLexerFactory = terminalLexerFactory;
+            ConcatenationLexerFactory = concatenationLexerFactory;
+            HexadecimalDigitLexerFactory = hexadecimalDigitLexerFactory.Singleton();
         }
 
-        public ILexer<PercentEncoding> Create()
+        public static PercentEncodingLexerFactory Default { get; }
+
+        public IConcatenationLexerFactory ConcatenationLexerFactory { get; }
+
+        public ILexerFactory<HexadecimalDigit> HexadecimalDigitLexerFactory { get; }
+
+        public ITerminalLexerFactory TerminalLexerFactory { get; }
+
+        public override ILexer<PercentEncoding> Create()
         {
-            var percentEncodingAlternationLexer = concatenationLexerFactory.Create(
-                terminalLexerFactory.Create(@"%", StringComparer.Ordinal),
-                hexadecimalDigitLexer,
-                hexadecimalDigitLexer);
+            var hexDigitLexer = HexadecimalDigitLexerFactory.Create();
+            var percentEncodingAlternationLexer = ConcatenationLexerFactory.Create(
+                TerminalLexerFactory.Create(@"%", StringComparer.Ordinal),
+                hexDigitLexer,
+                hexDigitLexer);
             return new PercentEncodingLexer(percentEncodingAlternationLexer);
         }
     }
