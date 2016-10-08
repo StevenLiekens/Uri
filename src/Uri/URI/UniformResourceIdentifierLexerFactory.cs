@@ -17,10 +17,10 @@ namespace UriSyntax.URI
                 Txt.ABNF.TerminalLexerFactory.Default,
                 Txt.ABNF.ConcatenationLexerFactory.Default,
                 Txt.ABNF.OptionLexerFactory.Default,
-                scheme.SchemeLexerFactory.Default,
-                hier_part.HierarchicalPartLexerFactory.Default,
-                query.QueryLexerFactory.Default,
-                fragment.FragmentLexerFactory.Default);
+                scheme.SchemeLexerFactory.Default.Singleton(),
+                hier_part.HierarchicalPartLexerFactory.Default.Singleton(),
+                query.QueryLexerFactory.Default.Singleton(),
+                fragment.FragmentLexerFactory.Default.Singleton());
         }
 
         public UniformResourceIdentifierLexerFactory(
@@ -63,10 +63,10 @@ namespace UriSyntax.URI
             TerminalLexerFactory = terminalLexerFactory;
             ConcatenationLexerFactory = concatenationLexerFactory;
             OptionLexerFactory = optionLexerFactory;
-            SchemeLexerFactory = schemeLexerFactory.Singleton();
-            HierarchicalPartLexerFactory = hierarchicalPartLexerFactory.Singleton();
-            QueryLexerFactory = queryLexerFactory.Singleton();
-            FragmentLexerFactory = fragmentLexerFactory.Singleton();
+            SchemeLexerFactory = schemeLexerFactory;
+            HierarchicalPartLexerFactory = hierarchicalPartLexerFactory;
+            QueryLexerFactory = queryLexerFactory;
+            FragmentLexerFactory = fragmentLexerFactory;
         }
 
         public static UniformResourceIdentifierLexerFactory Default { get; }

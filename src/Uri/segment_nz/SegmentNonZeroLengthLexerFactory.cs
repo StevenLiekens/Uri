@@ -12,7 +12,7 @@ namespace UriSyntax.segment_nz
         {
             Default = new SegmentNonZeroLengthLexerFactory(
                 Txt.ABNF.RepetitionLexerFactory.Default,
-                pchar.PathCharacterLexerFactory.Default);
+                pchar.PathCharacterLexerFactory.Default.Singleton());
         }
 
         public SegmentNonZeroLengthLexerFactory(
@@ -28,7 +28,7 @@ namespace UriSyntax.segment_nz
                 throw new ArgumentNullException(nameof(pathCharacterLexerFactory));
             }
             RepetitionLexerFactory = repetitionLexerFactory;
-            PathCharacterLexerFactory = pathCharacterLexerFactory.Singleton();
+            PathCharacterLexerFactory = pathCharacterLexerFactory;
         }
 
         public static SegmentNonZeroLengthLexerFactory Default { get; }

@@ -15,9 +15,9 @@ namespace UriSyntax.reg_name
             Default = new RegisteredNameLexerFactory(
                 Txt.ABNF.AlternationLexerFactory.Default,
                 Txt.ABNF.RepetitionLexerFactory.Default,
-                unreserved.UnreservedLexerFactory.Default,
-                pct_encoded.PercentEncodingLexerFactory.Default,
-                sub_delims.SubcomponentsDelimiterLexerFactory.Default);
+                unreserved.UnreservedLexerFactory.Default.Singleton(),
+                pct_encoded.PercentEncodingLexerFactory.Default.Singleton(),
+                sub_delims.SubcomponentsDelimiterLexerFactory.Default.Singleton());
         }
 
         public RegisteredNameLexerFactory(
@@ -49,9 +49,9 @@ namespace UriSyntax.reg_name
             }
             AlternationLexerFactory = alternationLexerFactory;
             RepetitionLexerFactory = repetitionLexerFactory;
-            UnreservedLexerFactory = unreservedLexerFactory.Singleton();
-            PercentEncodingLexerFactory = percentEncodingLexerFactory.Singleton();
-            SubcomponentsDelimiterLexerFactory = subcomponentsDelimiterLexerFactory.Singleton();
+            UnreservedLexerFactory = unreservedLexerFactory;
+            PercentEncodingLexerFactory = percentEncodingLexerFactory;
+            SubcomponentsDelimiterLexerFactory = subcomponentsDelimiterLexerFactory;
         }
 
         public static RegisteredNameLexerFactory Default { get; }

@@ -16,8 +16,8 @@ namespace UriSyntax.path_absolute
                 Txt.ABNF.ConcatenationLexerFactory.Default,
                 Txt.ABNF.RepetitionLexerFactory.Default,
                 Txt.ABNF.OptionLexerFactory.Default,
-                segment.SegmentLexerFactory.Default,
-                segment_nz.SegmentNonZeroLengthLexerFactory.Default);
+                segment.SegmentLexerFactory.Default.Singleton(),
+                segment_nz.SegmentNonZeroLengthLexerFactory.Default.Singleton());
         }
 
         public PathAbsoluteLexerFactory(
@@ -56,8 +56,8 @@ namespace UriSyntax.path_absolute
             ConcatenationLexerFactory = concatenationLexerFactory;
             RepetitionLexerFactory = repetitionLexerFactory;
             OptionLexerFactory = optionLexerFactory;
-            SegmentLexerFactory = segmentLexerFactory.Singleton();
-            SegmentNonZeroLengthLexerFactory = segmentNonZeroLengthLexerFactory.Singleton();
+            SegmentLexerFactory = segmentLexerFactory;
+            SegmentNonZeroLengthLexerFactory = segmentNonZeroLengthLexerFactory;
         }
 
         public static PathAbsoluteLexerFactory Default { get; }

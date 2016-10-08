@@ -16,7 +16,7 @@ namespace UriSyntax.dec_octet
                 Txt.ABNF.AlternationLexerFactory.Default,
                 Txt.ABNF.ConcatenationLexerFactory.Default,
                 Txt.ABNF.RepetitionLexerFactory.Default,
-                Txt.ABNF.Core.DIGIT.DigitLexerFactory.Default);
+                Txt.ABNF.Core.DIGIT.DigitLexerFactory.Default.Singleton());
         }
 
         public DecimalOctetLexerFactory(
@@ -56,7 +56,7 @@ namespace UriSyntax.dec_octet
             AlternationLexerFactory = alternationLexerFactory;
             ConcatenationLexerFactory = concatenationLexerFactory;
             RepetitionLexerFactory = repetitionLexerFactory;
-            DigitLexerFactory = digitLexerFactory.Singleton();
+            DigitLexerFactory = digitLexerFactory;
         }
 
         public static DecimalOctetLexerFactory Default { get; }

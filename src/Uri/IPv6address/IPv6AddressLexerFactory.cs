@@ -19,8 +19,8 @@ namespace UriSyntax.IPv6address
                 Txt.ABNF.ConcatenationLexerFactory.Default,
                 Txt.ABNF.RepetitionLexerFactory.Default,
                 Txt.ABNF.OptionLexerFactory.Default,
-                h16.HexadecimalInt16LexerFactory.Default,
-                ls32.LeastSignificantInt32LexerFactory.Default);
+                h16.HexadecimalInt16LexerFactory.Default.Singleton(),
+                ls32.LeastSignificantInt32LexerFactory.Default.Singleton());
         }
 
         public IPv6AddressLexerFactory(
@@ -65,8 +65,8 @@ namespace UriSyntax.IPv6address
             ConcatenationLexerFactory = concatenationLexerFactory;
             RepetitionLexerFactory = repetitionLexerFactory;
             OptionLexerFactory = optionLexerFactory;
-            HexadecimalInt16LexerFactory = hexadecimalInt16LexerFactory.Singleton();
-            LeastSignificantInt32LexerFactory = leastSignificantInt32LexerFactory.Singleton();
+            HexadecimalInt16LexerFactory = hexadecimalInt16LexerFactory;
+            LeastSignificantInt32LexerFactory = leastSignificantInt32LexerFactory;
         }
 
         public static IPv6AddressLexerFactory Default { get; }

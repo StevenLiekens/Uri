@@ -12,7 +12,7 @@ namespace UriSyntax.h16
         {
             Default = new HexadecimalInt16LexerFactory(
                 Txt.ABNF.RepetitionLexerFactory.Default,
-                HexadecimalDigitLexerFactory.Default);
+                HexadecimalDigitLexerFactory.Default.Singleton());
         }
 
         public HexadecimalInt16LexerFactory(
@@ -28,7 +28,7 @@ namespace UriSyntax.h16
                 throw new ArgumentNullException(nameof(hexadecimalLexerFactory));
             }
             RepetitionLexerFactory = repetitionLexerFactory;
-            HexadecimalLexerFactory = hexadecimalLexerFactory.Singleton();
+            HexadecimalLexerFactory = hexadecimalLexerFactory;
         }
 
         public static HexadecimalInt16LexerFactory Default { get; }

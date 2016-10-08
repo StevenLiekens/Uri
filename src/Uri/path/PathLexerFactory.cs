@@ -16,11 +16,11 @@ namespace UriSyntax.path
         {
             Default = new PathLexerFactory(
                 Txt.ABNF.AlternationLexerFactory.Default,
-                path_abempty.PathAbsoluteOrEmptyLexerFactory.Default,
-                path_absolute.PathAbsoluteLexerFactory.Default,
-                path_noscheme.PathNoSchemeLexerFactory.Default,
-                path_rootless.PathRootlessLexerFactory.Default,
-                path_empty.PathEmptyLexerFactory.Default);
+                path_abempty.PathAbsoluteOrEmptyLexerFactory.Default.Singleton(),
+                path_absolute.PathAbsoluteLexerFactory.Default.Singleton(),
+                path_noscheme.PathNoSchemeLexerFactory.Default.Singleton(),
+                path_rootless.PathRootlessLexerFactory.Default.Singleton(),
+                path_empty.PathEmptyLexerFactory.Default.Singleton());
         }
 
         public PathLexerFactory(
@@ -56,11 +56,11 @@ namespace UriSyntax.path
                 throw new ArgumentNullException(nameof(pathEmptyLexerFactory));
             }
             AlternationLexerFactory = alternationLexerFactory;
-            PathAbsoluteOrEmptyLexerFactory = pathAbsoluteOrEmptyLexerFactory.Singleton();
-            PathAbsoluteLexerFactory = pathAbsoluteLexerFactory.Singleton();
-            PathNoSchemeLexerFactory = pathNoSchemeLexerFactory.Singleton();
-            PathRootlessLexerFactory = pathRootlessLexerFactory.Singleton();
-            PathEmptyLexerFactory = pathEmptyLexerFactory.Singleton();
+            PathAbsoluteOrEmptyLexerFactory = pathAbsoluteOrEmptyLexerFactory;
+            PathAbsoluteLexerFactory = pathAbsoluteLexerFactory;
+            PathNoSchemeLexerFactory = pathNoSchemeLexerFactory;
+            PathRootlessLexerFactory = pathRootlessLexerFactory;
+            PathEmptyLexerFactory = pathEmptyLexerFactory;
         }
 
         public static PathLexerFactory Default { get; }

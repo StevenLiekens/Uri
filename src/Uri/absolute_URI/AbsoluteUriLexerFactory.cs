@@ -16,9 +16,9 @@ namespace UriSyntax.absolute_URI
                 Txt.ABNF.TerminalLexerFactory.Default,
                 Txt.ABNF.ConcatenationLexerFactory.Default,
                 Txt.ABNF.OptionLexerFactory.Default,
-                scheme.SchemeLexerFactory.Default,
-                hier_part.HierarchicalPartLexerFactory.Default,
-                query.QueryLexerFactory.Default);
+                scheme.SchemeLexerFactory.Default.Singleton(),
+                hier_part.HierarchicalPartLexerFactory.Default.Singleton(),
+                query.QueryLexerFactory.Default.Singleton());
         }
 
         public AbsoluteUriLexerFactory(
@@ -56,9 +56,9 @@ namespace UriSyntax.absolute_URI
             TerminalLexerFactory = terminalLexerFactory;
             ConcatenationLexerFactory = concatenationLexerFactory;
             OptionLexerFactory = optionLexerFactory;
-            SchemeLexerFactory = schemeLexerFactory.Singleton();
-            HierarchicalPartLexerFactory = hierarchicalPartLexerFactory.Singleton();
-            QueryLexerFactory = queryLexerFactory.Singleton();
+            SchemeLexerFactory = schemeLexerFactory;
+            HierarchicalPartLexerFactory = hierarchicalPartLexerFactory;
+            QueryLexerFactory = queryLexerFactory;
         }
 
         public static AbsoluteUriLexerFactory Default { get; }

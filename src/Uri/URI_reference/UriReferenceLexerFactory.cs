@@ -13,8 +13,8 @@ namespace UriSyntax.URI_reference
         {
             Default = new UriReferenceLexerFactory(
                 Txt.ABNF.AlternationLexerFactory.Default,
-                UniformResourceIdentifierLexerFactory.Default,
-                relative_ref.RelativeReferenceLexerFactory.Default);
+                UniformResourceIdentifierLexerFactory.Default.Singleton(),
+                relative_ref.RelativeReferenceLexerFactory.Default.Singleton());
         }
 
         public UriReferenceLexerFactory(
@@ -35,8 +35,8 @@ namespace UriSyntax.URI_reference
                 throw new ArgumentNullException(nameof(relativeReferenceLexerFactory));
             }
             AlternationLexerFactory = alternationLexerFactory;
-            UriLexerFactory = uriLexerFactory.Singleton();
-            RelativeReferenceLexerFactory = relativeReferenceLexerFactory.Singleton();
+            UriLexerFactory = uriLexerFactory;
+            RelativeReferenceLexerFactory = relativeReferenceLexerFactory;
         }
 
         public static UriReferenceLexerFactory Default { get; }

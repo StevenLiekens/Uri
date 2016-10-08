@@ -17,9 +17,9 @@ namespace UriSyntax.IPvFuture
                 Txt.ABNF.AlternationLexerFactory.Default,
                 Txt.ABNF.ConcatenationLexerFactory.Default,
                 Txt.ABNF.RepetitionLexerFactory.Default,
-                Txt.ABNF.Core.HEXDIG.HexadecimalDigitLexerFactory.Default,
-                unreserved.UnreservedLexerFactory.Default,
-                sub_delims.SubcomponentsDelimiterLexerFactory.Default);
+                Txt.ABNF.Core.HEXDIG.HexadecimalDigitLexerFactory.Default.Singleton(),
+                unreserved.UnreservedLexerFactory.Default.Singleton(),
+                sub_delims.SubcomponentsDelimiterLexerFactory.Default.Singleton());
         }
 
         public IPvFutureLexerFactory(
@@ -63,9 +63,9 @@ namespace UriSyntax.IPvFuture
             AlternationLexerFactory = alternationLexerFactory;
             ConcatenationLexerFactory = concatenationLexerFactory;
             RepetitionLexerFactory = repetitionLexerFactory;
-            HexadecimalDigitLexerFactory = hexadecimalDigitLexerFactory.Singleton();
-            UnreservedLexerFactory = unreservedLexerFactory.Singleton();
-            SubcomponentsDelimiterLexerFactory = subcomponentsDelimiterLexerFactory.Singleton();
+            HexadecimalDigitLexerFactory = hexadecimalDigitLexerFactory;
+            UnreservedLexerFactory = unreservedLexerFactory;
+            SubcomponentsDelimiterLexerFactory = subcomponentsDelimiterLexerFactory;
         }
 
         public static IPvFutureLexerFactory Default { get; }

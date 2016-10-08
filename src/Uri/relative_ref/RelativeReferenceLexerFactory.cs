@@ -16,9 +16,9 @@ namespace UriSyntax.relative_ref
                 Txt.ABNF.TerminalLexerFactory.Default,
                 Txt.ABNF.ConcatenationLexerFactory.Default,
                 Txt.ABNF.OptionLexerFactory.Default,
-                relative_part.RelativePartLexerFactory.Default,
-                query.QueryLexerFactory.Default,
-                fragment.FragmentLexerFactory.Default);
+                relative_part.RelativePartLexerFactory.Default.Singleton(),
+                query.QueryLexerFactory.Default.Singleton(),
+                fragment.FragmentLexerFactory.Default.Singleton());
         }
 
         public RelativeReferenceLexerFactory(
@@ -56,9 +56,9 @@ namespace UriSyntax.relative_ref
             TerminalLexerFactory = terminalLexerFactory;
             ConcatenationLexerFactory = concatenationLexerFactory;
             OptionLexerFactory = optionLexerFactory;
-            RelativePartLexerFactory = relativePartLexerFactory.Singleton();
-            QueryLexerFactory = queryLexerFactory.Singleton();
-            FragmentLexerFactory = fragmentLexerFactory.Singleton();
+            RelativePartLexerFactory = relativePartLexerFactory;
+            QueryLexerFactory = queryLexerFactory;
+            FragmentLexerFactory = fragmentLexerFactory;
         }
 
         public static RelativeReferenceLexerFactory Default { get; }

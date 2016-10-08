@@ -14,7 +14,7 @@ namespace UriSyntax.query
                 Txt.ABNF.TerminalLexerFactory.Default,
                 Txt.ABNF.AlternationLexerFactory.Default,
                 Txt.ABNF.RepetitionLexerFactory.Default,
-                pchar.PathCharacterLexerFactory.Default);
+                pchar.PathCharacterLexerFactory.Default.Singleton());
         }
 
         public QueryLexerFactory(
@@ -42,7 +42,7 @@ namespace UriSyntax.query
             TerminalLexerFactory = terminalLexerFactory;
             AlternationLexerFactory = alternationLexerFactory;
             RepetitionLexerFactory = repetitionLexerFactory;
-            PathCharacterLexerFactory = pathCharacterLexerFactory.Singleton();
+            PathCharacterLexerFactory = pathCharacterLexerFactory;
         }
 
         public static QueryLexerFactory Default { get; }

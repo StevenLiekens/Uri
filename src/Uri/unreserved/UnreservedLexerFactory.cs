@@ -33,16 +33,16 @@ namespace UriSyntax.unreserved
             }
             TerminalLexerFactory = terminalLexerFactory;
             AlternationLexerFactory = alternationLexerFactory;
-            AlphaLexerFactory = alphaLexerFactory.Singleton();
-            DigitLexerFactory = digitLexerFactory.Singleton();
+            AlphaLexerFactory = alphaLexerFactory;
+            DigitLexerFactory = digitLexerFactory;
         }
 
         public static UnreservedLexerFactory Default { get; } =
             new UnreservedLexerFactory(
                 Txt.ABNF.TerminalLexerFactory.Default,
                 Txt.ABNF.AlternationLexerFactory.Default,
-                Txt.ABNF.Core.ALPHA.AlphaLexerFactory.Default,
-                Txt.ABNF.Core.DIGIT.DigitLexerFactory.Default);
+                Txt.ABNF.Core.ALPHA.AlphaLexerFactory.Default.Singleton(),
+                Txt.ABNF.Core.DIGIT.DigitLexerFactory.Default.Singleton());
 
         public ILexerFactory<Alpha> AlphaLexerFactory { get; }
 

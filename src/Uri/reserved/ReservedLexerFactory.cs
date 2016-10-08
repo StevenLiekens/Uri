@@ -13,8 +13,8 @@ namespace UriSyntax.reserved
         {
             Default = new ReservedLexerFactory(
                 Txt.ABNF.AlternationLexerFactory.Default,
-                gen_delims.GenericDelimiterLexerFactory.Default,
-                sub_delims.SubcomponentsDelimiterLexerFactory.Default);
+                gen_delims.GenericDelimiterLexerFactory.Default.Singleton(),
+                sub_delims.SubcomponentsDelimiterLexerFactory.Default.Singleton());
         }
 
         public ReservedLexerFactory(
@@ -35,8 +35,8 @@ namespace UriSyntax.reserved
                 throw new ArgumentNullException(nameof(subcomponentsDelimiterLexerFactory));
             }
             AlternationLexerFactory = alternationLexerFactory;
-            GenericDelimiterLexerFactory = genericDelimiterLexerFactory.Singleton();
-            SubcomponentsDelimiterLexerFactory = subcomponentsDelimiterLexerFactory.Singleton();
+            GenericDelimiterLexerFactory = genericDelimiterLexerFactory;
+            SubcomponentsDelimiterLexerFactory = subcomponentsDelimiterLexerFactory;
         }
 
         public static ReservedLexerFactory Default { get; }

@@ -16,9 +16,9 @@ namespace UriSyntax.authority
                 Txt.ABNF.TerminalLexerFactory.Default,
                 Txt.ABNF.ConcatenationLexerFactory.Default,
                 Txt.ABNF.OptionLexerFactory.Default,
-                userinfo.UserInformationLexerFactory.Default,
-                host.HostLexerFactory.Default,
-                port.PortLexerFactory.Default);
+                userinfo.UserInformationLexerFactory.Default.Singleton(),
+                host.HostLexerFactory.Default.Singleton(),
+                port.PortLexerFactory.Default.Singleton());
         }
 
         public AuthorityLexerFactory(
@@ -56,9 +56,9 @@ namespace UriSyntax.authority
             TerminalLexerFactory = terminalLexerFactory;
             ConcatenationLexerFactory = concatenationLexerFactory;
             OptionLexerFactory = optionLexerFactory;
-            UserInformationLexerFactory = userInformationLexerFactory.Singleton();
-            HostLexerFactory = hostLexerFactory.Singleton();
-            PortLexerFactory = portLexerFactory.Singleton();
+            UserInformationLexerFactory = userInformationLexerFactory;
+            HostLexerFactory = hostLexerFactory;
+            PortLexerFactory = portLexerFactory;
         }
 
         public static AuthorityLexerFactory Default { get; }

@@ -16,8 +16,8 @@ namespace UriSyntax.scheme
                 Txt.ABNF.AlternationLexerFactory.Default,
                 Txt.ABNF.ConcatenationLexerFactory.Default,
                 Txt.ABNF.RepetitionLexerFactory.Default,
-                Txt.ABNF.Core.ALPHA.AlphaLexerFactory.Default,
-                Txt.ABNF.Core.DIGIT.DigitLexerFactory.Default);
+                Txt.ABNF.Core.ALPHA.AlphaLexerFactory.Default.Singleton(),
+                Txt.ABNF.Core.DIGIT.DigitLexerFactory.Default.Singleton());
         }
 
         public SchemeLexerFactory(
@@ -56,8 +56,8 @@ namespace UriSyntax.scheme
             AlternationLexerFactory = alternationLexerFactory;
             ConcatenationLexerFactory = concatenationLexerFactory;
             RepetitionLexerFactory = repetitionLexerFactory;
-            AlphaLexerFactory = alphaLexerFactory.Singleton();
-            DigitLexerFactory = digitLexerFactory.Singleton();
+            AlphaLexerFactory = alphaLexerFactory;
+            DigitLexerFactory = digitLexerFactory;
         }
 
         public static SchemeLexerFactory Default { get; }

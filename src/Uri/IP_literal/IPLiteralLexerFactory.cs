@@ -15,8 +15,8 @@ namespace UriSyntax.IP_literal
                 Txt.ABNF.TerminalLexerFactory.Default,
                 Txt.ABNF.AlternationLexerFactory.Default,
                 Txt.ABNF.ConcatenationLexerFactory.Default,
-                IPv6AddressLexerFactory.Default,
-                IPvFutureLexerFactory.Default);
+                IPv6AddressLexerFactory.Default.Singleton(),
+                IPvFutureLexerFactory.Default.Singleton());
         }
 
         public IPLiteralLexerFactory(
@@ -49,8 +49,8 @@ namespace UriSyntax.IP_literal
             TerminalLexerFactory = terminalLexerFactory;
             AlternationLexerFactory = alternationLexerFactory;
             ConcatenationLexerFactory = concatenationLexerFactory;
-            Ipv6AddressLexerFactory = ipv6AddressLexerFactory.Singleton();
-            IpvFutureLexerFactory = ipvFutureLexerFactory.Singleton();
+            Ipv6AddressLexerFactory = ipv6AddressLexerFactory;
+            IpvFutureLexerFactory = ipvFutureLexerFactory;
         }
 
         public static IPLiteralLexerFactory Default { get; }

@@ -16,9 +16,9 @@ namespace UriSyntax.userinfo
                 Txt.ABNF.TerminalLexerFactory.Default,
                 Txt.ABNF.AlternationLexerFactory.Default,
                 Txt.ABNF.RepetitionLexerFactory.Default,
-                unreserved.UnreservedLexerFactory.Default,
-                pct_encoded.PercentEncodingLexerFactory.Default,
-                sub_delims.SubcomponentsDelimiterLexerFactory.Default);
+                unreserved.UnreservedLexerFactory.Default.Singleton(),
+                pct_encoded.PercentEncodingLexerFactory.Default.Singleton(),
+                sub_delims.SubcomponentsDelimiterLexerFactory.Default.Singleton());
         }
 
         public UserInformationLexerFactory(
@@ -56,9 +56,9 @@ namespace UriSyntax.userinfo
             TerminalLexerFactory = terminalLexerFactory;
             AlternationLexerFactory = alternationLexerFactory;
             RepetitionLexerFactory = repetitionLexerFactory;
-            UnreservedLexerFactory = unreservedLexerFactory.Singleton();
-            PercentEncodingLexerFactory = percentEncodingLexerFactory.Singleton();
-            SubcomponentsDelimiterLexerFactory = subcomponentsDelimiterLexerFactory.Singleton();
+            UnreservedLexerFactory = unreservedLexerFactory;
+            PercentEncodingLexerFactory = percentEncodingLexerFactory;
+            SubcomponentsDelimiterLexerFactory = subcomponentsDelimiterLexerFactory;
         }
 
         public static UserInformationLexerFactory Default { get; }

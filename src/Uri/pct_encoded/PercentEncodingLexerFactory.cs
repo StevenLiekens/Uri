@@ -13,7 +13,7 @@ namespace UriSyntax.pct_encoded
             Default = new PercentEncodingLexerFactory(
                 Txt.ABNF.TerminalLexerFactory.Default,
                 Txt.ABNF.ConcatenationLexerFactory.Default,
-                Txt.ABNF.Core.HEXDIG.HexadecimalDigitLexerFactory.Default);
+                Txt.ABNF.Core.HEXDIG.HexadecimalDigitLexerFactory.Default.Singleton());
         }
 
         public PercentEncodingLexerFactory(
@@ -35,7 +35,7 @@ namespace UriSyntax.pct_encoded
             }
             TerminalLexerFactory = terminalLexerFactory;
             ConcatenationLexerFactory = concatenationLexerFactory;
-            HexadecimalDigitLexerFactory = hexadecimalDigitLexerFactory.Singleton();
+            HexadecimalDigitLexerFactory = hexadecimalDigitLexerFactory;
         }
 
         public static PercentEncodingLexerFactory Default { get; }

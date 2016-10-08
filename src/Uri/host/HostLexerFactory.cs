@@ -14,9 +14,9 @@ namespace UriSyntax.host
         {
             Default = new HostLexerFactory(
                 Txt.ABNF.AlternationLexerFactory.Default,
-                IPLiteralLexerFactory.Default,
-                IPv4AddressLexerFactory.Default,
-                reg_name.RegisteredNameLexerFactory.Default);
+                IPLiteralLexerFactory.Default.Singleton(),
+                IPv4AddressLexerFactory.Default.Singleton(),
+                reg_name.RegisteredNameLexerFactory.Default.Singleton());
         }
 
         public HostLexerFactory(
@@ -42,9 +42,9 @@ namespace UriSyntax.host
                 throw new ArgumentNullException(nameof(registeredNameLexerFactory));
             }
             AlternationLexerFactory = alternationLexerFactory;
-            IpLiteralLexerFactory = ipLiteralLexerFactory.Singleton();
-            Ipv4AddressLexerFactory = ipv4AddressLexerFactory.Singleton();
-            RegisteredNameLexerFactory = registeredNameLexerFactory.Singleton();
+            IpLiteralLexerFactory = ipLiteralLexerFactory;
+            Ipv4AddressLexerFactory = ipv4AddressLexerFactory;
+            RegisteredNameLexerFactory = registeredNameLexerFactory;
         }
 
         public static HostLexerFactory Default { get; }

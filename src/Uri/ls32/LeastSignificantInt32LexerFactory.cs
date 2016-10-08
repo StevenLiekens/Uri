@@ -15,8 +15,8 @@ namespace UriSyntax.ls32
                 Txt.ABNF.TerminalLexerFactory.Default,
                 Txt.ABNF.AlternationLexerFactory.Default,
                 Txt.ABNF.ConcatenationLexerFactory.Default,
-                h16.HexadecimalInt16LexerFactory.Default,
-                IPv4AddressLexerFactory.Default);
+                h16.HexadecimalInt16LexerFactory.Default.Singleton(),
+                IPv4AddressLexerFactory.Default.Singleton());
         }
 
         public LeastSignificantInt32LexerFactory(
@@ -49,8 +49,8 @@ namespace UriSyntax.ls32
             TerminalLexerFactory = terminalLexerFactory;
             AlternationLexerFactory = alternationLexerFactory;
             ConcatenationLexerFactory = concatenationLexerFactory;
-            HexadecimalInt16LexerFactory = hexadecimalInt16LexerFactory.Singleton();
-            Ipv4AddressLexerFactory = ipv4AddressLexerFactory.Singleton();
+            HexadecimalInt16LexerFactory = hexadecimalInt16LexerFactory;
+            Ipv4AddressLexerFactory = ipv4AddressLexerFactory;
         }
 
         public static LeastSignificantInt32LexerFactory Default { get; }

@@ -17,11 +17,11 @@ namespace UriSyntax.relative_part
                 Txt.ABNF.TerminalLexerFactory.Default,
                 Txt.ABNF.AlternationLexerFactory.Default,
                 Txt.ABNF.ConcatenationLexerFactory.Default,
-                authority.AuthorityLexerFactory.Default,
-                path_abempty.PathAbsoluteOrEmptyLexerFactory.Default,
-                path_absolute.PathAbsoluteLexerFactory.Default,
-                path_noscheme.PathNoSchemeLexerFactory.Default,
-                path_empty.PathEmptyLexerFactory.Default);
+                authority.AuthorityLexerFactory.Default.Singleton(),
+                path_abempty.PathAbsoluteOrEmptyLexerFactory.Default.Singleton(),
+                path_absolute.PathAbsoluteLexerFactory.Default.Singleton(),
+                path_noscheme.PathNoSchemeLexerFactory.Default.Singleton(),
+                path_empty.PathEmptyLexerFactory.Default.Singleton());
         }
 
         public RelativePartLexerFactory(
@@ -37,11 +37,11 @@ namespace UriSyntax.relative_part
             TerminalLexerFactory = terminalLexerFactory;
             AlternationLexerFactory = alternationLexerFactory;
             ConcatenationLexerFactory = concatenationLexerFactory;
-            AuthorityLexerFactory = authorityLexerFactory.Singleton();
-            PathAbsoluteOrEmptyLexerFactory = pathAbsoluteOrEmptyLexerFactory.Singleton();
-            PathAbsoluteLexerFactory = pathAbsoluteLexerFactory.Singleton();
-            PathNoSchemeLexerFactory = pathNoSchemeLexerFactory.Singleton();
-            PathEmptyLexerFactory = pathEmptyLexerFactory.Singleton();
+            AuthorityLexerFactory = authorityLexerFactory;
+            PathAbsoluteOrEmptyLexerFactory = pathAbsoluteOrEmptyLexerFactory;
+            PathAbsoluteLexerFactory = pathAbsoluteLexerFactory;
+            PathNoSchemeLexerFactory = pathNoSchemeLexerFactory;
+            PathEmptyLexerFactory = pathEmptyLexerFactory;
         }
 
         public static RelativePartLexerFactory Default { get; }

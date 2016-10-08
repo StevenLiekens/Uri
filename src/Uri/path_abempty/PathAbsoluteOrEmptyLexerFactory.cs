@@ -14,7 +14,7 @@ namespace UriSyntax.path_abempty
                 Txt.ABNF.TerminalLexerFactory.Default,
                 Txt.ABNF.ConcatenationLexerFactory.Default,
                 Txt.ABNF.RepetitionLexerFactory.Default,
-                segment.SegmentLexerFactory.Default);
+                segment.SegmentLexerFactory.Default.Singleton());
         }
 
         public PathAbsoluteOrEmptyLexerFactory(
@@ -42,7 +42,7 @@ namespace UriSyntax.path_abempty
             TerminalLexerFactory = terminalLexerFactory;
             ConcatenationLexerFactory = concatenationLexerFactory;
             RepetitionLexerFactory = repetitionLexerFactory;
-            SegmentLexerFactory = segmentLexerFactory.Singleton();
+            SegmentLexerFactory = segmentLexerFactory;
         }
 
         public static PathAbsoluteOrEmptyLexerFactory Default { get; }

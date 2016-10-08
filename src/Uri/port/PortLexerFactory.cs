@@ -12,7 +12,7 @@ namespace UriSyntax.port
         {
             Default = new PortLexerFactory(
                 Txt.ABNF.RepetitionLexerFactory.Default,
-                Txt.ABNF.Core.DIGIT.DigitLexerFactory.Default);
+                Txt.ABNF.Core.DIGIT.DigitLexerFactory.Default.Singleton());
         }
 
         public PortLexerFactory(
@@ -28,7 +28,7 @@ namespace UriSyntax.port
                 throw new ArgumentNullException(nameof(digitLexerFactory));
             }
             RepetitionLexerFactory = repetitionLexerFactory;
-            DigitLexerFactory = digitLexerFactory.Singleton();
+            DigitLexerFactory = digitLexerFactory;
         }
 
         public static PortLexerFactory Default { get; }

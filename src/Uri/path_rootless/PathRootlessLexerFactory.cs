@@ -15,8 +15,8 @@ namespace UriSyntax.path_rootless
                 Txt.ABNF.TerminalLexerFactory.Default,
                 Txt.ABNF.ConcatenationLexerFactory.Default,
                 Txt.ABNF.RepetitionLexerFactory.Default,
-                segment.SegmentLexerFactory.Default,
-                segment_nz.SegmentNonZeroLengthLexerFactory.Default);
+                segment.SegmentLexerFactory.Default.Singleton(),
+                segment_nz.SegmentNonZeroLengthLexerFactory.Default.Singleton());
         }
 
         public PathRootlessLexerFactory(
@@ -49,8 +49,8 @@ namespace UriSyntax.path_rootless
             TerminalLexerFactory = terminalLexerFactory;
             ConcatenationLexerFactory = concatenationLexerFactory;
             RepetitionLexerFactory = repetitionLexerFactory;
-            SegmentLexerFactory = segmentLexerFactory.Singleton();
-            SegmentNonZeroLengthLexerFactory = segmentNonZeroLengthLexerFactory.Singleton();
+            SegmentLexerFactory = segmentLexerFactory;
+            SegmentNonZeroLengthLexerFactory = segmentNonZeroLengthLexerFactory;
         }
 
         public static PathRootlessLexerFactory Default { get; }

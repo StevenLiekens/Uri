@@ -18,11 +18,11 @@ namespace UriSyntax.hier_part
                 Txt.ABNF.TerminalLexerFactory.Default,
                 Txt.ABNF.AlternationLexerFactory.Default,
                 Txt.ABNF.ConcatenationLexerFactory.Default,
-                authority.AuthorityLexerFactory.Default,
-                path_abempty.PathAbsoluteOrEmptyLexerFactory.Default,
-                path_absolute.PathAbsoluteLexerFactory.Default,
-                path_rootless.PathRootlessLexerFactory.Default,
-                path_empty.PathEmptyLexerFactory.Default);
+                authority.AuthorityLexerFactory.Default.Singleton(),
+                path_abempty.PathAbsoluteOrEmptyLexerFactory.Default.Singleton(),
+                path_absolute.PathAbsoluteLexerFactory.Default.Singleton(),
+                path_rootless.PathRootlessLexerFactory.Default.Singleton(),
+                path_empty.PathEmptyLexerFactory.Default.Singleton());
         }
 
         public HierarchicalPartLexerFactory(
@@ -70,11 +70,11 @@ namespace UriSyntax.hier_part
             TerminalLexerFactory = terminalLexerFactory;
             AlternationLexerFactory = alternationLexerFactory;
             ConcatenationLexerFactory = concatenationLexerFactory;
-            AuthorityLexerFactory = authorityLexerFactory.Singleton();
-            PathAbsoluteOrEmptyLexerFactory = pathAbsoluteOrEmptyLexerFactory.Singleton();
-            PathAbsoluteLexerFactory = pathAbsoluteLexerFactory.Singleton();
-            PathRootlessLexerFactory = pathRootlessLexerFactory.Singleton();
-            PathEmptyLexerFactory = pathEmptyLexerFactory.Singleton();
+            AuthorityLexerFactory = authorityLexerFactory;
+            PathAbsoluteOrEmptyLexerFactory = pathAbsoluteOrEmptyLexerFactory;
+            PathAbsoluteLexerFactory = pathAbsoluteLexerFactory;
+            PathRootlessLexerFactory = pathRootlessLexerFactory;
+            PathEmptyLexerFactory = pathEmptyLexerFactory;
         }
 
         public static HierarchicalPartLexerFactory Default { get; }

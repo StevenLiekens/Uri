@@ -12,7 +12,7 @@ namespace UriSyntax.path_empty
         {
             Default = new PathEmptyLexerFactory(
                 Txt.ABNF.RepetitionLexerFactory.Default,
-                pchar.PathCharacterLexerFactory.Default);
+                pchar.PathCharacterLexerFactory.Default.Singleton());
         }
 
         public PathEmptyLexerFactory(
@@ -28,7 +28,7 @@ namespace UriSyntax.path_empty
                 throw new ArgumentNullException(nameof(pathCharacterLexerFactory));
             }
             RepetitionLexerFactory = repetitionLexerFactory;
-            PathCharacterLexerFactory = pathCharacterLexerFactory.Singleton();
+            PathCharacterLexerFactory = pathCharacterLexerFactory;
         }
 
         public static PathEmptyLexerFactory Default { get; }

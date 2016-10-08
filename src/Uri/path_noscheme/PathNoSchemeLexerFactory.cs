@@ -15,8 +15,8 @@ namespace UriSyntax.path_noscheme
                 Txt.ABNF.TerminalLexerFactory.Default,
                 Txt.ABNF.ConcatenationLexerFactory.Default,
                 Txt.ABNF.RepetitionLexerFactory.Default,
-                segment.SegmentLexerFactory.Default,
-                segment_nz_nc.SegmentNonZeroLengthNoColonsLexerFactory.Default);
+                segment.SegmentLexerFactory.Default.Singleton(),
+                segment_nz_nc.SegmentNonZeroLengthNoColonsLexerFactory.Default.Singleton());
         }
 
         public PathNoSchemeLexerFactory(
@@ -49,8 +49,8 @@ namespace UriSyntax.path_noscheme
             TerminalLexerFactory = terminalLexerFactory;
             ConcatenationLexerFactory = concatenationLexerFactory;
             RepetitionLexerFactory = repetitionLexerFactory;
-            SegmentLexerFactory = segmentLexerFactory.Singleton();
-            SegmentNonZeroLengthNoColonsLexerFactory = segmentNonZeroLengthNoColonsLexerFactory.Singleton();
+            SegmentLexerFactory = segmentLexerFactory;
+            SegmentNonZeroLengthNoColonsLexerFactory = segmentNonZeroLengthNoColonsLexerFactory;
         }
 
         public static PathNoSchemeLexerFactory Default { get; }

@@ -13,7 +13,7 @@ namespace UriSyntax.IPv4address
             Default = new IPv4AddressLexerFactory(
                 Txt.ABNF.TerminalLexerFactory.Default,
                 Txt.ABNF.ConcatenationLexerFactory.Default,
-                DecimalOctetLexerFactory.Default);
+                DecimalOctetLexerFactory.Default.Singleton());
         }
 
         public IPv4AddressLexerFactory(
@@ -35,7 +35,7 @@ namespace UriSyntax.IPv4address
             }
             TerminalLexerFactory = terminalLexerFactory;
             ConcatenationLexerFactory = concatenationLexerFactory;
-            DecimaOctetLexerFactory = decimaOctetLexerFactory.Singleton();
+            DecimaOctetLexerFactory = decimaOctetLexerFactory;
         }
 
         public static IPv4AddressLexerFactory Default { get; }
