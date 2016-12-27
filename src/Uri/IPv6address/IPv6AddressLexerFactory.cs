@@ -1,6 +1,4 @@
-﻿// ReSharper disable InconsistentNaming
-
-using System;
+﻿using System;
 using JetBrains.Annotations;
 using Txt.ABNF;
 using Txt.Core;
@@ -9,6 +7,7 @@ using UriSyntax.ls32;
 
 namespace UriSyntax.IPv6address
 {
+    // ReSharper disable InconsistentNaming
     public class IPv6AddressLexerFactory : LexerFactory<IPv6Address>
     {
         static IPv6AddressLexerFactory()
@@ -69,20 +68,28 @@ namespace UriSyntax.IPv6address
             LeastSignificantInt32LexerFactory = leastSignificantInt32LexerFactory;
         }
 
+        [NotNull]
         public static IPv6AddressLexerFactory Default { get; }
 
+        [NotNull]
         public IAlternationLexerFactory AlternationLexerFactory { get; }
 
+        [NotNull]
         public IConcatenationLexerFactory ConcatenationLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<HexadecimalInt16> HexadecimalInt16LexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<LeastSignificantInt32> LeastSignificantInt32LexerFactory { get; }
 
+        [NotNull]
         public IOptionLexerFactory OptionLexerFactory { get; }
 
+        [NotNull]
         public IRepetitionLexerFactory RepetitionLexerFactory { get; }
 
+        [NotNull]
         public ITerminalLexerFactory TerminalLexerFactory { get; }
 
         public override ILexer<IPv6Address> Create()

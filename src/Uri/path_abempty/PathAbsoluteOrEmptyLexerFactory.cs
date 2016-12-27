@@ -45,14 +45,19 @@ namespace UriSyntax.path_abempty
             SegmentLexerFactory = segmentLexerFactory;
         }
 
+        [NotNull]
         public static PathAbsoluteOrEmptyLexerFactory Default { get; }
 
+        [NotNull]
         public IConcatenationLexerFactory ConcatenationLexerFactory { get; }
 
+        [NotNull]
         public IRepetitionLexerFactory RepetitionLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<Segment> SegmentLexerFactory { get; }
 
+        [NotNull]
         public ITerminalLexerFactory TerminalLexerFactory { get; }
 
         public override ILexer<PathAbsoluteOrEmpty> Create()

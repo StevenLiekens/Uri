@@ -31,10 +31,13 @@ namespace UriSyntax.h16
             HexadecimalLexerFactory = hexadecimalLexerFactory;
         }
 
+        [NotNull]
         public static HexadecimalInt16LexerFactory Default { get; }
 
+        [NotNull]
         public ILexerFactory<HexadecimalDigit> HexadecimalLexerFactory { get; }
 
+        [NotNull]
         public IRepetitionLexerFactory RepetitionLexerFactory { get; }
 
         public override ILexer<HexadecimalInt16> Create()

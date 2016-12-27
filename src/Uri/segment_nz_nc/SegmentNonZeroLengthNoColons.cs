@@ -1,10 +1,11 @@
-﻿using Txt.ABNF;
+﻿using JetBrains.Annotations;
+using Txt.ABNF;
 
 namespace UriSyntax.segment_nz_nc
 {
     public class SegmentNonZeroLengthNoColons : Repetition
     {
-        public SegmentNonZeroLengthNoColons(Repetition repetition)
+        public SegmentNonZeroLengthNoColons([NotNull] Repetition repetition)
             : base(repetition)
         {
         }

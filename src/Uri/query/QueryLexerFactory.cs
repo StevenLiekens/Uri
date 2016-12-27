@@ -45,14 +45,19 @@ namespace UriSyntax.query
             PathCharacterLexerFactory = pathCharacterLexerFactory;
         }
 
+        [NotNull]
         public static QueryLexerFactory Default { get; }
 
+        [NotNull]
         public IAlternationLexerFactory AlternationLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<PathCharacter> PathCharacterLexerFactory { get; }
 
+        [NotNull]
         public IRepetitionLexerFactory RepetitionLexerFactory { get; }
 
+        [NotNull]
         public ITerminalLexerFactory TerminalLexerFactory { get; }
 
         public override ILexer<Query> Create()

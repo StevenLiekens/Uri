@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using JetBrains.Annotations;
 using Txt.ABNF;
 using UriSyntax.fragment;
 using UriSyntax.hier_part;
@@ -11,7 +12,7 @@ namespace UriSyntax.URI
     /// <remarks>See: <a href="https://www.ietf.org/rfc/rfc3986.txt">RFC 3986</a>.</remarks>
     public class UniformResourceIdentifier : Concatenation
     {
-        public UniformResourceIdentifier(Concatenation concatenation)
+        public UniformResourceIdentifier([NotNull] Concatenation concatenation)
             : base(concatenation)
         {
         }

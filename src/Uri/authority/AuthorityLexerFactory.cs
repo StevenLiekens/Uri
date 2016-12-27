@@ -61,18 +61,25 @@ namespace UriSyntax.authority
             PortLexerFactory = portLexerFactory;
         }
 
+        [NotNull]
         public static AuthorityLexerFactory Default { get; }
 
+        [NotNull]
         public IConcatenationLexerFactory ConcatenationLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<Host> HostLexerFactory { get; }
 
+        [NotNull]
         public IOptionLexerFactory OptionLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<Port> PortLexerFactory { get; }
 
+        [NotNull]
         public ITerminalLexerFactory TerminalLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<UserInformation> UserInformationLexerFactory { get; }
 
         public override ILexer<Authority> Create()

@@ -1,4 +1,5 @@
-﻿using Txt.ABNF;
+﻿using JetBrains.Annotations;
+using Txt.ABNF;
 using UriSyntax.authority;
 using UriSyntax.path_abempty;
 using UriSyntax.path_absolute;
@@ -9,7 +10,7 @@ namespace UriSyntax.relative_part
 {
     public class RelativePart : Alternation
     {
-        public RelativePart(Alternation alternation)
+        public RelativePart([NotNull] Alternation alternation)
             : base(alternation)
         {
         }

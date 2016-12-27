@@ -53,16 +53,22 @@ namespace UriSyntax.ls32
             Ipv4AddressLexerFactory = ipv4AddressLexerFactory;
         }
 
+        [NotNull]
         public static LeastSignificantInt32LexerFactory Default { get; }
 
+        [NotNull]
         public IAlternationLexerFactory AlternationLexerFactory { get; }
 
+        [NotNull]
         public IConcatenationLexerFactory ConcatenationLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<HexadecimalInt16> HexadecimalInt16LexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<IPv4Address> Ipv4AddressLexerFactory { get; }
 
+        [NotNull]
         public ITerminalLexerFactory TerminalLexerFactory { get; }
 
         public override ILexer<LeastSignificantInt32> Create()

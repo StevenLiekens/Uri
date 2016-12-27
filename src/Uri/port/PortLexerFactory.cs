@@ -31,10 +31,13 @@ namespace UriSyntax.port
             DigitLexerFactory = digitLexerFactory;
         }
 
+        [NotNull]
         public static PortLexerFactory Default { get; }
 
+        [NotNull]
         public ILexerFactory<Digit> DigitLexerFactory { get; }
 
+        [NotNull]
         public IRepetitionLexerFactory RepetitionLexerFactory { get; }
 
         public override ILexer<Port> Create()

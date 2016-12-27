@@ -6,6 +6,7 @@ using UriSyntax.dec_octet;
 
 namespace UriSyntax.IPv4address
 {
+    // ReSharper disable once InconsistentNaming
     public class IPv4AddressLexerFactory : LexerFactory<IPv4Address>
     {
         static IPv4AddressLexerFactory()
@@ -38,12 +39,16 @@ namespace UriSyntax.IPv4address
             DecimaOctetLexerFactory = decimaOctetLexerFactory;
         }
 
+        [NotNull]
         public static IPv4AddressLexerFactory Default { get; }
 
+        [NotNull]
         public IConcatenationLexerFactory ConcatenationLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<DecimalOctet> DecimaOctetLexerFactory { get; }
 
+        [NotNull]
         public ITerminalLexerFactory TerminalLexerFactory { get; }
 
         public override ILexer<IPv4Address> Create()

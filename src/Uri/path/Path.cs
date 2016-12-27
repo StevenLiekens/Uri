@@ -1,10 +1,11 @@
-﻿using Txt.ABNF;
+﻿using JetBrains.Annotations;
+using Txt.ABNF;
 
 namespace UriSyntax.path
 {
     public class Path : Alternation
     {
-        public Path(Alternation alternation)
+        public Path([NotNull] Alternation alternation)
             : base(alternation)
         {
         }

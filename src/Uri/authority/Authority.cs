@@ -1,4 +1,5 @@
-﻿using Txt.ABNF;
+﻿using JetBrains.Annotations;
+using Txt.ABNF;
 using UriSyntax.host;
 using UriSyntax.port;
 using UriSyntax.userinfo;
@@ -7,7 +8,7 @@ namespace UriSyntax.authority
 {
     public class Authority : Concatenation
     {
-        public Authority(Concatenation concatenation)
+        public Authority([NotNull] Concatenation concatenation)
             : base(concatenation)
         {
         }

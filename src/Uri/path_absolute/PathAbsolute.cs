@@ -1,10 +1,11 @@
-﻿using Txt.ABNF;
+﻿using JetBrains.Annotations;
+using Txt.ABNF;
 
 namespace UriSyntax.path_absolute
 {
     public class PathAbsolute : Concatenation
     {
-        public PathAbsolute(Concatenation concatenation)
+        public PathAbsolute([NotNull] Concatenation concatenation)
             : base(concatenation)
         {
         }

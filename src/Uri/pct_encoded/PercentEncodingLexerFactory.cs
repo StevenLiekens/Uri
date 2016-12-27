@@ -38,12 +38,16 @@ namespace UriSyntax.pct_encoded
             HexadecimalDigitLexerFactory = hexadecimalDigitLexerFactory;
         }
 
+        [NotNull]
         public static PercentEncodingLexerFactory Default { get; }
 
+        [NotNull]
         public IConcatenationLexerFactory ConcatenationLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<HexadecimalDigit> HexadecimalDigitLexerFactory { get; }
 
+        [NotNull]
         public ITerminalLexerFactory TerminalLexerFactory { get; }
 
         public override ILexer<PercentEncoding> Create()

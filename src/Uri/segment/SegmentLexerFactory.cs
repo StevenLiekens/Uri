@@ -31,10 +31,13 @@ namespace UriSyntax.segment
             PathCharacterLexerFactory = pathCharacterLexerFactory;
         }
 
+        [NotNull]
         public static SegmentLexerFactory Default { get; }
 
+        [NotNull]
         public ILexerFactory<PathCharacter> PathCharacterLexerFactory { get; }
 
+        [NotNull]
         public IRepetitionLexerFactory RepetitionLexerFactory { get; }
 
         public override ILexer<Segment> Create()

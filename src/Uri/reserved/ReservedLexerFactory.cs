@@ -39,12 +39,16 @@ namespace UriSyntax.reserved
             SubcomponentsDelimiterLexerFactory = subcomponentsDelimiterLexerFactory;
         }
 
+        [NotNull]
         public static ReservedLexerFactory Default { get; }
 
+        [NotNull]
         public IAlternationLexerFactory AlternationLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<GenericDelimiter> GenericDelimiterLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<SubcomponentsDelimiter> SubcomponentsDelimiterLexerFactory { get; }
 
         public override ILexer<Reserved> Create()

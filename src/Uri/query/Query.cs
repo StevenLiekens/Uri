@@ -1,10 +1,11 @@
-﻿using Txt.ABNF;
+﻿using JetBrains.Annotations;
+using Txt.ABNF;
 
 namespace UriSyntax.query
 {
     public class Query : Repetition
     {
-        public Query(Repetition repetition)
+        public Query([NotNull] Repetition repetition)
             : base(repetition)
         {
         }

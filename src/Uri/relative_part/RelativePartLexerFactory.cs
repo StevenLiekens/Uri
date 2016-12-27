@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using Txt.ABNF;
 using Txt.Core;
 using UriSyntax.authority;
@@ -25,14 +26,14 @@ namespace UriSyntax.relative_part
         }
 
         public RelativePartLexerFactory(
-            ITerminalLexerFactory terminalLexerFactory,
-            IAlternationLexerFactory alternationLexerFactory,
-            IConcatenationLexerFactory concatenationLexerFactory,
-            ILexerFactory<Authority> authorityLexerFactory,
-            ILexerFactory<PathAbsoluteOrEmpty> pathAbsoluteOrEmptyLexerFactory,
-            ILexerFactory<PathAbsolute> pathAbsoluteLexerFactory,
-            ILexerFactory<PathNoScheme> pathNoSchemeLexerFactory,
-            ILexerFactory<PathEmpty> pathEmptyLexerFactory)
+            [NotNull] ITerminalLexerFactory terminalLexerFactory,
+            [NotNull] IAlternationLexerFactory alternationLexerFactory,
+            [NotNull] IConcatenationLexerFactory concatenationLexerFactory,
+            [NotNull] ILexerFactory<Authority> authorityLexerFactory,
+            [NotNull] ILexerFactory<PathAbsoluteOrEmpty> pathAbsoluteOrEmptyLexerFactory,
+            [NotNull] ILexerFactory<PathAbsolute> pathAbsoluteLexerFactory,
+            [NotNull] ILexerFactory<PathNoScheme> pathNoSchemeLexerFactory,
+            [NotNull] ILexerFactory<PathEmpty> pathEmptyLexerFactory)
         {
             TerminalLexerFactory = terminalLexerFactory;
             AlternationLexerFactory = alternationLexerFactory;
@@ -44,22 +45,31 @@ namespace UriSyntax.relative_part
             PathEmptyLexerFactory = pathEmptyLexerFactory;
         }
 
+        [NotNull]
         public static RelativePartLexerFactory Default { get; }
 
+        [NotNull]
         public IAlternationLexerFactory AlternationLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<Authority> AuthorityLexerFactory { get; }
 
+        [NotNull]
         public IConcatenationLexerFactory ConcatenationLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<PathAbsolute> PathAbsoluteLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<PathAbsoluteOrEmpty> PathAbsoluteOrEmptyLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<PathEmpty> PathEmptyLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<PathNoScheme> PathNoSchemeLexerFactory { get; }
 
+        [NotNull]
         public ITerminalLexerFactory TerminalLexerFactory { get; }
 
         public override ILexer<RelativePart> Create()

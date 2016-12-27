@@ -45,14 +45,19 @@ namespace UriSyntax.fragment
             PathCharacterLexerFactory = pathCharacterLexerFactory;
         }
 
+        [NotNull]
         public static FragmentLexerFactory Default { get; }
 
+        [NotNull]
         public IAlternationLexerFactory AlternationLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<PathCharacter> PathCharacterLexerFactory { get; }
 
+        [NotNull]
         public IRepetitionLexerFactory RepetitionLexerFactory { get; }
 
+        [NotNull]
         public ITerminalLexerFactory TerminalLexerFactory { get; }
 
         public override ILexer<Fragment> Create()

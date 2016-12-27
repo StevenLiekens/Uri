@@ -1,10 +1,11 @@
-﻿using Txt.ABNF;
+﻿using JetBrains.Annotations;
+using Txt.ABNF;
 
 namespace UriSyntax.userinfo
 {
     public class UserInformation : Repetition
     {
-        public UserInformation(Repetition repetition)
+        public UserInformation([NotNull] Repetition repetition)
             : base(repetition)
         {
         }

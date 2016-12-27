@@ -1,11 +1,12 @@
-﻿using Txt.ABNF;
+﻿using JetBrains.Annotations;
+using Txt.ABNF;
 
 namespace UriSyntax.gen_delims
 {
     public class GenericDelimiter : Alternation
     {
-        public GenericDelimiter(Alternation element)
-            : base(element)
+        public GenericDelimiter([NotNull] Alternation alternation)
+            : base(alternation)
         {
         }
     }

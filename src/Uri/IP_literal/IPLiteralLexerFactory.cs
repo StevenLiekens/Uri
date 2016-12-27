@@ -53,16 +53,22 @@ namespace UriSyntax.IP_literal
             IpvFutureLexerFactory = ipvFutureLexerFactory;
         }
 
+        [NotNull]
         public static IPLiteralLexerFactory Default { get; }
 
+        [NotNull]
         public IAlternationLexerFactory AlternationLexerFactory { get; }
 
+        [NotNull]
         public IConcatenationLexerFactory ConcatenationLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<IPv6Address> Ipv6AddressLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<IPvFuture.IPvFuture> IpvFutureLexerFactory { get; }
 
+        [NotNull]
         public ITerminalLexerFactory TerminalLexerFactory { get; }
 
         public override ILexer<IPLiteral> Create()

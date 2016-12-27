@@ -61,18 +61,25 @@ namespace UriSyntax.absolute_URI
             QueryLexerFactory = queryLexerFactory;
         }
 
+        [NotNull]
         public static AbsoluteUriLexerFactory Default { get; }
 
+        [NotNull]
         public IConcatenationLexerFactory ConcatenationLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<HierarchicalPart> HierarchicalPartLexerFactory { get; }
 
+        [NotNull]
         public IOptionLexerFactory OptionLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<Query> QueryLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<Scheme> SchemeLexerFactory { get; }
 
+        [NotNull]
         public ITerminalLexerFactory TerminalLexerFactory { get; }
 
         public override ILexer<AbsoluteUri> Create()

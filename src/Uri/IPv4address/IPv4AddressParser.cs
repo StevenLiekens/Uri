@@ -6,22 +6,24 @@ using UriSyntax.dec_octet;
 
 namespace UriSyntax.IPv4address
 {
+    // ReSharper disable once InconsistentNaming
     public class IPv4AddressParser : Parser<IPv4Address, byte[]>
     {
-        private readonly IParser<DecimalOctet, byte> decimalOctetParser;
-
         public IPv4AddressParser([NotNull] IParser<DecimalOctet, byte> decimalOctetParser)
         {
             if (decimalOctetParser == null)
             {
                 throw new ArgumentNullException(nameof(decimalOctetParser));
             }
-            this.decimalOctetParser = decimalOctetParser;
+            DecimalOctetParser = decimalOctetParser;
         }
+
+        [NotNull]
+        public IParser<DecimalOctet, byte> DecimalOctetParser { get; }
 
         protected override byte[] ParseImpl(IPv4Address value)
         {
-            return value.OfType<DecimalOctet>().Select(decimalOctetParser.Parse).ToArray();
+            return value.OfType<DecimalOctet>().Select(DecimalOctetParser.Parse).ToArray();
         }
     }
 }

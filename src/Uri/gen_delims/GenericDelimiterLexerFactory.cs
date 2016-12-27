@@ -30,10 +30,13 @@ namespace UriSyntax.gen_delims
             AlternationLexerFactory = alternationLexerFactory;
         }
 
+        [NotNull]
         public static GenericDelimiterLexerFactory Default { get; }
 
+        [NotNull]
         public IAlternationLexerFactory AlternationLexerFactory { get; }
 
+        [NotNull]
         public ITerminalLexerFactory TerminalLexerFactory { get; }
 
         public override ILexer<GenericDelimiter> Create()

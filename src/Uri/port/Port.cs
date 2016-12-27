@@ -1,10 +1,11 @@
-﻿using Txt.ABNF;
+﻿using JetBrains.Annotations;
+using Txt.ABNF;
 
 namespace UriSyntax.port
 {
     public class Port : Repetition
     {
-        public Port(Repetition repetition)
+        public Port([NotNull] Repetition repetition)
             : base(repetition)
         {
         }

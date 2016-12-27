@@ -5,6 +5,7 @@ using UriSyntax.dec_octet;
 
 namespace UriSyntax.IPv4address
 {
+    // ReSharper disable once InconsistentNaming
     public class IPv4AddressParserFactory : ParserFactory<IPv4Address, byte[]>
     {
         static IPv4AddressParserFactory()
@@ -21,8 +22,10 @@ namespace UriSyntax.IPv4address
             DecimalOctetParserFactory = decimalOctetParserFactory;
         }
 
+        [NotNull]
         public static IParserFactory<IPv4Address, byte[]> Default { get; }
 
+        [NotNull]
         public IParserFactory<DecimalOctet, byte> DecimalOctetParserFactory { get; }
 
         public override IParser<IPv4Address, byte[]> Create()

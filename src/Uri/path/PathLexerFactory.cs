@@ -63,18 +63,25 @@ namespace UriSyntax.path
             PathEmptyLexerFactory = pathEmptyLexerFactory;
         }
 
+        [NotNull]
         public static PathLexerFactory Default { get; }
 
+        [NotNull]
         public IAlternationLexerFactory AlternationLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<PathAbsolute> PathAbsoluteLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<PathAbsoluteOrEmpty> PathAbsoluteOrEmptyLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<PathEmpty> PathEmptyLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<PathNoScheme> PathNoSchemeLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<PathRootless> PathRootlessLexerFactory { get; }
 
         public override ILexer<Path> Create()

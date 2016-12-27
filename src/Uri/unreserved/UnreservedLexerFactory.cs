@@ -9,6 +9,15 @@ namespace UriSyntax.unreserved
 {
     public class UnreservedLexerFactory : LexerFactory<Unreserved>
     {
+        static UnreservedLexerFactory()
+        {
+            Default = new UnreservedLexerFactory(
+                Txt.ABNF.TerminalLexerFactory.Default,
+                Txt.ABNF.AlternationLexerFactory.Default,
+                Txt.ABNF.Core.ALPHA.AlphaLexerFactory.Default.Singleton(),
+                Txt.ABNF.Core.DIGIT.DigitLexerFactory.Default.Singleton());
+        }
+
         public UnreservedLexerFactory(
             [NotNull] ITerminalLexerFactory terminalLexerFactory,
             [NotNull] IAlternationLexerFactory alternationLexerFactory,
@@ -37,19 +46,19 @@ namespace UriSyntax.unreserved
             DigitLexerFactory = digitLexerFactory;
         }
 
-        public static UnreservedLexerFactory Default { get; } =
-            new UnreservedLexerFactory(
-                Txt.ABNF.TerminalLexerFactory.Default,
-                Txt.ABNF.AlternationLexerFactory.Default,
-                Txt.ABNF.Core.ALPHA.AlphaLexerFactory.Default.Singleton(),
-                Txt.ABNF.Core.DIGIT.DigitLexerFactory.Default.Singleton());
+        [NotNull]
+        public static UnreservedLexerFactory Default { get; }
 
+        [NotNull]
         public ILexerFactory<Alpha> AlphaLexerFactory { get; }
 
+        [NotNull]
         public IAlternationLexerFactory AlternationLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<Digit> DigitLexerFactory { get; }
 
+        [NotNull]
         public ITerminalLexerFactory TerminalLexerFactory { get; }
 
         public override ILexer<Unreserved> Create()

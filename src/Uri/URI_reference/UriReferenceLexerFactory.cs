@@ -39,12 +39,16 @@ namespace UriSyntax.URI_reference
             RelativeReferenceLexerFactory = relativeReferenceLexerFactory;
         }
 
+        [NotNull]
         public static UriReferenceLexerFactory Default { get; }
 
+        [NotNull]
         public IAlternationLexerFactory AlternationLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<RelativeReference> RelativeReferenceLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<UniformResourceIdentifier> UriLexerFactory { get; }
 
         public override ILexer<UriReference> Create()

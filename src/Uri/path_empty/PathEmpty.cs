@@ -1,11 +1,12 @@
-﻿using Txt.ABNF;
+﻿using JetBrains.Annotations;
+using Txt.ABNF;
 
 namespace UriSyntax.path_empty
 {
     public class PathEmpty : Repetition
     {
-        public PathEmpty(Repetition pathEmpty)
-            : base(pathEmpty)
+        public PathEmpty([NotNull] Repetition repetition)
+            : base(repetition)
         {
         }
     }

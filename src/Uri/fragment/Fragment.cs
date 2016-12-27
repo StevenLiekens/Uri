@@ -1,10 +1,11 @@
-﻿using Txt.ABNF;
+﻿using JetBrains.Annotations;
+using Txt.ABNF;
 
 namespace UriSyntax.fragment
 {
     public class Fragment : Repetition
     {
-        public Fragment(Repetition repetition)
+        public Fragment([NotNull] Repetition repetition)
             : base(repetition)
         {
         }

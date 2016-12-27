@@ -1,11 +1,12 @@
-﻿using Txt.ABNF;
+﻿using JetBrains.Annotations;
+using Txt.ABNF;
 
 namespace UriSyntax.pchar
 {
     public class PathCharacter : Alternation
     {
-        public PathCharacter(Alternation element)
-            : base(element)
+        public PathCharacter([NotNull] Alternation alternation)
+            : base(alternation)
         {
         }
     }

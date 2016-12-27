@@ -68,20 +68,28 @@ namespace UriSyntax.IPvFuture
             SubcomponentsDelimiterLexerFactory = subcomponentsDelimiterLexerFactory;
         }
 
+        [NotNull]
         public static IPvFutureLexerFactory Default { get; }
 
+        [NotNull]
         public IAlternationLexerFactory AlternationLexerFactory { get; }
 
+        [NotNull]
         public IConcatenationLexerFactory ConcatenationLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<HexadecimalDigit> HexadecimalDigitLexerFactory { get; }
 
+        [NotNull]
         public IRepetitionLexerFactory RepetitionLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<SubcomponentsDelimiter> SubcomponentsDelimiterLexerFactory { get; }
 
+        [NotNull]
         public ITerminalLexerFactory TerminalLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<Unreserved> UnreservedLexerFactory { get; }
 
         public override ILexer<IPvFuture> Create()

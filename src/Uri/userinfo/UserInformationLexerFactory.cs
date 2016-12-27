@@ -61,18 +61,25 @@ namespace UriSyntax.userinfo
             SubcomponentsDelimiterLexerFactory = subcomponentsDelimiterLexerFactory;
         }
 
+        [NotNull]
         public static UserInformationLexerFactory Default { get; }
 
+        [NotNull]
         public IAlternationLexerFactory AlternationLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<PercentEncoding> PercentEncodingLexerFactory { get; }
 
+        [NotNull]
         public IRepetitionLexerFactory RepetitionLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<SubcomponentsDelimiter> SubcomponentsDelimiterLexerFactory { get; }
 
+        [NotNull]
         public ITerminalLexerFactory TerminalLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<Unreserved> UnreservedLexerFactory { get; }
 
         public override ILexer<UserInformation> Create()

@@ -1,10 +1,11 @@
-﻿using Txt.ABNF;
+﻿using JetBrains.Annotations;
+using Txt.ABNF;
 
 namespace UriSyntax.h16
 {
     public class HexadecimalInt16 : Repetition
     {
-        public HexadecimalInt16(Repetition repetition)
+        public HexadecimalInt16([NotNull] Repetition repetition)
             : base(repetition)
         {
         }

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using JetBrains.Annotations;
 using Txt.ABNF;
 using UriSyntax.hier_part;
 using UriSyntax.query;
@@ -8,7 +9,7 @@ namespace UriSyntax.absolute_URI
 {
     public class AbsoluteUri : Concatenation
     {
-        public AbsoluteUri(Concatenation concatenation)
+        public AbsoluteUri([NotNull] Concatenation concatenation)
             : base(concatenation)
         {
         }

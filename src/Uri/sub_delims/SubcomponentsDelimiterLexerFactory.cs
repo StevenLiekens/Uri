@@ -30,10 +30,13 @@ namespace UriSyntax.sub_delims
             AlternationLexerFactory = alternationLexerFactory;
         }
 
+        [NotNull]
         public static SubcomponentsDelimiterLexerFactory Default { get; }
 
+        [NotNull]
         public IAlternationLexerFactory AlternationLexerFactory { get; }
 
+        [NotNull]
         public ITerminalLexerFactory TerminalLexerFactory { get; }
 
         public override ILexer<SubcomponentsDelimiter> Create()

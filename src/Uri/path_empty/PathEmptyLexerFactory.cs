@@ -31,10 +31,13 @@ namespace UriSyntax.path_empty
             PathCharacterLexerFactory = pathCharacterLexerFactory;
         }
 
+        [NotNull]
         public static PathEmptyLexerFactory Default { get; }
 
+        [NotNull]
         public ILexerFactory<PathCharacter> PathCharacterLexerFactory { get; }
 
+        [NotNull]
         public IRepetitionLexerFactory RepetitionLexerFactory { get; }
 
         public override ILexer<PathEmpty> Create()

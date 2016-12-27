@@ -53,16 +53,22 @@ namespace UriSyntax.path_noscheme
             SegmentNonZeroLengthNoColonsLexerFactory = segmentNonZeroLengthNoColonsLexerFactory;
         }
 
+        [NotNull]
         public static PathNoSchemeLexerFactory Default { get; }
 
+        [NotNull]
         public IConcatenationLexerFactory ConcatenationLexerFactory { get; }
 
+        [NotNull]
         public IRepetitionLexerFactory RepetitionLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<Segment> SegmentLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<SegmentNonZeroLengthNoColons> SegmentNonZeroLengthNoColonsLexerFactory { get; }
 
+        [NotNull]
         public ITerminalLexerFactory TerminalLexerFactory { get; }
 
         public override ILexer<PathNoScheme> Create()

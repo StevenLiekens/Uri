@@ -53,16 +53,22 @@ namespace UriSyntax.path_rootless
             SegmentNonZeroLengthLexerFactory = segmentNonZeroLengthLexerFactory;
         }
 
+        [NotNull]
         public static PathRootlessLexerFactory Default { get; }
 
+        [NotNull]
         public IConcatenationLexerFactory ConcatenationLexerFactory { get; }
 
+        [NotNull]
         public IRepetitionLexerFactory RepetitionLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<Segment> SegmentLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<SegmentNonZeroLength> SegmentNonZeroLengthLexerFactory { get; }
 
+        [NotNull]
         public ITerminalLexerFactory TerminalLexerFactory { get; }
 
         public override ILexer<PathRootless> Create()

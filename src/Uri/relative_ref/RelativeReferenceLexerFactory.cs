@@ -61,18 +61,25 @@ namespace UriSyntax.relative_ref
             FragmentLexerFactory = fragmentLexerFactory;
         }
 
+        [NotNull]
         public static RelativeReferenceLexerFactory Default { get; }
 
+        [NotNull]
         public IConcatenationLexerFactory ConcatenationLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<Fragment> FragmentLexerFactory { get; }
 
+        [NotNull]
         public IOptionLexerFactory OptionLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<Query> QueryLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<RelativePart> RelativePartLexerFactory { get; }
 
+        [NotNull]
         public ITerminalLexerFactory TerminalLexerFactory { get; }
 
         public override ILexer<RelativeReference> Create()

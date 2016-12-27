@@ -59,6 +59,7 @@ namespace UriSyntax.dec_octet
             DigitLexerFactory = digitLexerFactory;
         }
 
+        [NotNull]
         public static DecimalOctetLexerFactory Default { get; }
 
         public IAlternationLexerFactory AlternationLexerFactory { get; }

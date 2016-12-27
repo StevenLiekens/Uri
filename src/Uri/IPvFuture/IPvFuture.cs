@@ -1,10 +1,12 @@
-﻿using Txt.ABNF;
+﻿using JetBrains.Annotations;
+using Txt.ABNF;
 
 namespace UriSyntax.IPvFuture
 {
+    // ReSharper disable once InconsistentNaming
     public class IPvFuture : Concatenation
     {
-        public IPvFuture(Concatenation concatenation)
+        public IPvFuture([NotNull] Concatenation concatenation)
             : base(concatenation)
         {
         }

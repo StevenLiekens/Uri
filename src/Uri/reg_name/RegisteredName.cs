@@ -1,10 +1,11 @@
-﻿using Txt.ABNF;
+﻿using JetBrains.Annotations;
+using Txt.ABNF;
 
 namespace UriSyntax.reg_name
 {
     public class RegisteredName : Repetition
     {
-        public RegisteredName(Repetition repetition)
+        public RegisteredName([NotNull] Repetition repetition)
             : base(repetition)
         {
         }

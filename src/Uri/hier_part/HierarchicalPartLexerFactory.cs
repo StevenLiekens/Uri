@@ -77,22 +77,31 @@ namespace UriSyntax.hier_part
             PathEmptyLexerFactory = pathEmptyLexerFactory;
         }
 
+        [NotNull]
         public static HierarchicalPartLexerFactory Default { get; }
 
+        [NotNull]
         public IAlternationLexerFactory AlternationLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<Authority> AuthorityLexerFactory { get; }
 
+        [NotNull]
         public IConcatenationLexerFactory ConcatenationLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<PathAbsolute> PathAbsoluteLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<PathAbsoluteOrEmpty> PathAbsoluteOrEmptyLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<PathEmpty> PathEmptyLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<PathRootless> PathRootlessLexerFactory { get; }
 
+        [NotNull]
         public ITerminalLexerFactory TerminalLexerFactory { get; }
 
         public override ILexer<HierarchicalPart> Create()

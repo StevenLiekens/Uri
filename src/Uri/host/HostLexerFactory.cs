@@ -47,14 +47,19 @@ namespace UriSyntax.host
             RegisteredNameLexerFactory = registeredNameLexerFactory;
         }
 
+        [NotNull]
         public static HostLexerFactory Default { get; }
 
+        [NotNull]
         public IAlternationLexerFactory AlternationLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<IPLiteral> IpLiteralLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<IPv4Address> Ipv4AddressLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<RegisteredName> RegisteredNameLexerFactory { get; }
 
         public override ILexer<Host> Create()

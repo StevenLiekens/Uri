@@ -60,18 +60,25 @@ namespace UriSyntax.scheme
             DigitLexerFactory = digitLexerFactory;
         }
 
+        [NotNull]
         public static SchemeLexerFactory Default { get; }
 
+        [NotNull]
         public ILexerFactory<Alpha> AlphaLexerFactory { get; }
 
+        [NotNull]
         public IAlternationLexerFactory AlternationLexerFactory { get; }
 
+        [NotNull]
         public IConcatenationLexerFactory ConcatenationLexerFactory { get; }
 
+        [NotNull]
         public ILexerFactory<Digit> DigitLexerFactory { get; }
 
+        [NotNull]
         public IRepetitionLexerFactory RepetitionLexerFactory { get; }
 
+        [NotNull]
         public ITerminalLexerFactory TerminalLexerFactory { get; }
 
         public override ILexer<Scheme> Create()
