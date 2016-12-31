@@ -10,14 +10,11 @@ using UriSyntax.path_noscheme;
 
 namespace UriSyntax.relative_part
 {
-    public class RelativePartLexerFactory : LexerFactory<RelativePart>
+    public class RelativePartLexerFactory : RuleLexerFactory<RelativePart>
     {
         static RelativePartLexerFactory()
         {
             Default = new RelativePartLexerFactory(
-                Txt.ABNF.TerminalLexerFactory.Default,
-                Txt.ABNF.AlternationLexerFactory.Default,
-                Txt.ABNF.ConcatenationLexerFactory.Default,
                 authority.AuthorityLexerFactory.Default.Singleton(),
                 path_abempty.PathAbsoluteOrEmptyLexerFactory.Default.Singleton(),
                 path_absolute.PathAbsoluteLexerFactory.Default.Singleton(),
@@ -26,18 +23,32 @@ namespace UriSyntax.relative_part
         }
 
         public RelativePartLexerFactory(
-            [NotNull] ITerminalLexerFactory terminalLexerFactory,
-            [NotNull] IAlternationLexerFactory alternationLexerFactory,
-            [NotNull] IConcatenationLexerFactory concatenationLexerFactory,
             [NotNull] ILexerFactory<Authority> authorityLexerFactory,
             [NotNull] ILexerFactory<PathAbsoluteOrEmpty> pathAbsoluteOrEmptyLexerFactory,
             [NotNull] ILexerFactory<PathAbsolute> pathAbsoluteLexerFactory,
             [NotNull] ILexerFactory<PathNoScheme> pathNoSchemeLexerFactory,
             [NotNull] ILexerFactory<PathEmpty> pathEmptyLexerFactory)
         {
-            TerminalLexerFactory = terminalLexerFactory;
-            AlternationLexerFactory = alternationLexerFactory;
-            ConcatenationLexerFactory = concatenationLexerFactory;
+            if (authorityLexerFactory == null)
+            {
+                throw new ArgumentNullException(nameof(authorityLexerFactory));
+            }
+            if (pathAbsoluteOrEmptyLexerFactory == null)
+            {
+                throw new ArgumentNullException(nameof(pathAbsoluteOrEmptyLexerFactory));
+            }
+            if (pathAbsoluteLexerFactory == null)
+            {
+                throw new ArgumentNullException(nameof(pathAbsoluteLexerFactory));
+            }
+            if (pathNoSchemeLexerFactory == null)
+            {
+                throw new ArgumentNullException(nameof(pathNoSchemeLexerFactory));
+            }
+            if (pathEmptyLexerFactory == null)
+            {
+                throw new ArgumentNullException(nameof(pathEmptyLexerFactory));
+            }
             AuthorityLexerFactory = authorityLexerFactory;
             PathAbsoluteOrEmptyLexerFactory = pathAbsoluteOrEmptyLexerFactory;
             PathAbsoluteLexerFactory = pathAbsoluteLexerFactory;
@@ -49,13 +60,7 @@ namespace UriSyntax.relative_part
         public static RelativePartLexerFactory Default { get; }
 
         [NotNull]
-        public IAlternationLexerFactory AlternationLexerFactory { get; }
-
-        [NotNull]
         public ILexerFactory<Authority> AuthorityLexerFactory { get; }
-
-        [NotNull]
-        public IConcatenationLexerFactory ConcatenationLexerFactory { get; }
 
         [NotNull]
         public ILexerFactory<PathAbsolute> PathAbsoluteLexerFactory { get; }
@@ -69,15 +74,12 @@ namespace UriSyntax.relative_part
         [NotNull]
         public ILexerFactory<PathNoScheme> PathNoSchemeLexerFactory { get; }
 
-        [NotNull]
-        public ITerminalLexerFactory TerminalLexerFactory { get; }
-
         public override ILexer<RelativePart> Create()
         {
             var innerLexer =
-                AlternationLexerFactory.Create(
-                    ConcatenationLexerFactory.Create(
-                        TerminalLexerFactory.Create(@"//", StringComparer.Ordinal),
+                Alternation.Create(
+                    Concatenation.Create(
+                        Terminal.Create(@"//", StringComparer.Ordinal),
                         AuthorityLexerFactory.Create(),
                         PathAbsoluteOrEmptyLexerFactory.Create()),
                     PathAbsoluteLexerFactory.Create(),

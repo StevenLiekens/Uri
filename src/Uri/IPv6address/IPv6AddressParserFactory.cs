@@ -6,17 +6,14 @@ using UriSyntax.ls32;
 
 namespace UriSyntax.IPv6address
 {
+    // ReSharper disable once InconsistentNaming
     public class IPv6AddressParserFactory : ParserFactory<IPv6Address, byte[]>
     {
-        private readonly IParserFactory<HexadecimalInt16, byte[]> hexadecimalInt16ParserFactory;
-
-        private readonly IParserFactory<LeastSignificantInt32, byte[]> leastSignificantInt32ParserFactory;
-
         static IPv6AddressParserFactory()
         {
             Default = new IPv6AddressParserFactory(
-                HexadecimalInt16ParserFactory.Default.Singleton(),
-                LeastSignificantInt32ParserFactory.Default.Singleton());
+                h16.HexadecimalInt16ParserFactory.Default.Singleton(),
+                ls32.LeastSignificantInt32ParserFactory.Default.Singleton());
         }
 
         public IPv6AddressParserFactory(
@@ -31,17 +28,24 @@ namespace UriSyntax.IPv6address
             {
                 throw new ArgumentNullException(nameof(leastSignificantInt32ParserFactory));
             }
-            this.hexadecimalInt16ParserFactory = hexadecimalInt16ParserFactory;
-            this.leastSignificantInt32ParserFactory = leastSignificantInt32ParserFactory;
+            HexadecimalInt16ParserFactory = hexadecimalInt16ParserFactory;
+            LeastSignificantInt32ParserFactory = leastSignificantInt32ParserFactory;
         }
 
+        [NotNull]
         public static IPv6AddressParserFactory Default { get; }
+
+        [NotNull]
+        public IParserFactory<HexadecimalInt16, byte[]> HexadecimalInt16ParserFactory { get; }
+
+        [NotNull]
+        public IParserFactory<LeastSignificantInt32, byte[]> LeastSignificantInt32ParserFactory { get; }
 
         public override IParser<IPv6Address, byte[]> Create()
         {
             return new IPv6AddressParser(
-                hexadecimalInt16ParserFactory.Create(),
-                leastSignificantInt32ParserFactory.Create());
+                HexadecimalInt16ParserFactory.Create(),
+                LeastSignificantInt32ParserFactory.Create());
         }
     }
 }

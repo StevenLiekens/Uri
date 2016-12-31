@@ -7,25 +7,19 @@ using UriSyntax.URI;
 
 namespace UriSyntax.URI_reference
 {
-    public class UriReferenceLexerFactory : LexerFactory<UriReference>
+    public class UriReferenceLexerFactory : RuleLexerFactory<UriReference>
     {
         static UriReferenceLexerFactory()
         {
             Default = new UriReferenceLexerFactory(
-                Txt.ABNF.AlternationLexerFactory.Default,
                 UniformResourceIdentifierLexerFactory.Default.Singleton(),
                 relative_ref.RelativeReferenceLexerFactory.Default.Singleton());
         }
 
         public UriReferenceLexerFactory(
-            [NotNull] IAlternationLexerFactory alternationLexerFactory,
             [NotNull] ILexerFactory<UniformResourceIdentifier> uriLexerFactory,
             [NotNull] ILexerFactory<RelativeReference> relativeReferenceLexerFactory)
         {
-            if (alternationLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(alternationLexerFactory));
-            }
             if (uriLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(uriLexerFactory));
@@ -34,16 +28,12 @@ namespace UriSyntax.URI_reference
             {
                 throw new ArgumentNullException(nameof(relativeReferenceLexerFactory));
             }
-            AlternationLexerFactory = alternationLexerFactory;
             UriLexerFactory = uriLexerFactory;
             RelativeReferenceLexerFactory = relativeReferenceLexerFactory;
         }
 
         [NotNull]
         public static UriReferenceLexerFactory Default { get; }
-
-        [NotNull]
-        public IAlternationLexerFactory AlternationLexerFactory { get; }
 
         [NotNull]
         public ILexerFactory<RelativeReference> RelativeReferenceLexerFactory { get; }
@@ -53,7 +43,7 @@ namespace UriSyntax.URI_reference
 
         public override ILexer<UriReference> Create()
         {
-            var innerLexer = AlternationLexerFactory.Create(
+            var innerLexer = Alternation.Create(
                 UriLexerFactory.Create(),
                 RelativeReferenceLexerFactory.Create());
             return new UriReferenceLexer(innerLexer);

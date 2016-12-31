@@ -6,28 +6,20 @@ using Txt.Core;
 
 namespace UriSyntax.port
 {
-    public class PortLexerFactory : LexerFactory<Port>
+    public class PortLexerFactory : RuleLexerFactory<Port>
     {
         static PortLexerFactory()
         {
-            Default = new PortLexerFactory(
-                Txt.ABNF.RepetitionLexerFactory.Default,
-                Txt.ABNF.Core.DIGIT.DigitLexerFactory.Default.Singleton());
+            Default = new PortLexerFactory(Txt.ABNF.Core.DIGIT.DigitLexerFactory.Default.Singleton());
         }
 
         public PortLexerFactory(
-            [NotNull] IRepetitionLexerFactory repetitionLexerFactory,
             [NotNull] ILexerFactory<Digit> digitLexerFactory)
         {
-            if (repetitionLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(repetitionLexerFactory));
-            }
             if (digitLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(digitLexerFactory));
             }
-            RepetitionLexerFactory = repetitionLexerFactory;
             DigitLexerFactory = digitLexerFactory;
         }
 
@@ -37,12 +29,9 @@ namespace UriSyntax.port
         [NotNull]
         public ILexerFactory<Digit> DigitLexerFactory { get; }
 
-        [NotNull]
-        public IRepetitionLexerFactory RepetitionLexerFactory { get; }
-
         public override ILexer<Port> Create()
         {
-            var innerLexer = RepetitionLexerFactory.Create(DigitLexerFactory.Create(), 0, int.MaxValue);
+            var innerLexer = Repetition.Create(DigitLexerFactory.Create(), 0, int.MaxValue);
             return new PortLexer(innerLexer);
         }
     }

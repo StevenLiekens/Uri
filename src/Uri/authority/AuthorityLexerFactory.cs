@@ -8,39 +8,21 @@ using UriSyntax.userinfo;
 
 namespace UriSyntax.authority
 {
-    public class AuthorityLexerFactory : LexerFactory<Authority>
+    public class AuthorityLexerFactory : RuleLexerFactory<Authority>
     {
         static AuthorityLexerFactory()
         {
             Default = new AuthorityLexerFactory(
-                Txt.ABNF.TerminalLexerFactory.Default,
-                Txt.ABNF.ConcatenationLexerFactory.Default,
-                Txt.ABNF.OptionLexerFactory.Default,
                 userinfo.UserInformationLexerFactory.Default.Singleton(),
                 host.HostLexerFactory.Default.Singleton(),
                 port.PortLexerFactory.Default.Singleton());
         }
 
         public AuthorityLexerFactory(
-            [NotNull] ITerminalLexerFactory terminalLexerFactory,
-            [NotNull] IConcatenationLexerFactory concatenationLexerFactory,
-            [NotNull] IOptionLexerFactory optionLexerFactory,
             [NotNull] ILexerFactory<UserInformation> userInformationLexerFactory,
             [NotNull] ILexerFactory<Host> hostLexerFactory,
             [NotNull] ILexerFactory<Port> portLexerFactory)
         {
-            if (terminalLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(terminalLexerFactory));
-            }
-            if (concatenationLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(concatenationLexerFactory));
-            }
-            if (optionLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(optionLexerFactory));
-            }
             if (userInformationLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(userInformationLexerFactory));
@@ -53,9 +35,6 @@ namespace UriSyntax.authority
             {
                 throw new ArgumentNullException(nameof(portLexerFactory));
             }
-            TerminalLexerFactory = terminalLexerFactory;
-            ConcatenationLexerFactory = concatenationLexerFactory;
-            OptionLexerFactory = optionLexerFactory;
             UserInformationLexerFactory = userInformationLexerFactory;
             HostLexerFactory = hostLexerFactory;
             PortLexerFactory = portLexerFactory;
@@ -65,32 +44,23 @@ namespace UriSyntax.authority
         public static AuthorityLexerFactory Default { get; }
 
         [NotNull]
-        public IConcatenationLexerFactory ConcatenationLexerFactory { get; }
-
-        [NotNull]
         public ILexerFactory<Host> HostLexerFactory { get; }
 
         [NotNull]
-        public IOptionLexerFactory OptionLexerFactory { get; }
-
-        [NotNull]
         public ILexerFactory<Port> PortLexerFactory { get; }
-
-        [NotNull]
-        public ITerminalLexerFactory TerminalLexerFactory { get; }
 
         [NotNull]
         public ILexerFactory<UserInformation> UserInformationLexerFactory { get; }
 
         public override ILexer<Authority> Create()
         {
-            var at = TerminalLexerFactory.Create(@"@", StringComparer.Ordinal);
-            var userinfoseq = ConcatenationLexerFactory.Create(UserInformationLexerFactory.Create(), at);
-            var optuserinfo = OptionLexerFactory.Create(userinfoseq);
-            var colon = TerminalLexerFactory.Create(@":", StringComparer.Ordinal);
-            var portseq = ConcatenationLexerFactory.Create(colon, PortLexerFactory.Create());
-            var optport = OptionLexerFactory.Create(portseq);
-            var innerLexer = ConcatenationLexerFactory.Create(optuserinfo, HostLexerFactory.Create(), optport);
+            var at = Terminal.Create(@"@", StringComparer.Ordinal);
+            var userinfoseq = Concatenation.Create(UserInformationLexerFactory.Create(), at);
+            var optuserinfo = Option.Create(userinfoseq);
+            var colon = Terminal.Create(@":", StringComparer.Ordinal);
+            var portseq = Concatenation.Create(colon, PortLexerFactory.Create());
+            var optport = Option.Create(portseq);
+            var innerLexer = Concatenation.Create(optuserinfo, HostLexerFactory.Create(), optport);
             return new AuthorityLexer(innerLexer);
         }
     }

@@ -8,27 +8,21 @@ using UriSyntax.reg_name;
 
 namespace UriSyntax.host
 {
-    public class HostLexerFactory : LexerFactory<Host>
+    public class HostLexerFactory : RuleLexerFactory<Host>
     {
         static HostLexerFactory()
         {
             Default = new HostLexerFactory(
-                Txt.ABNF.AlternationLexerFactory.Default,
-                IPLiteralLexerFactory.Default.Singleton(),
-                IPv4AddressLexerFactory.Default.Singleton(),
+                IP_literal.IPLiteralLexerFactory.Default.Singleton(),
+                IPv4address.IPv4AddressLexerFactory.Default.Singleton(),
                 reg_name.RegisteredNameLexerFactory.Default.Singleton());
         }
 
         public HostLexerFactory(
-            [NotNull] IAlternationLexerFactory alternationLexerFactory,
             [NotNull] ILexerFactory<IPLiteral> ipLiteralLexerFactory,
             [NotNull] ILexerFactory<IPv4Address> ipv4AddressLexerFactory,
             [NotNull] ILexerFactory<RegisteredName> registeredNameLexerFactory)
         {
-            if (alternationLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(alternationLexerFactory));
-            }
             if (ipLiteralLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(ipLiteralLexerFactory));
@@ -41,9 +35,8 @@ namespace UriSyntax.host
             {
                 throw new ArgumentNullException(nameof(registeredNameLexerFactory));
             }
-            AlternationLexerFactory = alternationLexerFactory;
-            IpLiteralLexerFactory = ipLiteralLexerFactory;
-            Ipv4AddressLexerFactory = ipv4AddressLexerFactory;
+            IPLiteralLexerFactory = ipLiteralLexerFactory;
+            IPv4AddressLexerFactory = ipv4AddressLexerFactory;
             RegisteredNameLexerFactory = registeredNameLexerFactory;
         }
 
@@ -51,22 +44,20 @@ namespace UriSyntax.host
         public static HostLexerFactory Default { get; }
 
         [NotNull]
-        public IAlternationLexerFactory AlternationLexerFactory { get; }
+        public ILexerFactory<IPLiteral> IPLiteralLexerFactory { get; }
 
         [NotNull]
-        public ILexerFactory<IPLiteral> IpLiteralLexerFactory { get; }
-
-        [NotNull]
-        public ILexerFactory<IPv4Address> Ipv4AddressLexerFactory { get; }
+        // ReSharper disable once InconsistentNaming
+        public ILexerFactory<IPv4Address> IPv4AddressLexerFactory { get; }
 
         [NotNull]
         public ILexerFactory<RegisteredName> RegisteredNameLexerFactory { get; }
 
         public override ILexer<Host> Create()
         {
-            var innerLexer = AlternationLexerFactory.Create(
-                IpLiteralLexerFactory.Create(),
-                Ipv4AddressLexerFactory.Create(),
+            var innerLexer = Alternation.Create(
+                IPLiteralLexerFactory.Create(),
+                IPv4AddressLexerFactory.Create(),
                 RegisteredNameLexerFactory.Create());
             return new HostLexer(innerLexer);
         }

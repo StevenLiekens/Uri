@@ -10,14 +10,11 @@ using UriSyntax.path_rootless;
 
 namespace UriSyntax.hier_part
 {
-    public class HierarchicalPartLexerFactory : LexerFactory<HierarchicalPart>
+    public class HierarchicalPartLexerFactory : RuleLexerFactory<HierarchicalPart>
     {
         static HierarchicalPartLexerFactory()
         {
             Default = new HierarchicalPartLexerFactory(
-                Txt.ABNF.TerminalLexerFactory.Default,
-                Txt.ABNF.AlternationLexerFactory.Default,
-                Txt.ABNF.ConcatenationLexerFactory.Default,
                 authority.AuthorityLexerFactory.Default.Singleton(),
                 path_abempty.PathAbsoluteOrEmptyLexerFactory.Default.Singleton(),
                 path_absolute.PathAbsoluteLexerFactory.Default.Singleton(),
@@ -26,27 +23,12 @@ namespace UriSyntax.hier_part
         }
 
         public HierarchicalPartLexerFactory(
-            [NotNull] ITerminalLexerFactory terminalLexerFactory,
-            [NotNull] IAlternationLexerFactory alternationLexerFactory,
-            [NotNull] IConcatenationLexerFactory concatenationLexerFactory,
             [NotNull] ILexerFactory<Authority> authorityLexerFactory,
             [NotNull] ILexerFactory<PathAbsoluteOrEmpty> pathAbsoluteOrEmptyLexerFactory,
             [NotNull] ILexerFactory<PathAbsolute> pathAbsoluteLexerFactory,
             [NotNull] ILexerFactory<PathRootless> pathRootlessLexerFactory,
             [NotNull] ILexerFactory<PathEmpty> pathEmptyLexerFactory)
         {
-            if (terminalLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(terminalLexerFactory));
-            }
-            if (alternationLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(alternationLexerFactory));
-            }
-            if (concatenationLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(concatenationLexerFactory));
-            }
             if (authorityLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(authorityLexerFactory));
@@ -67,9 +49,6 @@ namespace UriSyntax.hier_part
             {
                 throw new ArgumentNullException(nameof(pathEmptyLexerFactory));
             }
-            TerminalLexerFactory = terminalLexerFactory;
-            AlternationLexerFactory = alternationLexerFactory;
-            ConcatenationLexerFactory = concatenationLexerFactory;
             AuthorityLexerFactory = authorityLexerFactory;
             PathAbsoluteOrEmptyLexerFactory = pathAbsoluteOrEmptyLexerFactory;
             PathAbsoluteLexerFactory = pathAbsoluteLexerFactory;
@@ -81,13 +60,7 @@ namespace UriSyntax.hier_part
         public static HierarchicalPartLexerFactory Default { get; }
 
         [NotNull]
-        public IAlternationLexerFactory AlternationLexerFactory { get; }
-
-        [NotNull]
         public ILexerFactory<Authority> AuthorityLexerFactory { get; }
-
-        [NotNull]
-        public IConcatenationLexerFactory ConcatenationLexerFactory { get; }
 
         [NotNull]
         public ILexerFactory<PathAbsolute> PathAbsoluteLexerFactory { get; }
@@ -101,17 +74,14 @@ namespace UriSyntax.hier_part
         [NotNull]
         public ILexerFactory<PathRootless> PathRootlessLexerFactory { get; }
 
-        [NotNull]
-        public ITerminalLexerFactory TerminalLexerFactory { get; }
-
         public override ILexer<HierarchicalPart> Create()
         {
-            var delim = TerminalLexerFactory.Create(@"//", StringComparer.Ordinal);
-            var seq = ConcatenationLexerFactory.Create(
+            var delim = Terminal.Create(@"//", StringComparer.Ordinal);
+            var seq = Concatenation.Create(
                 delim,
                 AuthorityLexerFactory.Create(),
                 PathAbsoluteOrEmptyLexerFactory.Create());
-            var innerLexer = AlternationLexerFactory.Create(
+            var innerLexer = Alternation.Create(
                 seq,
                 PathAbsoluteLexerFactory.Create(),
                 PathRootlessLexerFactory.Create(),

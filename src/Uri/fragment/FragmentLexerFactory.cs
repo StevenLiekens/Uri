@@ -6,42 +6,19 @@ using UriSyntax.pchar;
 
 namespace UriSyntax.fragment
 {
-    public class FragmentLexerFactory : LexerFactory<Fragment>
+    public class FragmentLexerFactory : RuleLexerFactory<Fragment>
     {
         static FragmentLexerFactory()
         {
-            Default = new FragmentLexerFactory(
-                Txt.ABNF.TerminalLexerFactory.Default,
-                Txt.ABNF.AlternationLexerFactory.Default,
-                Txt.ABNF.RepetitionLexerFactory.Default,
-                pchar.PathCharacterLexerFactory.Default.Singleton());
+            Default = new FragmentLexerFactory(pchar.PathCharacterLexerFactory.Default.Singleton());
         }
 
-        public FragmentLexerFactory(
-            [NotNull] ITerminalLexerFactory terminalLexerFactory,
-            [NotNull] IAlternationLexerFactory alternationLexerFactory,
-            [NotNull] IRepetitionLexerFactory repetitionLexerFactory,
-            [NotNull] ILexerFactory<PathCharacter> pathCharacterLexerFactory)
+        public FragmentLexerFactory([NotNull] ILexerFactory<PathCharacter> pathCharacterLexerFactory)
         {
-            if (terminalLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(terminalLexerFactory));
-            }
-            if (alternationLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(alternationLexerFactory));
-            }
-            if (repetitionLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(repetitionLexerFactory));
-            }
             if (pathCharacterLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(pathCharacterLexerFactory));
             }
-            TerminalLexerFactory = terminalLexerFactory;
-            AlternationLexerFactory = alternationLexerFactory;
-            RepetitionLexerFactory = repetitionLexerFactory;
             PathCharacterLexerFactory = pathCharacterLexerFactory;
         }
 
@@ -49,25 +26,16 @@ namespace UriSyntax.fragment
         public static FragmentLexerFactory Default { get; }
 
         [NotNull]
-        public IAlternationLexerFactory AlternationLexerFactory { get; }
-
-        [NotNull]
         public ILexerFactory<PathCharacter> PathCharacterLexerFactory { get; }
-
-        [NotNull]
-        public IRepetitionLexerFactory RepetitionLexerFactory { get; }
-
-        [NotNull]
-        public ITerminalLexerFactory TerminalLexerFactory { get; }
 
         public override ILexer<Fragment> Create()
         {
             var pathCharacterLexer = PathCharacterLexerFactory.Create();
-            var alternationLexer = AlternationLexerFactory.Create(
+            var alternationLexer = Alternation.Create(
                 pathCharacterLexer,
-                TerminalLexerFactory.Create(@"/", StringComparer.Ordinal),
-                TerminalLexerFactory.Create(@"?", StringComparer.Ordinal));
-            var fragmentRepetitionLexer = RepetitionLexerFactory.Create(alternationLexer, 0, int.MaxValue);
+                Terminal.Create(@"/", StringComparer.Ordinal),
+                Terminal.Create(@"?", StringComparer.Ordinal));
+            var fragmentRepetitionLexer = Repetition.Create(alternationLexer, 0, int.MaxValue);
             return new FragmentLexer(fragmentRepetitionLexer);
         }
     }

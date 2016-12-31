@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
+using JetBrains.Annotations;
 using Txt.ABNF;
+using Txt.Core;
 using UriSyntax.fragment;
 using UriSyntax.query;
 using UriSyntax.relative_part;
@@ -8,7 +10,7 @@ namespace UriSyntax.relative_ref
 {
     public class RelativeReference : Concatenation
     {
-        public RelativeReference(Concatenation concatenation)
+        public RelativeReference([NotNull] Concatenation concatenation)
             : base(concatenation)
         {
         }

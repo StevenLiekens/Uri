@@ -6,28 +6,20 @@ using Txt.Core;
 
 namespace UriSyntax.h16
 {
-    public class HexadecimalInt16LexerFactory : LexerFactory<HexadecimalInt16>
+    public class HexadecimalInt16LexerFactory : RuleLexerFactory<HexadecimalInt16>
     {
         static HexadecimalInt16LexerFactory()
         {
-            Default = new HexadecimalInt16LexerFactory(
-                Txt.ABNF.RepetitionLexerFactory.Default,
-                HexadecimalDigitLexerFactory.Default.Singleton());
+            Default = new HexadecimalInt16LexerFactory(HexadecimalDigitLexerFactory.Default.Singleton());
         }
 
         public HexadecimalInt16LexerFactory(
-            [NotNull] IRepetitionLexerFactory repetitionLexerFactory,
             [NotNull] ILexerFactory<HexadecimalDigit> hexadecimalLexerFactory)
         {
-            if (repetitionLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(repetitionLexerFactory));
-            }
             if (hexadecimalLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(hexadecimalLexerFactory));
             }
-            RepetitionLexerFactory = repetitionLexerFactory;
             HexadecimalLexerFactory = hexadecimalLexerFactory;
         }
 
@@ -37,12 +29,9 @@ namespace UriSyntax.h16
         [NotNull]
         public ILexerFactory<HexadecimalDigit> HexadecimalLexerFactory { get; }
 
-        [NotNull]
-        public IRepetitionLexerFactory RepetitionLexerFactory { get; }
-
         public override ILexer<HexadecimalInt16> Create()
         {
-            var innerLexer = RepetitionLexerFactory.Create(HexadecimalLexerFactory.Create(), 1, 4);
+            var innerLexer = Repetition.Create(HexadecimalLexerFactory.Create(), 1, 4);
             return new HexadecimalInt16Lexer(innerLexer);
         }
     }

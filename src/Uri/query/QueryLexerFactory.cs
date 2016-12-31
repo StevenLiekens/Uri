@@ -6,42 +6,20 @@ using UriSyntax.pchar;
 
 namespace UriSyntax.query
 {
-    public class QueryLexerFactory : LexerFactory<Query>
+    public class QueryLexerFactory : RuleLexerFactory<Query>
     {
         static QueryLexerFactory()
         {
-            Default = new QueryLexerFactory(
-                Txt.ABNF.TerminalLexerFactory.Default,
-                Txt.ABNF.AlternationLexerFactory.Default,
-                Txt.ABNF.RepetitionLexerFactory.Default,
-                pchar.PathCharacterLexerFactory.Default.Singleton());
+            Default = new QueryLexerFactory(pchar.PathCharacterLexerFactory.Default.Singleton());
         }
 
         public QueryLexerFactory(
-            [NotNull] ITerminalLexerFactory terminalLexerFactory,
-            [NotNull] IAlternationLexerFactory alternationLexerFactory,
-            [NotNull] IRepetitionLexerFactory repetitionLexerFactory,
             [NotNull] ILexerFactory<PathCharacter> pathCharacterLexerFactory)
         {
-            if (terminalLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(terminalLexerFactory));
-            }
-            if (alternationLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(alternationLexerFactory));
-            }
-            if (repetitionLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(repetitionLexerFactory));
-            }
             if (pathCharacterLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(pathCharacterLexerFactory));
             }
-            TerminalLexerFactory = terminalLexerFactory;
-            AlternationLexerFactory = alternationLexerFactory;
-            RepetitionLexerFactory = repetitionLexerFactory;
             PathCharacterLexerFactory = pathCharacterLexerFactory;
         }
 
@@ -49,24 +27,15 @@ namespace UriSyntax.query
         public static QueryLexerFactory Default { get; }
 
         [NotNull]
-        public IAlternationLexerFactory AlternationLexerFactory { get; }
-
-        [NotNull]
         public ILexerFactory<PathCharacter> PathCharacterLexerFactory { get; }
-
-        [NotNull]
-        public IRepetitionLexerFactory RepetitionLexerFactory { get; }
-
-        [NotNull]
-        public ITerminalLexerFactory TerminalLexerFactory { get; }
 
         public override ILexer<Query> Create()
         {
-            var alternationLexer = AlternationLexerFactory.Create(
+            var alternationLexer = Alternation.Create(
                 PathCharacterLexerFactory.Create(),
-                TerminalLexerFactory.Create(@"/", StringComparer.Ordinal),
-                TerminalLexerFactory.Create(@"?", StringComparer.Ordinal));
-            var fragmentRepetitionLexer = RepetitionLexerFactory.Create(alternationLexer, 0, int.MaxValue);
+                Terminal.Create(@"/", StringComparer.Ordinal),
+                Terminal.Create(@"?", StringComparer.Ordinal));
+            var fragmentRepetitionLexer = Repetition.Create(alternationLexer, 0, int.MaxValue);
             return new QueryLexer(fragmentRepetitionLexer);
         }
     }

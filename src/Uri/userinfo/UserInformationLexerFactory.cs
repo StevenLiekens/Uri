@@ -8,39 +8,21 @@ using UriSyntax.unreserved;
 
 namespace UriSyntax.userinfo
 {
-    public class UserInformationLexerFactory : LexerFactory<UserInformation>
+    public class UserInformationLexerFactory : RuleLexerFactory<UserInformation>
     {
         static UserInformationLexerFactory()
         {
             Default = new UserInformationLexerFactory(
-                Txt.ABNF.TerminalLexerFactory.Default,
-                Txt.ABNF.AlternationLexerFactory.Default,
-                Txt.ABNF.RepetitionLexerFactory.Default,
                 unreserved.UnreservedLexerFactory.Default.Singleton(),
                 pct_encoded.PercentEncodingLexerFactory.Default.Singleton(),
                 sub_delims.SubcomponentsDelimiterLexerFactory.Default.Singleton());
         }
 
         public UserInformationLexerFactory(
-            [NotNull] ITerminalLexerFactory terminalLexerFactory,
-            [NotNull] IAlternationLexerFactory alternationLexerFactory,
-            [NotNull] IRepetitionLexerFactory repetitionLexerFactory,
             [NotNull] ILexerFactory<Unreserved> unreservedLexerFactory,
             [NotNull] ILexerFactory<PercentEncoding> percentEncodingLexerFactory,
             [NotNull] ILexerFactory<SubcomponentsDelimiter> subcomponentsDelimiterLexerFactory)
         {
-            if (terminalLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(terminalLexerFactory));
-            }
-            if (alternationLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(alternationLexerFactory));
-            }
-            if (repetitionLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(repetitionLexerFactory));
-            }
             if (unreservedLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(unreservedLexerFactory));
@@ -53,9 +35,6 @@ namespace UriSyntax.userinfo
             {
                 throw new ArgumentNullException(nameof(subcomponentsDelimiterLexerFactory));
             }
-            TerminalLexerFactory = terminalLexerFactory;
-            AlternationLexerFactory = alternationLexerFactory;
-            RepetitionLexerFactory = repetitionLexerFactory;
             UnreservedLexerFactory = unreservedLexerFactory;
             PercentEncodingLexerFactory = percentEncodingLexerFactory;
             SubcomponentsDelimiterLexerFactory = subcomponentsDelimiterLexerFactory;
@@ -65,31 +44,22 @@ namespace UriSyntax.userinfo
         public static UserInformationLexerFactory Default { get; }
 
         [NotNull]
-        public IAlternationLexerFactory AlternationLexerFactory { get; }
-
-        [NotNull]
         public ILexerFactory<PercentEncoding> PercentEncodingLexerFactory { get; }
 
         [NotNull]
-        public IRepetitionLexerFactory RepetitionLexerFactory { get; }
-
-        [NotNull]
         public ILexerFactory<SubcomponentsDelimiter> SubcomponentsDelimiterLexerFactory { get; }
-
-        [NotNull]
-        public ITerminalLexerFactory TerminalLexerFactory { get; }
 
         [NotNull]
         public ILexerFactory<Unreserved> UnreservedLexerFactory { get; }
 
         public override ILexer<UserInformation> Create()
         {
-            var innerLexer = RepetitionLexerFactory.Create(
-                AlternationLexerFactory.Create(
+            var innerLexer = Repetition.Create(
+                Alternation.Create(
                     UnreservedLexerFactory.Create(),
                     PercentEncodingLexerFactory.Create(),
                     SubcomponentsDelimiterLexerFactory.Create(),
-                    TerminalLexerFactory.Create(@":", StringComparer.Ordinal)),
+                    Terminal.Create(@":", StringComparer.Ordinal)),
                 0,
                 int.MaxValue);
             return new UserInformationLexer(innerLexer);

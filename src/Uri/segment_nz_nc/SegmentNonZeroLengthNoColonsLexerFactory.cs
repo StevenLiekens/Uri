@@ -8,39 +8,21 @@ using UriSyntax.unreserved;
 
 namespace UriSyntax.segment_nz_nc
 {
-    public class SegmentNonZeroLengthNoColonsLexerFactory : LexerFactory<SegmentNonZeroLengthNoColons>
+    public class SegmentNonZeroLengthNoColonsLexerFactory : RuleLexerFactory<SegmentNonZeroLengthNoColons>
     {
         static SegmentNonZeroLengthNoColonsLexerFactory()
         {
             Default = new SegmentNonZeroLengthNoColonsLexerFactory(
-                Txt.ABNF.TerminalLexerFactory.Default,
-                Txt.ABNF.AlternationLexerFactory.Default,
-                Txt.ABNF.RepetitionLexerFactory.Default,
                 unreserved.UnreservedLexerFactory.Default.Singleton(),
                 pct_encoded.PercentEncodingLexerFactory.Default.Singleton(),
                 sub_delims.SubcomponentsDelimiterLexerFactory.Default.Singleton());
         }
 
         public SegmentNonZeroLengthNoColonsLexerFactory(
-            [NotNull] ITerminalLexerFactory terminalLexerFactory,
-            [NotNull] IAlternationLexerFactory alternationLexerFactory,
-            [NotNull] IRepetitionLexerFactory repetitionLexerFactory,
             [NotNull] ILexerFactory<Unreserved> unreservedLexerFactory,
             [NotNull] ILexerFactory<PercentEncoding> percentEncodingLexerFactory,
             [NotNull] ILexerFactory<SubcomponentsDelimiter> subcomponentsDelimiterLexerFactory)
         {
-            if (terminalLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(terminalLexerFactory));
-            }
-            if (alternationLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(alternationLexerFactory));
-            }
-            if (repetitionLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(repetitionLexerFactory));
-            }
             if (unreservedLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(unreservedLexerFactory));
@@ -53,9 +35,6 @@ namespace UriSyntax.segment_nz_nc
             {
                 throw new ArgumentNullException(nameof(subcomponentsDelimiterLexerFactory));
             }
-            TerminalLexerFactory = terminalLexerFactory;
-            AlternationLexerFactory = alternationLexerFactory;
-            RepetitionLexerFactory = repetitionLexerFactory;
             UnreservedLexerFactory = unreservedLexerFactory;
             PercentEncodingLexerFactory = percentEncodingLexerFactory;
             SubcomponentsDelimiterLexerFactory = subcomponentsDelimiterLexerFactory;
@@ -65,31 +44,22 @@ namespace UriSyntax.segment_nz_nc
         public static SegmentNonZeroLengthNoColonsLexerFactory Default { get; }
 
         [NotNull]
-        public IAlternationLexerFactory AlternationLexerFactory { get; }
-
-        [NotNull]
         public ILexerFactory<PercentEncoding> PercentEncodingLexerFactory { get; }
 
         [NotNull]
-        public IRepetitionLexerFactory RepetitionLexerFactory { get; }
-
-        [NotNull]
         public ILexerFactory<SubcomponentsDelimiter> SubcomponentsDelimiterLexerFactory { get; }
-
-        [NotNull]
-        public ITerminalLexerFactory TerminalLexerFactory { get; }
 
         [NotNull]
         public ILexerFactory<Unreserved> UnreservedLexerFactory { get; }
 
         public override ILexer<SegmentNonZeroLengthNoColons> Create()
         {
-            var alternationLexer = AlternationLexerFactory.Create(
+            var alternationLexer = Alternation.Create(
                 UnreservedLexerFactory.Create(),
                 PercentEncodingLexerFactory.Create(),
                 SubcomponentsDelimiterLexerFactory.Create(),
-                TerminalLexerFactory.Create(@"@", StringComparer.Ordinal));
-            var segmentNonZeroLengthNoColonsRepetitionLexer = RepetitionLexerFactory.Create(
+                Terminal.Create(@"@", StringComparer.Ordinal));
+            var segmentNonZeroLengthNoColonsRepetitionLexer = Repetition.Create(
                 alternationLexer,
                 1,
                 int.MaxValue);

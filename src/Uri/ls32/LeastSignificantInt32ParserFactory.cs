@@ -31,10 +31,14 @@ namespace UriSyntax.ls32
             HexadecimalInt16ParserFactory = hexadecimalInt16ParserFactory;
         }
 
+        [NotNull]
         public static IParserFactory<LeastSignificantInt32, byte[]> Default { get; }
 
+        [NotNull]
         public IParserFactory<HexadecimalInt16, byte[]> HexadecimalInt16ParserFactory { get; }
 
+        [NotNull]
+        // ReSharper disable once InconsistentNaming
         public IParserFactory<IPv4Address, byte[]> IPv4AddressParserFactory { get; }
 
         public override IParser<LeastSignificantInt32, byte[]> Create()

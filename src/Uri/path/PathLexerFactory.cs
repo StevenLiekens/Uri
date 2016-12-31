@@ -10,12 +10,11 @@ using UriSyntax.path_rootless;
 
 namespace UriSyntax.path
 {
-    public class PathLexerFactory : LexerFactory<Path>
+    public class PathLexerFactory : RuleLexerFactory<Path>
     {
         static PathLexerFactory()
         {
             Default = new PathLexerFactory(
-                Txt.ABNF.AlternationLexerFactory.Default,
                 path_abempty.PathAbsoluteOrEmptyLexerFactory.Default.Singleton(),
                 path_absolute.PathAbsoluteLexerFactory.Default.Singleton(),
                 path_noscheme.PathNoSchemeLexerFactory.Default.Singleton(),
@@ -24,17 +23,12 @@ namespace UriSyntax.path
         }
 
         public PathLexerFactory(
-            [NotNull] IAlternationLexerFactory alternationLexerFactory,
             [NotNull] ILexerFactory<PathAbsoluteOrEmpty> pathAbsoluteOrEmptyLexerFactory,
             [NotNull] ILexerFactory<PathAbsolute> pathAbsoluteLexerFactory,
             [NotNull] ILexerFactory<PathNoScheme> pathNoSchemeLexerFactory,
             [NotNull] ILexerFactory<PathRootless> pathRootlessLexerFactory,
             [NotNull] ILexerFactory<PathEmpty> pathEmptyLexerFactory)
         {
-            if (alternationLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(alternationLexerFactory));
-            }
             if (pathAbsoluteOrEmptyLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(pathAbsoluteOrEmptyLexerFactory));
@@ -55,7 +49,6 @@ namespace UriSyntax.path
             {
                 throw new ArgumentNullException(nameof(pathEmptyLexerFactory));
             }
-            AlternationLexerFactory = alternationLexerFactory;
             PathAbsoluteOrEmptyLexerFactory = pathAbsoluteOrEmptyLexerFactory;
             PathAbsoluteLexerFactory = pathAbsoluteLexerFactory;
             PathNoSchemeLexerFactory = pathNoSchemeLexerFactory;
@@ -65,9 +58,6 @@ namespace UriSyntax.path
 
         [NotNull]
         public static PathLexerFactory Default { get; }
-
-        [NotNull]
-        public IAlternationLexerFactory AlternationLexerFactory { get; }
 
         [NotNull]
         public ILexerFactory<PathAbsolute> PathAbsoluteLexerFactory { get; }
@@ -86,7 +76,7 @@ namespace UriSyntax.path
 
         public override ILexer<Path> Create()
         {
-            var innerLexer = AlternationLexerFactory.Create(
+            var innerLexer = Alternation.Create(
                 PathAbsoluteOrEmptyLexerFactory.Create(),
                 PathAbsoluteLexerFactory.Create(),
                 PathNoSchemeLexerFactory.Create(),

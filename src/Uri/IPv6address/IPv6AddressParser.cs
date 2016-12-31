@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using JetBrains.Annotations;
 using Txt.ABNF;
 using Txt.Core;
@@ -10,11 +9,12 @@ using UriSyntax.ls32;
 
 namespace UriSyntax.IPv6address
 {
+    // ReSharper disable once InconsistentNaming
     public class IPv6AddressParser : Parser<IPv6Address, byte[]>
     {
         private readonly IParser<HexadecimalInt16, byte[]> hexadecimalInt16Parser;
 
-        private readonly IParser<LeastSignificantInt32, byte[]> leastSignificantInt32parser;
+        private readonly IParser<LeastSignificantInt32, byte[]> leastSignificantInt32Parser;
 
         public IPv6AddressParser(
             [NotNull] IParser<HexadecimalInt16, byte[]> hexadecimalInt16Parser,
@@ -29,7 +29,7 @@ namespace UriSyntax.IPv6address
                 throw new ArgumentNullException(nameof(leastSignificantInt32Parser));
             }
             this.hexadecimalInt16Parser = hexadecimalInt16Parser;
-            leastSignificantInt32parser = leastSignificantInt32Parser;
+            this.leastSignificantInt32Parser = leastSignificantInt32Parser;
         }
 
         private delegate byte[] BytesFactory();
@@ -61,80 +61,6 @@ namespace UriSyntax.IPv6address
             return null;
         }
 
-        private static string ConvertToIPv6Address(byte[] bytes)
-        {
-            var segments = new int[8];
-            for (var i = 0; i < bytes.Length; i += 2)
-            {
-                segments[i/2] = (bytes[i] << 8) | bytes[i + 1];
-            }
-            Subset emptySubset = null;
-            var emptySubsets = new List<Subset>();
-            for (var i = 0; i < segments.Length; i++)
-            {
-                if (segments[i] == ushort.MinValue)
-                {
-                    if (emptySubset == null)
-                    {
-                        emptySubset = new Subset { StartIndex = i };
-                    }
-                    emptySubset.Length += 1;
-                }
-                else
-                {
-                    if (emptySubset != null)
-                    {
-                        emptySubsets.Add(emptySubset);
-                        emptySubset = null;
-                    }
-                }
-            }
-            if (emptySubset != null)
-            {
-                emptySubsets.Add(emptySubset);
-            }
-            if (emptySubsets.Count == 0)
-            {
-                return string.Join(":", segments.Select(FormatHex));
-            }
-            var collapse = emptySubsets[0];
-            if (emptySubsets.Count != 1)
-            {
-                for (var i = 1; i < emptySubsets.Count; i++)
-                {
-                    var subset = emptySubsets[i];
-                    if (subset.Length > collapse.Length)
-                    {
-                        collapse = subset;
-                    }
-                }
-            }
-            var buffer = new StringBuilder(39);
-            for (var i = 0; i < collapse.StartIndex; i++)
-            {
-                buffer.AppendFormat("{0:x}:", segments[i]);
-            }
-            if (collapse.StartIndex == 0)
-            {
-                buffer.Append(':');
-            }
-            var collapseEndIndex = collapse.StartIndex + collapse.Length;
-            for (var i = collapseEndIndex; i < segments.Length; i++)
-            {
-                buffer.AppendFormat(":{0:x}", segments[i]);
-            }
-            if (collapseEndIndex == segments.Length)
-            {
-                buffer.Append(':');
-            }
-            return buffer.ToString();
-        }
-
-        private static string FormatHex(int value)
-        {
-            return $"{value:x}";
-        }
-
         private byte[] GetBytes1(Concatenation concatenation)
         {
             var ctx = new BytesFactoryContext();
@@ -146,7 +72,7 @@ namespace UriSyntax.IPv6address
                 ctx.RightAlign.Add(() => hexadecimalInt16Parser.Parse(h16));
             }
             var ls32 = (LeastSignificantInt32)concatenation[1];
-            ctx.RightAlign.Add(() => leastSignificantInt32parser.Parse(ls32));
+            ctx.RightAlign.Add(() => leastSignificantInt32Parser.Parse(ls32));
             return ctx.GetResult();
         }
 
@@ -161,7 +87,7 @@ namespace UriSyntax.IPv6address
                 ctx.RightAlign.Add(() => hexadecimalInt16Parser.Parse(h16));
             }
             var ls32 = (LeastSignificantInt32)concatenation[2];
-            ctx.RightAlign.Add(() => leastSignificantInt32parser.Parse(ls32));
+            ctx.RightAlign.Add(() => leastSignificantInt32Parser.Parse(ls32));
             return ctx.GetResult();
         }
 
@@ -182,7 +108,7 @@ namespace UriSyntax.IPv6address
                 ctx.RightAlign.Add(() => hexadecimalInt16Parser.Parse(h16));
             }
             var ls32 = (LeastSignificantInt32)concatenation[3];
-            ctx.RightAlign.Add(() => leastSignificantInt32parser.Parse(ls32));
+            ctx.RightAlign.Add(() => leastSignificantInt32Parser.Parse(ls32));
             return ctx.GetResult();
         }
 
@@ -202,7 +128,7 @@ namespace UriSyntax.IPv6address
                 ctx.RightAlign.Add(() => hexadecimalInt16Parser.Parse(h16));
             }
             var ls32 = (LeastSignificantInt32)concatenation[3];
-            ctx.RightAlign.Add(() => leastSignificantInt32parser.Parse(ls32));
+            ctx.RightAlign.Add(() => leastSignificantInt32Parser.Parse(ls32));
             return ctx.GetResult();
         }
 
@@ -222,7 +148,7 @@ namespace UriSyntax.IPv6address
                 ctx.RightAlign.Add(() => hexadecimalInt16Parser.Parse(h16));
             }
             var ls32 = (LeastSignificantInt32)concatenation[3];
-            ctx.RightAlign.Add(() => leastSignificantInt32parser.Parse(ls32));
+            ctx.RightAlign.Add(() => leastSignificantInt32Parser.Parse(ls32));
             return ctx.GetResult();
         }
 
@@ -237,7 +163,7 @@ namespace UriSyntax.IPv6address
             var h16 = (HexadecimalInt16)concatenation[2];
             ctx.RightAlign.Add(() => hexadecimalInt16Parser.Parse(h16));
             var ls32 = (LeastSignificantInt32)concatenation[4];
-            ctx.RightAlign.Add(() => leastSignificantInt32parser.Parse(ls32));
+            ctx.RightAlign.Add(() => leastSignificantInt32Parser.Parse(ls32));
             return ctx.GetResult();
         }
 
@@ -250,7 +176,7 @@ namespace UriSyntax.IPv6address
                 GetBytesh16Alt5((Alternation)opt1[0], ctx);
             }
             var ls32 = (LeastSignificantInt32)concatenation[2];
-            ctx.RightAlign.Add(() => leastSignificantInt32parser.Parse(ls32));
+            ctx.RightAlign.Add(() => leastSignificantInt32Parser.Parse(ls32));
             return ctx.GetResult();
         }
 
@@ -406,13 +332,6 @@ namespace UriSyntax.IPv6address
                 }
                 return result;
             }
-        }
-
-        private class Subset
-        {
-            public int Length { get; set; }
-
-            public int StartIndex { get; set; }
         }
     }
 }

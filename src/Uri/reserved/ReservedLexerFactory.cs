@@ -7,25 +7,19 @@ using UriSyntax.sub_delims;
 
 namespace UriSyntax.reserved
 {
-    public class ReservedLexerFactory : LexerFactory<Reserved>
+    public class ReservedLexerFactory : RuleLexerFactory<Reserved>
     {
         static ReservedLexerFactory()
         {
             Default = new ReservedLexerFactory(
-                Txt.ABNF.AlternationLexerFactory.Default,
                 gen_delims.GenericDelimiterLexerFactory.Default.Singleton(),
                 sub_delims.SubcomponentsDelimiterLexerFactory.Default.Singleton());
         }
 
         public ReservedLexerFactory(
-            [NotNull] IAlternationLexerFactory alternationLexerFactory,
             [NotNull] ILexerFactory<GenericDelimiter> genericDelimiterLexerFactory,
             [NotNull] ILexerFactory<SubcomponentsDelimiter> subcomponentsDelimiterLexerFactory)
         {
-            if (alternationLexerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(alternationLexerFactory));
-            }
             if (genericDelimiterLexerFactory == null)
             {
                 throw new ArgumentNullException(nameof(genericDelimiterLexerFactory));
@@ -34,16 +28,12 @@ namespace UriSyntax.reserved
             {
                 throw new ArgumentNullException(nameof(subcomponentsDelimiterLexerFactory));
             }
-            AlternationLexerFactory = alternationLexerFactory;
             GenericDelimiterLexerFactory = genericDelimiterLexerFactory;
             SubcomponentsDelimiterLexerFactory = subcomponentsDelimiterLexerFactory;
         }
 
         [NotNull]
         public static ReservedLexerFactory Default { get; }
-
-        [NotNull]
-        public IAlternationLexerFactory AlternationLexerFactory { get; }
 
         [NotNull]
         public ILexerFactory<GenericDelimiter> GenericDelimiterLexerFactory { get; }
@@ -53,7 +43,7 @@ namespace UriSyntax.reserved
 
         public override ILexer<Reserved> Create()
         {
-            var innerLexer = AlternationLexerFactory.Create(
+            var innerLexer = Alternation.Create(
                 GenericDelimiterLexerFactory.Create(),
                 SubcomponentsDelimiterLexerFactory.Create());
             return new ReservedLexer(innerLexer);
